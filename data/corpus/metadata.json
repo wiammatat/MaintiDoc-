@@ -10,16 +10,6 @@
     "groupes_autorises": [
       "tech_pompes",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_pompe_hf-200_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_pompe_hf-200_plaque.png"
-      }
     ]
   },
   {
@@ -59,16 +49,6 @@
     "groupes_autorises": [
       "tech_pompes",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_pompe_hf-350_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_pompe_hf-350_plaque.png"
-      }
     ]
   },
   {
@@ -108,16 +88,6 @@
     "groupes_autorises": [
       "tech_pompes",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_pompe_hf-500_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_pompe_hf-500_plaque.png"
-      }
     ]
   },
   {
@@ -313,16 +283,6 @@
     "groupes_autorises": [
       "tech_compresseurs",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_compresseur_ac-15_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_compresseur_ac-15_plaque.png"
-      }
     ]
   },
   {
@@ -362,16 +322,6 @@
     "groupes_autorises": [
       "tech_compresseurs",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_compresseur_ac-30_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_compresseur_ac-30_plaque.png"
-      }
     ]
   },
   {
@@ -411,16 +361,6 @@
     "groupes_autorises": [
       "tech_compresseurs",
       "responsable"
-    ],
-    "figures": [
-      {
-        "element_id": "figure_3_1",
-        "fichier": "figures/manuel_compresseur_ac-55_panneau.png"
-      },
-      {
-        "element_id": "figure_5_1",
-        "fichier": "figures/manuel_compresseur_ac-55_plaque.png"
-      }
     ]
   },
   {

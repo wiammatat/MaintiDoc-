@@ -25,3 +25,6 @@ volumes/
 .idea/
 Thumbs.db
 .DS_Store
+
+# Sorties de l'ingestion (régénérables)
+data/processed/

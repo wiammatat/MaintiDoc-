@@ -217,9 +217,7 @@ def manuel(famille, modele):
          Paragraph(f"La liste complète des codes figure dans le document alarmes_{famille}_{slug}.", BODY)]
     path = CORPUS / f"{doc_id}.pdf"
     build_pdf(path, doc_id, "v1", s)
-    register(doc_id, f"Manuel d'utilisation {modele}", famille, "manuel", path, modele=modele,
-             figures=[{"element_id": "figure_3_1", "fichier": f"figures/{fig_panel.name}"},
-                      {"element_id": "figure_5_1", "fichier": f"figures/{fig_plaque.name}"}])
+    register(doc_id, f"Manuel d'utilisation {modele}", famille, "manuel", path, modele=modele)
 
 
 def alarmes(famille, modele):
