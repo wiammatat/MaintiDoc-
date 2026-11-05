@@ -1,0 +1,37 @@
+[
+  {
+    "user_id": "tech_p01",
+    "nom": "Technicien Pompes 1",
+    "groupes": [
+      "tech_pompes"
+    ]
+  },
+  {
+    "user_id": "tech_p02",
+    "nom": "Technicien Pompes 2",
+    "groupes": [
+      "tech_pompes"
+    ]
+  },
+  {
+    "user_id": "tech_c01",
+    "nom": "Technicien Compresseurs 1",
+    "groupes": [
+      "tech_compresseurs"
+    ]
+  },
+  {
+    "user_id": "tech_c02",
+    "nom": "Technicien Compresseurs 2",
+    "groupes": [
+      "tech_compresseurs"
+    ]
+  },
+  {
+    "user_id": "resp_01",
+    "nom": "Responsable Maintenance",
+    "groupes": [
+      "responsable"
+    ]
+  }
+]

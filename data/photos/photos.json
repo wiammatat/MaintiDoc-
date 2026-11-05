@@ -1,0 +1,278 @@
+[
+  {
+    "fichier": "photo_01.jpg",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_02.jpg",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "voyant": "L3",
+    "code": "E07",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_03.jpg",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_04.jpg",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_05.jpg",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_06.jpg",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "voyant": "L3",
+    "code": "E03",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_07.jpg",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_08.jpg",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_09.jpg",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_10.jpg",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "voyant": "L3",
+    "code": "E07",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_11.jpg",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_12.jpg",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_13.jpg",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "type": "plaque_signaletique",
+    "lisible": true,
+    "ambigu": false,
+    "attendu": "answered"
+  },
+  {
+    "fichier": "photo_14.jpg",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "type": "plaque_signaletique",
+    "lisible": true,
+    "ambigu": false,
+    "attendu": "answered"
+  },
+  {
+    "fichier": "photo_15.jpg",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "type": "plaque_signaletique",
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_16.jpg",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_17.jpg",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "voyant": "L3",
+    "code": "A06",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_18.jpg",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_19.jpg",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_20.jpg",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_21.jpg",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "voyant": "L3",
+    "code": "A03",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_22.jpg",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_23.jpg",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_24.jpg",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "voyant": "L2",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_25.jpg",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "voyant": "L3",
+    "code": "A03",
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_26.jpg",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "voyant": "L1",
+    "code": null,
+    "lisible": true,
+    "ambigu": false
+  },
+  {
+    "fichier": "photo_27.jpg",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "voyant": "L2",
+    "code": null,
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  },
+  {
+    "fichier": "photo_28.jpg",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "type": "plaque_signaletique",
+    "lisible": true,
+    "ambigu": false,
+    "attendu": "answered"
+  },
+  {
+    "fichier": "photo_29.jpg",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "type": "plaque_signaletique",
+    "lisible": true,
+    "ambigu": false,
+    "attendu": "answered"
+  },
+  {
+    "fichier": "photo_30.jpg",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "type": "plaque_signaletique",
+    "lisible": false,
+    "ambigu": true,
+    "attendu": "needs_clarification"
+  }
+]

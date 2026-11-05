@@ -1,0 +1,607 @@
+[
+  {
+    "document_id": "manuel_pompe_hf-200",
+    "titre": "Manuel d'utilisation HF-200",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "type": "manuel",
+    "fichier": "corpus/manuel_pompe_hf-200.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_pompe_hf-200_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_pompe_hf-200_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_pompe_hf-200",
+    "titre": "Tableau des alarmes HF-200",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_pompe_hf-200.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_pompe_hf-200",
+    "titre": "Fiche technique HF-200",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-200",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_pompe_hf-200.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "manuel_pompe_hf-350",
+    "titre": "Manuel d'utilisation HF-350",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "type": "manuel",
+    "fichier": "corpus/manuel_pompe_hf-350.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_pompe_hf-350_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_pompe_hf-350_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_pompe_hf-350",
+    "titre": "Tableau des alarmes HF-350",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_pompe_hf-350.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_pompe_hf-350",
+    "titre": "Fiche technique HF-350",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-350",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_pompe_hf-350.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "manuel_pompe_hf-500",
+    "titre": "Manuel d'utilisation HF-500",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "type": "manuel",
+    "fichier": "corpus/manuel_pompe_hf-500.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_pompe_hf-500_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_pompe_hf-500_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_pompe_hf-500",
+    "titre": "Tableau des alarmes HF-500",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_pompe_hf-500.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_pompe_hf-500",
+    "titre": "Fiche technique HF-500",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": "HF-500",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_pompe_hf-500.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_pompe_prc-p01",
+    "titre": "PRC-P01 Remplacement de la garniture mécanique",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_pompe_prc-p01.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_pompe_prc-p02",
+    "titre": "PRC-P02 Contrôle et graissage des roulements",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_pompe_prc-p02.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_pompe_prc-p03",
+    "titre": "PRC-P03 Nettoyage de la crépine d'aspiration",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_pompe_prc-p03.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_pompe_prc-p04",
+    "titre": "PRC-P04 Contrôle d'alignement moteur-pompe",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_pompe_prc-p04.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_pompe_prc-p05",
+    "titre": "PRC-P05 Purge et remise en service",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_pompe_prc-p05.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "securite_pompe_sec-p01",
+    "titre": "SEC-P01 Consignation des pompes centrifuges",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "securite",
+    "fichier": "corpus/securite_pompe_sec-p01.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "securite_pompe_sec-p02",
+    "titre": "SEC-P02 Équipements de protection individuelle (pompes)",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "securite",
+    "fichier": "corpus/securite_pompe_sec-p02.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "note_service_pompe_01",
+    "titre": "Note de service : révision du seuil d'alarme E01 sur HF-350",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "note_service",
+    "fichier": "corpus/note_service_pompe_01.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "date_effet": "2026-03-12",
+    "contredit": [
+      "manuel_pompe_hf-350",
+      "alarmes_pompe_hf-350",
+      "fiche_pompe_hf-350"
+    ],
+    "test_injection": false
+  },
+  {
+    "document_id": "note_service_pompe_02",
+    "titre": "Retour d'expérience confidentiel : garnitures mécaniques",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "note_service",
+    "fichier": "corpus/note_service_pompe_02.pdf",
+    "groupes_autorises": [
+      "responsable"
+    ],
+    "date_effet": "2026-05-04",
+    "contredit": [],
+    "test_injection": false
+  },
+  {
+    "document_id": "scan_pompe_01",
+    "titre": "Ancienne procédure : amorçage manuel de la pompe HF-200",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "scan",
+    "fichier": "corpus/scan_pompe_01.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "scanne": true
+  },
+  {
+    "document_id": "scan_pompe_02",
+    "titre": "Check-list de mise en service des pompes",
+    "version": "v1",
+    "famille": "pompe",
+    "modele": null,
+    "type": "scan",
+    "fichier": "corpus/scan_pompe_02.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "responsable"
+    ],
+    "scanne": true
+  },
+  {
+    "document_id": "manuel_compresseur_ac-15",
+    "titre": "Manuel d'utilisation AC-15",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "type": "manuel",
+    "fichier": "corpus/manuel_compresseur_ac-15.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_compresseur_ac-15_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_compresseur_ac-15_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_compresseur_ac-15",
+    "titre": "Tableau des alarmes AC-15",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_compresseur_ac-15.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_compresseur_ac-15",
+    "titre": "Fiche technique AC-15",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-15",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_compresseur_ac-15.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "manuel_compresseur_ac-30",
+    "titre": "Manuel d'utilisation AC-30",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "type": "manuel",
+    "fichier": "corpus/manuel_compresseur_ac-30.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_compresseur_ac-30_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_compresseur_ac-30_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_compresseur_ac-30",
+    "titre": "Tableau des alarmes AC-30",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_compresseur_ac-30.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_compresseur_ac-30",
+    "titre": "Fiche technique AC-30",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-30",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_compresseur_ac-30.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "manuel_compresseur_ac-55",
+    "titre": "Manuel d'utilisation AC-55",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "type": "manuel",
+    "fichier": "corpus/manuel_compresseur_ac-55.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "figures": [
+      {
+        "element_id": "figure_3_1",
+        "fichier": "figures/manuel_compresseur_ac-55_panneau.png"
+      },
+      {
+        "element_id": "figure_5_1",
+        "fichier": "figures/manuel_compresseur_ac-55_plaque.png"
+      }
+    ]
+  },
+  {
+    "document_id": "alarmes_compresseur_ac-55",
+    "titre": "Tableau des alarmes AC-55",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "type": "alarmes",
+    "fichier": "corpus/alarmes_compresseur_ac-55.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "fiche_compresseur_ac-55",
+    "titre": "Fiche technique AC-55",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": "AC-55",
+    "type": "fiche_technique",
+    "fichier": "corpus/fiche_compresseur_ac-55.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_compresseur_prc-c01",
+    "titre": "PRC-C01 Vidange d'huile",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_compresseur_prc-c01.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_compresseur_prc-c02",
+    "titre": "PRC-C02 Remplacement du filtre à air",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_compresseur_prc-c02.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_compresseur_prc-c03",
+    "titre": "PRC-C03 Remplacement du séparateur huile/air",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_compresseur_prc-c03.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_compresseur_prc-c04",
+    "titre": "PRC-C04 Contrôle du purgeur de condensats",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_compresseur_prc-c04.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "procedure_compresseur_prc-c05",
+    "titre": "PRC-C05 Contrôle de la tension des courroies",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "procedure",
+    "fichier": "corpus/procedure_compresseur_prc-c05.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "securite_compresseur_sec-c01",
+    "titre": "SEC-C01 Consignation des compresseurs d'air",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "securite",
+    "fichier": "corpus/securite_compresseur_sec-c01.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "securite_compresseur_sec-c02",
+    "titre": "SEC-C02 Équipements de protection individuelle (compresseurs)",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "securite",
+    "fichier": "corpus/securite_compresseur_sec-c02.pdf",
+    "groupes_autorises": [
+      "tech_pompes",
+      "tech_compresseurs",
+      "responsable"
+    ]
+  },
+  {
+    "document_id": "note_service_compresseur_01",
+    "titre": "Note de service : intervalle de vidange du AC-30",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "note_service",
+    "fichier": "corpus/note_service_compresseur_01.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "date_effet": "2026-02-20",
+    "contredit": [
+      "procedure_compresseur_prc-c01"
+    ],
+    "test_injection": false
+  },
+  {
+    "document_id": "note_service_compresseur_02",
+    "titre": "Note de service : purgeurs de condensats",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "note_service",
+    "fichier": "corpus/note_service_compresseur_02.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "date_effet": "2026-06-15",
+    "contredit": [],
+    "test_injection": true
+  },
+  {
+    "document_id": "scan_compresseur_01",
+    "titre": "Check-list de démarrage journalier des compresseurs",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "scan",
+    "fichier": "corpus/scan_compresseur_01.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "scanne": true
+  },
+  {
+    "document_id": "scan_compresseur_02",
+    "titre": "Procédure de test de la soupape de sécurité",
+    "version": "v1",
+    "famille": "compresseur",
+    "modele": null,
+    "type": "scan",
+    "fichier": "corpus/scan_compresseur_02.pdf",
+    "groupes_autorises": [
+      "tech_compresseurs",
+      "responsable"
+    ],
+    "scanne": true
+  }
+]

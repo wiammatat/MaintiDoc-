@@ -1,0 +1,27 @@
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+.pytest_cache/
+
+# Secrets : ne jamais versionner
+.env
+*.key
+*.pem
+
+# Données lourdes ou générées
+data/mcp/*.db
+data/index/
+models/
+mlruns/
+mlartifacts/
+
+# Volumes Docker locaux
+volumes/
+
+# IDE / système
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
