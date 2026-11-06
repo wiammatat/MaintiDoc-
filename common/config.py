@@ -19,8 +19,12 @@ class Settings(BaseSettings):
     # Modèles
     vlm_model: str = "Qwen/Qwen2.5-VL-7B-Instruct"
     text_embedding_model: str = "BAAI/bge-m3"
-    image_embedding_model: str = "sentence-transformers/clip-ViT-B-32-multilingual-v1"
+    image_embedding_model: str = "sentence-transformers/clip-ViT-B-32-multilingual-v1"  # texte -> espace CLIP
+    image_encoder_model: str = "sentence-transformers/clip-ViT-B-32"                     # image -> espace CLIP
     reranker_model: str = "BAAI/bge-reranker-v2-m3"
+
+    # Index vectoriel (le numéro de version est porté par le nom des collections)
+    index_version: str = "v1"
 
     # OCR
     tesseract_cmd: str = "tesseract"
@@ -51,6 +55,14 @@ class Settings(BaseSettings):
     @property
     def corpus_dir(self) -> Path:
         return self.data_dir / "corpus"
+
+    @property
+    def text_collection(self) -> str:
+        return f"maintidoc_text_{self.index_version}"
+
+    @property
+    def image_collection(self) -> str:
+        return f"maintidoc_images_{self.index_version}"
 
     @property
     def tessdata_dir(self) -> Path:

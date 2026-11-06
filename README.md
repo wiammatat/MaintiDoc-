@@ -52,6 +52,7 @@ python scripts/generate_corpus.py   # génère data/ (déterministe)
 docker compose up -d                # Qdrant, PostgreSQL, SeaweedFS (S3), MLflow
 python scripts/check_services.py    # vérifie la connexion à chaque service
 python -m ingestion.pipeline        # extraction + OCR + stockage S3 / PostgreSQL (~1 min 30)
+python -m ingestion.index           # embeddings BGE-M3 + CLIP -> Qdrant (1er lancement : ~3,5 Go de modèles)
 pytest                              # vérifie le corpus, l'OCR et le contrôle d'accès
 ```
 
