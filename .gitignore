@@ -28,3 +28,12 @@ Thumbs.db
 
 # Sorties de l'ingestion (régénérables)
 data/processed/
+
+# Archives générées (bundle Kaggle)
+dist/
+
+# Notebooks téléchargés depuis Kaggle : leurs sorties peuvent contenir l'adresse du tunnel et le jeton du serveur VLM
+notebooks/notebook*.ipynb
+
+# Qdrant embarqué (profil léger, ex. Lightning AI Studio)
+data/qdrant/

@@ -1,62 +1,101 @@
-"""Vérifie l'index Qdrant (étape 1.3). Nécessite docker compose up et python -m ingestion.index."""
+"""Vérifie les index (étape 3) : textuel (LlamaIndex + BGE-M3) et visuel (CLIP).
+
+Les tests sur Qdrant nécessitent docker compose up et python -m pipeline.index.
+"""
 
 import pytest
-from qdrant_client import models
+from llama_index.core.schema import MetadataMode
 
 from common.config import get_settings
-from ingestion.index import client
-from retrieval.embeddings import embed_texts, embed_texts_for_images
+from indexing.embeddings import embed_texts_for_images
+from indexing.qdrant import client
+from indexing.text_index import context_text, search_text, to_node
+from indexing.visual_index import search_visual
+from preparation.schema import Element
 
 S = get_settings()
 
+ELEMENT = Element(document_id="manuel_baie_sn-400", version="v1", page=2, element_id="table_2_1_1", type="table",
+                  section="3. Panneau de contrôle", text="| L2 | orange | Disque défaillant |",
+                  titre="Manuel d'utilisation SN-400", famille="baie", modele="SN-400", doc_type="manuel",
+                  groupes_autorises=["tech_stockage", "responsable"])
+
+
+# --- Nœuds LlamaIndex (sans service)
+
+def test_noeud_encode_titre_et_section_mais_pas_les_droits():
+    encoded = to_node(ELEMENT).get_content(metadata_mode=MetadataMode.EMBED)
+    assert "Manuel d'utilisation SN-400" in encoded and "3. Panneau de contrôle" in encoded
+    assert "| L2 | orange |" in encoded
+    assert "tech_stockage" not in encoded and "groupes_autorises" not in encoded
+
+
+def test_noeud_garde_la_provenance():
+    meta = to_node(ELEMENT).metadata
+    assert meta["uid"] == ELEMENT.uid and meta["page"] == 2 and meta["groupes_autorises"] == ELEMENT.groupes_autorises
+    assert "text" not in meta   # le texte est porté par le nœud, pas dupliqué en métadonnée
+
+
+def test_context_text_identique_au_texte_encode():
+    p = ELEMENT.model_dump()
+    assert context_text(p) == to_node(ELEMENT).get_content(metadata_mode=MetadataMode.EMBED)
+
+
+# --- Index réels
 
 def _index_ready() -> bool:
     try:
-        qc = client()
-        return all(qc.collection_exists(c) and qc.count(c).count > 0
+        return all(client().collection_exists(c) and client().count(c).count > 0
                    for c in (S.text_collection, S.image_collection))
     except Exception:
         return False
 
 
-pytestmark = pytest.mark.skipif(not _index_ready(), reason="index Qdrant absent : lancer python -m ingestion.index")
+needs_index = pytest.mark.skipif(not _index_ready(), reason="index absent : lancer python -m pipeline.index")
 
 
-def groups_filter(*groups: str) -> models.Filter:
-    return models.Filter(must=[models.FieldCondition(key="groupes_autorises", match=models.MatchAny(any=list(groups)))])
-
-
-def search_text(query: str, *groups: str, limit: int = 5):
-    return client().query_points(S.text_collection, query=embed_texts([query])[0].tolist(),
-                                 query_filter=groups_filter(*groups), limit=limit, with_payload=True).points
-
-
+@needs_index
 def test_payload_complet():
     point = client().scroll(S.text_collection, limit=1, with_payload=True)[0][0]
-    for key in ("document_id", "version", "page", "element_id", "groupes_autorises", "text", "index_version"):
+    for key in ("document_id", "version", "page", "element_id", "groupes_autorises", "uid", "index_version",
+                "_node_content"):
         assert key in point.payload
 
 
+@needs_index
 def test_recherche_texte_pertinente():
-    hits = search_text("Que faire en cas d'alarme E05 fuite de garniture ?", "tech_pompes")
-    assert any("E05" in h.payload["text"] for h in hits[:3])
+    hits = search_text("Que faire en cas d'alarme E05 batterie de cache faible ?", ["tech_stockage"])
+    assert any("E05" in p["text"] for _, p in hits[:3])
 
 
+@needs_index
 def test_filtre_groupes_avant_recuperation():
-    # Un technicien compresseurs ne doit jamais récupérer un document réservé aux pompes.
-    for hit in search_text("seuil d'alarme E01 surchauffe moteur pompe HF-350", "tech_compresseurs", limit=20):
-        assert "tech_compresseurs" in hit.payload["groupes_autorises"]
-        assert hit.payload["famille"] != "pompe" or hit.payload["doc_type"] == "securite"
+    # Un technicien réseau ne récupère jamais un document réservé aux baies.
+    for _, p in search_text("seuil d'alarme E03 température contrôleur SN-400", ["tech_reseau"], k=50):
+        assert "tech_reseau" in p["groupes_autorises"]
 
 
+@needs_index
 def test_note_confidentielle_reservee_aux_responsables():
-    query = "retour d'expérience garnitures mécaniques lot défaillant"
-    assert all(h.payload["document_id"] != "note_service_pompe_02" for h in search_text(query, "tech_pompes", limit=50))
-    assert any(h.payload["document_id"] == "note_service_pompe_02" for h in search_text(query, "responsable"))
+    q = "retour d'expérience lot de disques défaillants"
+    assert all(p["document_id"] != "note_service_baie_02" for _, p in search_text(q, ["tech_stockage"], k=50))
+    assert any(p["document_id"] == "note_service_baie_02" for _, p in search_text(q, ["responsable"]))
 
 
-def test_recherche_image_par_texte():
-    vector = embed_texts_for_images(["panneau de commande avec voyants"])[0].tolist()
-    hits = client().query_points(S.image_collection, query=vector, query_filter=groups_filter("responsable"),
-                                 limit=5, with_payload=True).points
-    assert hits and all(h.payload["type"] in ("figure", "page") for h in hits)
+@needs_index
+def test_filtre_par_modele():
+    hits = search_text("voyant orange", ["tech_stockage"], filters={"modele": "SN-400"})
+    assert hits and all(p["modele"] == "SN-400" for _, p in hits)
+
+
+@needs_index
+def test_recherche_visuelle_par_texte():
+    hits = search_visual(embed_texts_for_images(["schéma d'architecture d'un réseau de stockage"])[0], ["responsable"])
+    assert hits and all(p["type"] in ("figure", "page") for _, p in hits)
+
+
+def test_section_absente_non_encodee():
+    sans_section = ELEMENT.model_copy(update={"section": None})
+    encoded = to_node(sans_section).get_content(metadata_mode=MetadataMode.EMBED)
+    assert "None" not in encoded and "section" not in encoded
+    assert context_text(sans_section.model_dump()) == encoded

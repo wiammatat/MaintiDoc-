@@ -1,4 +1,4 @@
-"""Vérifie la cohérence du corpus généré par scripts/generate_corpus.py."""
+"""Vérifie la cohérence du corpus SAN généré par scripts/generate_corpus.py."""
 
 import json
 
@@ -8,7 +8,7 @@ from common.access import can_access, get_user
 from common.config import get_settings
 
 DATA = get_settings().data_dir
-GROUPES = {"tech_pompes", "tech_compresseurs", "responsable"}
+GROUPES = {"tech_stockage", "tech_reseau", "responsable"}
 
 
 @pytest.fixture(scope="module")
@@ -16,12 +16,17 @@ def metadata():
     return json.loads((DATA / "corpus" / "metadata.json").read_text(encoding="utf-8"))
 
 
+def by_id(metadata, doc_id):
+    return next(d for d in metadata if d["document_id"] == doc_id)
+
+
 def test_taille_corpus(metadata):
     assert 30 <= len(metadata) <= 50
 
 
-def test_deux_familles(metadata):
-    assert {d["famille"] for d in metadata} == {"pompe", "compresseur"}
+def test_deux_familles_et_manuel_commun(metadata):
+    assert {d["famille"] for d in metadata} == {"baie", "switch", "san"}
+    assert by_id(metadata, "manuel_san_pedagogique")["type"] == "manuel_pedagogique"
 
 
 def test_fichiers_presents(metadata):
@@ -39,22 +44,28 @@ def test_groupes_valides(metadata):
         assert d["groupes_autorises"] and set(d["groupes_autorises"]) <= GROUPES
 
 
+def test_manuel_pedagogique_et_securite_visibles_par_tous(metadata):
+    for doc_id in ("manuel_san_pedagogique", "securite_baie_sec-b01", "securite_switch_sec-s01"):
+        for user in ("tech_s01", "tech_r01", "resp_01"):
+            assert can_access(get_user(user), by_id(metadata, doc_id)["groupes_autorises"])
+
+
 def test_note_confidentielle_invisible_pour_techniciens(metadata):
-    note = next(d for d in metadata if d["document_id"] == "note_service_pompe_02")
-    assert not can_access(get_user("tech_p01"), note["groupes_autorises"])
+    note = by_id(metadata, "note_service_baie_02")
+    assert not can_access(get_user("tech_s01"), note["groupes_autorises"])
     assert can_access(get_user("resp_01"), note["groupes_autorises"])
 
 
 def test_cloisonnement_familles(metadata):
-    tech_c = get_user("tech_c01")
-    manuel_pompe = next(d for d in metadata if d["document_id"] == "manuel_pompe_hf-350")
-    assert not can_access(tech_c, manuel_pompe["groupes_autorises"])
+    assert not can_access(get_user("tech_r01"), by_id(metadata, "manuel_baie_sn-400")["groupes_autorises"])
+    assert not can_access(get_user("tech_s01"), by_id(metadata, "manuel_switch_fl-48")["groupes_autorises"])
 
 
 def test_pieges_presents(metadata):
     assert any(d.get("test_injection") for d in metadata)
-    assert any(d.get("contredit") for d in metadata)
-    assert any(d.get("scanne") for d in metadata)
+    assert by_id(metadata, "note_service_baie_01")["contredit"]
+    assert by_id(metadata, "note_service_switch_01")["contredit"] == ["procedure_switch_prc-s02"]
+    assert sum(bool(d.get("scanne")) for d in metadata) == 4
 
 
 def test_utilisateur_inconnu_refuse():
@@ -65,6 +76,7 @@ def test_utilisateur_inconnu_refuse():
 def test_photos_verite_terrain():
     photos = json.loads((DATA / "photos" / "photos.json").read_text(encoding="utf-8"))
     assert len(photos) == 30
+    assert {p["famille"] for p in photos} == {"baie", "switch"}
     assert any(p["ambigu"] for p in photos)
     for p in photos:
         assert (DATA / "photos" / p["fichier"]).exists()

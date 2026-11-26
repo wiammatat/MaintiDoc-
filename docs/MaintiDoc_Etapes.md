@@ -42,7 +42,7 @@ Chaque étape indique **l'objectif**, **ce qu'il faut faire**, **les outils** et
 - Ouvrir chaque PDF avec **PyMuPDF**.
 - Extraire séparément les **paragraphes**, les **tableaux**, les **figures et schémas** (en images) et le rendu de chaque **page**.
 - Passer les pages scannées dans un **OCR local** (par exemple Tesseract ou PaddleOCR).
-- Conserver les images originales dans le stockage S3 (**SeaweedFS**, qui remplace MinIO) pour que le VLM puisse les voir.
+- Conserver les images originales dans le stockage S3 (**MinIO**) pour que le VLM puisse les voir.
 
 ### Étape 1.2 : découper et annoter
 - Découper le texte en passages courts (environ 300 à 500 tokens, avec un léger chevauchement).
@@ -256,7 +256,7 @@ class Reponse(BaseModel):
 - **Performance** : latence médiane et p95 (objectif : moins de 30 s pour une demande simple), mémoire, temps GPU.
 
 ### Étape 5.4 : déployer
-1. Écrire le `docker-compose.yml` avec les services API, UI, VLM (vLLM ou Transformers), Qdrant, PostgreSQL, SeaweedFS, MLflow et le serveur MCP.
+1. Écrire le `docker-compose.yml` avec les services API, UI, VLM (vLLM ou Transformers), Qdrant, PostgreSQL, MinIO, MLflow et le serveur MCP.
 2. Viser un **GPU de 24 Go** avec quantification et des limites sur la taille des images et du contexte, puis valider par benchmark.
 3. Mettre en place une CI : tests unitaires, d'intégration et de sécurité, détection de secrets.
 4. Versionner le corpus, l'index, les prompts et les modèles.

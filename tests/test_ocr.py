@@ -5,7 +5,7 @@ import pytest
 from PIL import Image
 
 from common.config import get_settings
-from ingestion.ocr import ocr_available, ocr_image
+from preparation.ocr import ocr_available, ocr_image
 
 pytestmark = pytest.mark.skipif(not ocr_available(), reason="Tesseract ou le pack français est absent")
 
@@ -16,10 +16,10 @@ def _render(name: str) -> Image.Image:
 
 
 def test_scan_sans_couche_texte():
-    assert pymupdf.open(get_settings().corpus_dir / "scan_compresseur_02.pdf")[0].get_text().strip() == ""
+    assert pymupdf.open(get_settings().corpus_dir / "scan_switch_02.pdf")[0].get_text().strip() == ""
 
 
 def test_ocr_lit_le_scan():
-    texte = ocr_image(_render("scan_compresseur_02")).lower()
-    assert "soupape" in texte
-    assert "1,1 fois la pression nominale" in texte
+    texte = ocr_image(_render("scan_switch_02")).lower()
+    assert "basculement" in texte
+    assert "fabric b" in texte

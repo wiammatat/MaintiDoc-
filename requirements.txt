@@ -26,6 +26,8 @@ accelerate>=0.30
 qwen-vl-utils>=0.0.8
 
 # --- Orchestration
+llama-index-core>=0.14            # index textuel (comme le prototype du professeur)
+llama-index-vector-stores-qdrant>=0.11
 langchain>=0.3
 langchain-core>=0.3
 langgraph>=0.2
@@ -35,7 +37,7 @@ langchain-mcp-adapters>=0.1
 # --- Stockage
 psycopg[binary]>=3.1
 sqlalchemy>=2.0
-boto3>=1.34            # client S3 (SeaweedFS)
+boto3>=1.34            # client S3 (MinIO)
 
 # --- API / UI
 fastapi>=0.111

@@ -1,0 +1,32 @@
+# Profil léger (Lightning AI Studio, GPU T4) : sans Docker, PostgreSQL, MinIO ni MLflow.
+# torch et torchvision avec CUDA sont déjà installés dans le Studio. Versions alignées sur requirements.lock.
+
+# Modèles
+transformers==5.22.1
+sentence-transformers==6.2.0
+accelerate==1.15.0
+bitsandbytes>=0.45        # Qwen2.5-VL-7B en 4 bits sur un T4 de 16 Go
+qwen-vl-utils==0.0.14
+
+# Index et recherche
+qdrant-client==1.20.0     # en mode embarqué (QDRANT_PATH)
+llama-index-core==0.14.26
+llama-index-vector-stores-qdrant==0.11.0
+
+# Extraction (ré-ingestion du corpus)
+pymupdf==2.1
+pytesseract==0.3.13
+reportlab==5.1.0
+
+# API
+fastapi==0.162.0
+uvicorn==0.54.0
+python-multipart==0.0.33
+PyJWT==2.15.1
+httpx==0.28.1
+
+# Socle et tests
+pydantic==2.14.2
+pydantic-settings==2.16.2
+PyYAML==6.0.3
+pytest==9.2.0

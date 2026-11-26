@@ -1,9 +1,10 @@
-"""Génère le corpus synthétique MaintiDoc dans data/.
+"""Génère le corpus synthétique MaintiDoc (maintenance SAN) dans data/.
 
 Usage : python scripts/generate_corpus.py
 Toutes les données sont fictives. Le générateur est déterministe (graine fixe).
 """
 
+import hashlib
 import io
 import json
 import random
@@ -13,13 +14,13 @@ from datetime import date, timedelta
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter, ImageFont, ImageEnhance
+from PIL import Image, ImageDraw, ImageEnhance, ImageFilter, ImageFont
 from reportlab.lib import colors
 from reportlab.lib.pagesizes import A4
-from reportlab.lib.styles import getSampleStyleSheet, ParagraphStyle
+from reportlab.lib.styles import ParagraphStyle, getSampleStyleSheet
 from reportlab.lib.units import cm
-from reportlab.platypus import (Image as RLImage, PageBreak, Paragraph, SimpleDocTemplate,
-                                Spacer, Table, TableStyle)
+from reportlab.platypus import Image as RLImage
+from reportlab.platypus import PageBreak, Paragraph, SimpleDocTemplate, Spacer, Table, TableStyle
 
 try:
     import pymupdf
@@ -27,7 +28,9 @@ except ImportError:
     import fitz as pymupdf
 
 sys.path.insert(0, str(Path(__file__).parent))
-from corpus_content import FAMILLES, NOTES, SCANS, SECURITE  # noqa: E402
+sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
+from common.security import hash_password  # noqa: E402
+from corpus_content import FAMILLES, MANUEL_SAN, NOTES, SCANS, SECURITE  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent / "data"
 CORPUS = ROOT / "corpus"
@@ -44,6 +47,8 @@ SMALL = ParagraphStyle("small", parent=BODY, fontSize=8.5, leading=10.5)
 CAPTION = ParagraphStyle("caption", parent=BODY, fontSize=9, textColor=colors.grey, alignment=1)
 
 COULEURS = {"vert": (40, 200, 70), "orange": (255, 150, 20), "rouge": (230, 30, 30), "bleu": (40, 120, 240)}
+TOUS_LES_GROUPES = sorted({f["groupe"] for f in FAMILLES.values()} | {"responsable"})
+LIBELLES_PLAQUE = {"capacite_brute": "Capacité", "alimentation": "Alimentation", "ports": "Ports"}
 
 documents = []  # manifeste du corpus
 
@@ -103,50 +108,55 @@ def rl_image(pil_path, width_cm):
     return RLImage(str(pil_path), width=width_cm * cm, height=width_cm * cm * h / w)
 
 
-# --------------------------------------------------------------------------- images
+def seuil_valeur(famille, modele):
+    s = FAMILLES[famille]["seuil"]
+    return f"{FAMILLES[famille]['modeles'][modele][s['key']]} {s['unit']}"
+
+
+# --------------------------------------------------------------------------- images d'équipements
 
 def draw_panel(famille, modele, lit=None, code="", show_label=True):
-    """Panneau de commande : 4 voyants L1..L4, afficheur, boutons. Disposition identique pour les deux familles."""
+    """Face avant : 4 voyants L1..L4, afficheur, boutons. Disposition identique pour les deux familles."""
     W, H = 900, 520
     img = Image.new("RGB", (W, H), (70, 74, 80))
     d = ImageDraw.Draw(img)
     d.rounded_rectangle((30, 30, W - 30, H - 30), 25, fill=(185, 190, 196), outline=(40, 40, 40), width=4)
     if show_label:
         d.text((70, 55), f"{FAMILLES[famille]['marque']}  {modele}", fill=(20, 20, 20), font=font(38))
-    # afficheur
     d.rectangle((560, 55, 830, 135), fill=(20, 35, 20), outline=(0, 0, 0), width=3)
     d.text((585, 68), code or "----", fill=(120, 255, 120) if code else (40, 80, 40), font=font(52))
-    # voyants
     for i, (nom, couleur, _) in enumerate(FAMILLES[famille]["voyants"]):
         cx, cy, r = 140 + i * 190, 270, 45
         base = COULEURS[couleur]
         if nom == lit:
             for g in range(30, 0, -6):  # halo
-                halo = tuple(min(255, int(c * 0.6 + 100)) for c in base)
-                d.ellipse((cx - r - g, cy - r - g, cx + r + g, cy + r + g), fill=halo)
+                d.ellipse((cx - r - g, cy - r - g, cx + r + g, cy + r + g),
+                          fill=tuple(min(255, int(c * 0.6 + 100)) for c in base))
             fill = base
         else:
             fill = tuple(int(c * 0.3) + 40 for c in base)
         d.ellipse((cx - r, cy - r, cx + r, cy + r), fill=fill, outline=(30, 30, 30), width=4)
         d.text((cx - 20, cy + 65), nom, fill=(20, 20, 20), font=font(30))
-    # boutons
+    # boutons : POWER (vert), ID (bleu), RESET (petit, gris)
     d.ellipse((120, 400, 200, 480), fill=(30, 150, 50), outline=(0, 0, 0), width=3)
-    d.text((215, 425), "START", fill=(20, 20, 20), font=font(26))
-    d.ellipse((380, 400, 460, 480), fill=(200, 30, 30), outline=(0, 0, 0), width=3)
-    d.text((475, 425), "STOP", fill=(20, 20, 20), font=font(26))
-    d.ellipse((680, 385, 790, 495), fill=(220, 190, 20), outline=(0, 0, 0), width=3)
-    d.ellipse((700, 405, 770, 475), fill=(200, 20, 20))
+    d.text((215, 425), "POWER", fill=(20, 20, 20), font=font(26))
+    d.ellipse((420, 405, 490, 475), fill=(60, 110, 210), outline=(0, 0, 0), width=3)
+    d.text((505, 425), "ID", fill=(20, 20, 20), font=font(26))
+    d.ellipse((670, 418, 714, 462), fill=(120, 120, 125), outline=(0, 0, 0), width=3)
+    d.text((728, 425), "RESET", fill=(20, 20, 20), font=font(26))
     return img
 
 
 def draw_plaque(famille, modele, serie):
-    spec = FAMILLES[famille]["modeles"][modele]
+    fam = FAMILLES[famille]
+    spec = fam["modeles"][modele]
     img = Image.new("RGB", (700, 400), (200, 200, 205))
     d = ImageDraw.Draw(img)
     d.rectangle((10, 10, 690, 390), outline=(60, 60, 60), width=5)
-    d.text((40, 30), FAMILLES[famille]["marque"], fill=(10, 10, 10), font=font(40))
-    lignes = [f"Modèle : {modele}", f"N° série : {serie}", f"Puissance : {spec['puissance']}",
-              f"Débit : {spec['debit']}", "Année : 2024    Tension : 400 V / 50 Hz"]
+    d.text((40, 30), fam["marque"], fill=(10, 10, 10), font=font(40))
+    lignes = [f"Modèle : {modele}", f"N° série : {serie}"]
+    lignes += [f"{LIBELLES_PLAQUE[k]} : {spec[k]}" for k in fam["plaque"]]
+    lignes += ["Année : 2024    Tension : 230 V / 50 Hz"]
     for i, l in enumerate(lignes):
         d.text((40, 100 + i * 52), l, fill=(20, 20, 20), font=font(30))
     return img
@@ -154,8 +164,7 @@ def draw_plaque(famille, modele, serie):
 
 def degrade(img, blur=0.0, dark=1.0, noise=0.0, angle=0.0, glare=False):
     if glare:  # reflet qui masque le nom du modèle
-        d = ImageDraw.Draw(img)
-        d.ellipse((30, 20, 560, 140), fill=(250, 250, 250))
+        ImageDraw.Draw(img).ellipse((30, 20, 560, 140), fill=(250, 250, 250))
     if angle:
         img = img.rotate(angle, expand=True, fillcolor=(55, 55, 60))
     if blur:
@@ -164,57 +173,187 @@ def degrade(img, blur=0.0, dark=1.0, noise=0.0, angle=0.0, glare=False):
         img = ImageEnhance.Brightness(img).enhance(dark)
     if noise:
         arr = np.asarray(img).astype(np.int16)
-        arr = np.clip(arr + np.random.normal(0, noise, arr.shape), 0, 255).astype(np.uint8)
-        img = Image.fromarray(arr)
+        img = Image.fromarray(np.clip(arr + np.random.normal(0, noise, arr.shape), 0, 255).astype(np.uint8))
     return img
+
+
+# --------------------------------------------------------------------------- schémas du manuel pédagogique
+
+def _box(d, xy, label, fill=(230, 236, 246), size=24):
+    d.rounded_rectangle(xy, 12, fill=fill, outline=(40, 60, 100), width=3)
+    x0, y0, x1, y1 = xy
+    for k, line in enumerate(label.split("\n")):
+        d.text(((x0 + x1) / 2, (y0 + y1) / 2 + (k - (label.count("\n")) / 2) * (size + 4)), line,
+               fill=(20, 20, 30), font=font(size), anchor="mm")
+
+
+def _canvas(title):
+    img = Image.new("RGB", (1000, 560), "white")
+    d = ImageDraw.Draw(img)
+    d.text((500, 30), title, fill=(30, 50, 110), font=font(30), anchor="mm")
+    return img, d
+
+
+def schema_architecture():
+    img, d = _canvas("Architecture d'un SAN")
+    for i in range(3):
+        _box(d, (60 + i * 310, 80, 300 + i * 310, 170), f"Serveur {i + 1}\nHBA")
+    _box(d, (200, 260, 440, 340), "Switch FC\nfabric A", (255, 240, 220))
+    _box(d, (560, 260, 800, 340), "Switch FC\nfabric B", (255, 240, 220))
+    _box(d, (300, 430, 700, 530), "Baie StorNova\ncontrôleurs A et B", (225, 245, 225))
+    for i in range(3):
+        x = 180 + i * 310
+        d.line((x, 170, 320, 260), fill=(40, 90, 200), width=3)
+        d.line((x, 170, 680, 260), fill=(230, 130, 20), width=3)
+    d.line((320, 340, 430, 430), fill=(40, 90, 200), width=3)
+    d.line((680, 340, 570, 430), fill=(230, 130, 20), width=3)
+    return img
+
+
+def schema_multipath():
+    img, d = _canvas("Double fabric et multipath")
+    _box(d, (380, 70, 620, 160), "Serveur\nHBA 1   HBA 2")
+    _box(d, (100, 250, 340, 330), "Fabric A", (220, 232, 255))
+    _box(d, (660, 250, 900, 330), "Fabric B", (255, 236, 215))
+    _box(d, (100, 430, 340, 520), "Contrôleur A", (225, 245, 225))
+    _box(d, (660, 430, 900, 520), "Contrôleur B", (225, 245, 225))
+    d.line((440, 160, 220, 250), fill=(40, 90, 200), width=5)
+    d.line((560, 160, 780, 250), fill=(230, 130, 20), width=5)
+    d.line((220, 330, 220, 430), fill=(40, 90, 200), width=5)
+    d.line((780, 330, 780, 430), fill=(230, 130, 20), width=5)
+    d.text((500, 380), "si une fabric tombe,\nle trafic passe par l'autre", fill=(90, 90, 90), font=font(22),
+           anchor="mm", align="center")
+    return img
+
+
+def schema_raid():
+    img, d = _canvas("Groupe RAID 6 : 6 disques de données + 2 de parité")
+    for i in range(8):
+        x = 60 + i * 115
+        parite = i >= 6
+        fill = (255, 225, 200) if parite else (220, 232, 255)
+        d.rounded_rectangle((x, 140, x + 95, 400), 10, fill=fill, outline=(40, 60, 100), width=3)
+        d.text((x + 47, 270), ("P" if i == 6 else "Q") if parite else f"D{i + 1}", fill=(20, 20, 30),
+               font=font(34), anchor="mm")
+    d.text((500, 460), "Jusqu'à 2 disques perdus sans perte de données", fill=(30, 30, 30), font=font(26),
+           anchor="mm")
+    return img
+
+
+def schema_zoning():
+    img, d = _canvas("Zoning : quels ports communiquent")
+    _box(d, (380, 220, 620, 340), "Switch FC", (255, 240, 220))
+    zones = [((40, 90, 320, 520), (40, 90, 200), "Zone 1", ["Serveur 1 (WWN ..:A1)", "Baie port 0"]),
+             ((680, 90, 960, 520), (30, 150, 70), "Zone 2", ["Serveur 2 (WWN ..:B7)", "Baie port 1"])]
+    for (x0, y0, x1, y1), col, name, members in zones:
+        for k in range(0, x1 - x0, 24):  # bordure en pointillés
+            d.line((x0 + k, y0, x0 + k + 12, y0), fill=col, width=4)
+            d.line((x0 + k, y1, x0 + k + 12, y1), fill=col, width=4)
+        d.text(((x0 + x1) / 2, y0 + 30), name, fill=col, font=font(28), anchor="mm")
+        for j, m in enumerate(members):
+            _box(d, (x0 + 20, y0 + 90 + j * 170, x1 - 20, y0 + 200 + j * 170), m, size=20)
+    return img
+
+
+def photo_couverture():
+    """Photo de couverture : baie informatique avec switchs et baie de stockage."""
+    img = Image.new("RGB", (900, 600), (30, 32, 36))
+    d = ImageDraw.Draw(img)
+    d.rectangle((250, 30, 650, 580), fill=(15, 15, 18), outline=(80, 80, 85), width=6)
+    y = 60
+    for kind in ("switch", "switch", "vide", "baie", "baie", "vide", "baie"):
+        h = 40 if kind == "switch" else (90 if kind == "baie" else 30)
+        if kind != "vide":
+            d.rectangle((270, y, 630, y + h), fill=(55, 58, 64), outline=(100, 100, 110), width=2)
+            if kind == "switch":
+                for p in range(16):
+                    x = 290 + p * 20
+                    d.rectangle((x, y + 12, x + 12, y + 28), fill=(20, 20, 20))
+                    d.ellipse((x + 3, y + 3, x + 9, y + 9), fill=(40, 220, 80) if p % 5 else (255, 160, 30))
+            else:
+                for b in range(12):
+                    x = 285 + b * 28
+                    d.rectangle((x, y + 10, x + 22, y + h - 10), fill=(85, 88, 95), outline=(30, 30, 30))
+                    d.ellipse((x + 8, y + h - 22, x + 14, y + h - 16), fill=(40, 220, 80))
+        y += h + 12
+    img = img.filter(ImageFilter.GaussianBlur(0.8))
+    return degrade(img, noise=8)
+
+
+SCHEMAS = {"architecture": (schema_architecture, "Architecture d'un SAN : serveurs, switchs et baie"),
+           "multipath": (schema_multipath, "Double fabric (A et B) et multipath"),
+           "raid": (schema_raid, "Groupe RAID 6"),
+           "zoning": (schema_zoning, "Exemple de zoning sur un switch Fibre Channel"),
+           "panneau": (lambda: draw_panel("baie", "SN-400"), "Face avant d'une baie StorNova SN-400")}
 
 
 # --------------------------------------------------------------------------- documents
 
+def manuel_pedagogique():
+    m = MANUEL_SAN
+    doc_id = m["id"]
+    cover = FIGURES / f"{doc_id}_couverture.png"
+    photo_couverture().save(cover)
+    s = [Paragraph(m["titre"], H1), Paragraph("Document fictif à usage pédagogique - projet MaintiDoc", CAPTION),
+         Spacer(1, 20), rl_image(cover, 13), Paragraph("Figure 0 - Baie informatique d'un SAN", CAPTION),
+         PageBreak()]
+    for n, (titre, paragraphes, schema) in enumerate(m["sections"], 1):
+        draw, legende = SCHEMAS[schema]
+        fig = FIGURES / f"{doc_id}_{schema}.png"
+        draw().save(fig)
+        s += [Paragraph(titre, H2)] + [Paragraph(p, BODY) for p in paragraphes]
+        s += [Spacer(1, 8), rl_image(fig, 14), Paragraph(f"Figure {n} - {legende}", CAPTION), Spacer(1, 8)]
+        if schema == "raid":
+            s += [table(m["raid"], [3 * cm, 5 * cm, 9 * cm])]
+        s.append(PageBreak())
+    s += [Paragraph("6. Bonnes pratiques de maintenance", H2),
+          Paragraph("Avant toute intervention sur une baie, appliquer la procédure SEC-B01 ; sur un switch, "
+                    "la procédure SEC-S01. Vérifier la redondance, sauvegarder la configuration, intervenir sur "
+                    "un seul composant ou une seule fabric à la fois, et tracer l'intervention.", BODY),
+          Spacer(1, 10), Paragraph("Glossaire", H2), table(m["glossaire"], [4 * cm, 13 * cm])]
+    path = CORPUS / f"{doc_id}.pdf"
+    build_pdf(path, doc_id, "v1", s)
+    register(doc_id, m["titre"], "san", "manuel_pedagogique", path, groupes=TOUS_LES_GROUPES)
+
+
 def manuel(famille, modele):
     fam = FAMILLES[famille]
     spec = fam["modeles"][modele]
-    slug = modele.lower()
-    doc_id = f"manuel_{famille}_{slug}"
+    seuil = fam["seuil"]
+    doc_id = f"manuel_{famille}_{modele.lower()}"
     fig_panel = FIGURES / f"{doc_id}_panneau.png"
     draw_panel(famille, modele).save(fig_panel)
     fig_plaque = FIGURES / f"{doc_id}_plaque.png"
     draw_plaque(famille, modele, "XX-0000-0000").save(fig_plaque)
 
-    seuil = (f"Le seuil de l'alarme E01 (surchauffe moteur) est fixé à {spec['seuil_temp']} °C."
-             if famille == "pompe" else
-             f"Le seuil de l'alarme A01 (pression haute) est fixé à {spec['seuil_pression']}.")
     s = [Paragraph(f"Manuel d'utilisation - {fam['marque']} {modele}", H1),
          Paragraph(f"{fam['libelle']} - document fictif à usage de démonstration", CAPTION), Spacer(1, 12),
          Paragraph("1. Présentation", H2),
-         Paragraph(f"Le {modele} appartient à la gamme {fam['libelle'].lower()} {fam['marque']}. "
-                   f"Puissance nominale : {spec['puissance']}, débit nominal : {spec['debit']}.", BODY),
+         Paragraph(fam["presentation"].format(modele=modele, **spec), BODY),
          Paragraph("2. Consignes de sécurité", H2),
-         Paragraph("Toute intervention nécessite une consignation préalable selon la procédure "
-                   f"{'SEC-P01' if famille == 'pompe' else 'SEC-C01'}. Seul un personnel habilité peut "
-                   "intervenir sur l'équipement. Ce manuel ne remplace pas les consignes du site.", BODY),
+         Paragraph(f"Toute intervention doit respecter la procédure {fam['sec_ref']}. Seul un personnel habilité "
+                   "peut intervenir sur l'équipement. Ce manuel ne remplace pas les consignes du site.", BODY),
          PageBreak(),
-         Paragraph("3. Panneau de commande", H2),
-         Paragraph("Le panneau comporte quatre voyants (L1 à L4), un afficheur de code, les boutons START "
-                   "et STOP et un bouton d'arrêt d'urgence.", BODY), Spacer(1, 8),
+         Paragraph("3. Panneau de contrôle", H2),
+         Paragraph("La face avant comporte quatre voyants (L1 à L4), un afficheur de code et les boutons "
+                   "POWER, ID et RESET.", BODY), Spacer(1, 8),
          rl_image(fig_panel, 14),
-         Paragraph(f"Figure 3.1 - Panneau de commande du {modele}", CAPTION), Spacer(1, 10),
+         Paragraph(f"Figure 3.1 - Face avant du {modele}", CAPTION), Spacer(1, 10),
          table([["Voyant", "Couleur", "Signification"]] + [list(v) for v in fam["voyants"]],
                [2 * cm, 2.5 * cm, 12.5 * cm]),
-         Spacer(1, 8), Paragraph(seuil, BODY),
+         Spacer(1, 8),
+         Paragraph(f"Le seuil de l'alarme {seuil['code']} ({seuil['label']}) est fixé à "
+                   f"{seuil_valeur(famille, modele)}.", BODY),
          PageBreak(),
-         Paragraph("4. Démarrage et arrêt", H2),
-         Paragraph("Démarrage : vérifier qu'aucun code n'est affiché, puis appuyer sur START. Le voyant L1 "
-                   "vert doit s'allumer en moins de 10 secondes.", BODY),
-         Paragraph("Arrêt : appuyer sur STOP. Le bouton d'arrêt d'urgence ne doit être utilisé qu'en cas de "
-                   "danger : il déclenche l'alarme " + ("E10." if famille == "pompe" else "A10."), BODY),
+         Paragraph("4. Mise sous tension et arrêt", H2),
+         Paragraph(fam["demarrage"], BODY), Paragraph(fam["arret"], BODY),
          Paragraph("5. Plaque signalétique", H2),
-         Paragraph("La plaque signalétique est fixée sur le côté du carter. Elle indique le modèle et le "
+         Paragraph("La plaque signalétique est fixée à l'arrière de l'équipement. Elle indique le modèle et le "
                    "numéro de série, à communiquer pour toute demande d'assistance.", BODY), Spacer(1, 8),
          rl_image(fig_plaque, 10),
          Paragraph(f"Figure 5.1 - Exemple de plaque signalétique {modele}", CAPTION),
          Paragraph("6. Codes d'alarme", H2),
-         Paragraph(f"La liste complète des codes figure dans le document alarmes_{famille}_{slug}.", BODY)]
+         Paragraph(f"La liste complète des codes figure dans le document alarmes_{famille}_{modele.lower()}.", BODY)]
     path = CORPUS / f"{doc_id}.pdf"
     build_pdf(path, doc_id, "v1", s)
     register(doc_id, f"Manuel d'utilisation {modele}", famille, "manuel", path, modele=modele)
@@ -222,18 +361,15 @@ def manuel(famille, modele):
 
 def alarmes(famille, modele):
     fam = FAMILLES[famille]
-    spec = fam["modeles"][modele]
     doc_id = f"alarmes_{famille}_{modele.lower()}"
     rows = [["Code", "Libellé", "Voyant", "Cause probable", "Action"]]
     for code, lib, voy, cause, action in fam["alarmes"]:
-        if code == "E01":
-            lib = f"{lib} (seuil {spec['seuil_temp']} °C)"
-        if code == "A01":
-            lib = f"{lib} (seuil {spec['seuil_pression']})"
+        if code == fam["seuil"]["code"]:
+            lib = f"{lib} (seuil {seuil_valeur(famille, modele)})"
         rows.append([code, lib, voy, cause, action])
     s = [Paragraph(f"Tableau des alarmes - {fam['marque']} {modele}", H1), Spacer(1, 8),
-         Paragraph("En cas de doute, ou si une alarme bloquante se répète plus de 3 fois, ne pas réarmer et "
-                   "contacter le responsable de maintenance.", BODY), Spacer(1, 8),
+         Paragraph("En cas de doute, ou si une alarme bloquante se répète, ne rien redémarrer et contacter le "
+                   "responsable de maintenance.", BODY), Spacer(1, 8),
          table(rows, [1.4 * cm, 3.4 * cm, 2 * cm, 4.6 * cm, 5.6 * cm])]
     path = CORPUS / f"{doc_id}.pdf"
     build_pdf(path, doc_id, "v1", s)
@@ -242,10 +378,11 @@ def alarmes(famille, modele):
 
 def fiche(famille, modele):
     fam = FAMILLES[famille]
-    spec = fam["modeles"][modele]
+    seuil_key = fam["seuil"]["key"]
     doc_id = f"fiche_{famille}_{modele.lower()}"
-    rows = [["Caractéristique", "Valeur"]] + [[k.replace("_", " ").capitalize(), v] for k, v in spec.items()]
-    rows = [[r[0], f"{r[1]} °C" if r[0] == "Seuil temp" else r[1]] for r in rows]
+    rows = [["Caractéristique", "Valeur"]]
+    for k, v in fam["modeles"][modele].items():
+        rows.append([k.replace("_", " ").capitalize(), f"{v} {fam['seuil']['unit']}" if k == seuil_key else v])
     s = [Paragraph(f"Fiche technique - {fam['marque']} {modele}", H1), Spacer(1, 10),
          table(rows, [7 * cm, 7 * cm]), Spacer(1, 10),
          Paragraph("Valeurs nominales données à titre indicatif pour le prototype MaintiDoc.", SMALL)]
@@ -254,14 +391,12 @@ def fiche(famille, modele):
     register(doc_id, f"Fiche technique {modele}", famille, "fiche_technique", path, modele=modele)
 
 
-def procedure(famille, pid, titre, freq, outillage, etapes, intro=None):
+def procedure(famille, pid, titre, freq, outillage, etapes):
     doc_id = f"procedure_{famille}_{pid.lower()}"
     s = [Paragraph(f"{pid} - {titre}", H1), Spacer(1, 8),
          table([["Fréquence", freq], ["Outillage", outillage],
                 ["Modèles", ", ".join(FAMILLES[famille]["modeles"])]], [4 * cm, 13 * cm], header=False),
          Spacer(1, 10), Paragraph("Étapes", H2)]
-    if intro:
-        s.append(Paragraph(intro, BODY))
     s += [Paragraph(f"{i}. {e}", BODY) for i, e in enumerate(etapes, 1)]
     path = CORPUS / f"{doc_id}.pdf"
     build_pdf(path, doc_id, "v1", s)
@@ -276,8 +411,7 @@ def securite(famille, sid, titre, etapes, risques):
     path = CORPUS / f"{doc_id}.pdf"
     build_pdf(path, doc_id, "v1", s)
     # Les documents de sécurité sont accessibles à tous les groupes.
-    register(doc_id, f"{sid} {titre}", famille, "securite", path,
-             groupes=["tech_pompes", "tech_compresseurs", "responsable"])
+    register(doc_id, f"{sid} {titre}", famille, "securite", path, groupes=TOUS_LES_GROUPES)
 
 
 def note(famille, n):
@@ -291,7 +425,7 @@ def note(famille, n):
 
 def scan(famille, doc_id, titre, lignes):
     tmp = io.BytesIO()
-    s = [Paragraph(titre, H1), Paragraph("Document d'archive (1998) - recopié pour numérisation", CAPTION),
+    s = [Paragraph(titre, H1), Paragraph("Document d'archive (2008) - recopié pour numérisation", CAPTION),
          Spacer(1, 12)] + [Paragraph(f"{i}. {l}", BODY) for i, l in enumerate(lignes, 1)]
     build_pdf(tmp, doc_id, "v1", s)
     pages = []
@@ -299,7 +433,6 @@ def scan(famille, doc_id, titre, lignes):
         for page in pdf:
             pix = page.get_pixmap(dpi=110)
             img = Image.frombytes("RGB", (pix.width, pix.height), pix.samples).convert("L").convert("RGB")
-            img = ImageEnhance.Color(img).enhance(0)
             img = Image.blend(img, Image.new("RGB", img.size, (235, 225, 200)), 0.25)  # papier jauni
             pages.append(degrade(img, blur=0.6, noise=14, angle=random.uniform(-2.0, 2.0)))
     path = CORPUS / f"{doc_id}.pdf"
@@ -321,27 +454,26 @@ def photos():
         meta.append({"fichier": name, **truth})
 
     for famille, fam in FAMILLES.items():
-        prefix = "E" if famille == "pompe" else "A"
+        codes_bloquants = [a[0] for a in fam["alarmes"] if a[2].startswith("L3")]
         for modele in fam["modeles"]:
             save(degrade(draw_panel(famille, modele, lit="L2"), blur=0.8, noise=6, angle=random.uniform(-6, 6)),
                  famille=famille, modele=modele, voyant="L2", code=None, lisible=True, ambigu=False)
-            code = f"{prefix}0{random.choice([3, 6, 7])}"
+            code = random.choice(codes_bloquants)
             save(degrade(draw_panel(famille, modele, lit="L3", code=code), blur=1.0, noise=8,
                          dark=0.85, angle=random.uniform(-6, 6)),
                  famille=famille, modele=modele, voyant="L3", code=code, lisible=True, ambigu=False)
             save(degrade(draw_panel(famille, modele, lit="L1"), blur=1.2, noise=6, angle=random.uniform(-8, 8)),
                  famille=famille, modele=modele, voyant="L1", code=None, lisible=True, ambigu=False)
-            # Ambiguë : reflet sur le nom du modèle, voyant orange -> impossible de savoir pompe ou compresseur.
+            # Ambiguë : reflet sur le nom du modèle, voyant orange -> impossible de savoir baie ou switch.
             save(degrade(draw_panel(famille, modele, lit="L2"), blur=2.5, noise=10, dark=0.6, glare=True,
                          angle=random.uniform(-10, 10)),
                  famille=famille, modele=modele, voyant="L2", code=None, lisible=False, ambigu=True,
                  attendu="needs_clarification")
         for i, modele in enumerate(fam["modeles"]):
-            serie = f"{prefix}{modele[-3:].replace('-', '')}-2024-{1000 + i}"
+            serie = f"{fam['code_prefix']}{modele.replace('-', '')}-2024-{1000 + i}"
             illisible = i == 2
-            img = draw_plaque(famille, modele, serie)
-            img = degrade(img, blur=6 if illisible else 0.7, noise=20 if illisible else 5,
-                          dark=0.5 if illisible else 1.0, angle=random.uniform(-5, 5))
+            img = degrade(draw_plaque(famille, modele, serie), blur=6 if illisible else 0.7,
+                          noise=20 if illisible else 5, dark=0.5 if illisible else 1.0, angle=random.uniform(-5, 5))
             save(img, famille=famille, modele=modele, type="plaque_signaletique", lisible=not illisible,
                  ambigu=illisible, attendu="needs_clarification" if illisible else "answered")
     (PHOTOS / "photos.json").write_text(json.dumps(meta, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -364,40 +496,39 @@ def base_mcp():
     """)
     equipements = []
     for famille, fam in FAMILLES.items():
-        prefix = "POMPE" if famille == "pompe" else "COMP"
+        modeles = list(fam["modeles"])
         k = 0
-        for modele in fam["modeles"]:
-            for _ in range(2 if modele.endswith(("350", "30")) else 1):
+        for modele in modeles:
+            for _ in range(2 if modele == modeles[1] else 1):   # le modèle intermédiaire est le plus déployé
                 k += 1
-                eid = f"{prefix}-{modele.replace('-', '')}-{k:03d}"
-                equipements.append((eid, famille, modele, random.choice(["Atelier A", "Atelier B"]),
+                eid = f"{fam['id_prefix']}-{modele.replace('-', '')}-{k:03d}"
+                equipements.append((eid, famille, modele, random.choice(["Salle serveurs A", "Salle serveurs B"]),
                                     f"202{random.randint(1, 4)}-0{random.randint(1, 9)}-15", fam["groupe"]))
     con.executemany("INSERT INTO equipements VALUES (?,?,?,?,?,?)", equipements)
 
-    techs = {"pompe": ["tech_p01", "tech_p02"], "compresseur": ["tech_c01", "tech_c02"]}
     rows, start = [], date(2025, 6, 1)
-    for eid, famille, modele, *_ in equipements:
+    for eid, famille, *_ in equipements:
         fam = FAMILLES[famille]
         for _ in range(random.randint(4, 7)):
             d = start + timedelta(days=random.randint(0, 500))
             if random.random() < 0.5:
                 code, lib, *_rest, action = random.choice(fam["alarmes"])
                 rows.append((eid, d.isoformat(), "corrective", code, f"Alarme {code} ({lib}). {action}",
-                             random.choice(techs[famille]), round(random.uniform(0.5, 4), 1)))
+                             random.choice(fam["techs"]), round(random.uniform(0.5, 4), 1)))
             else:
                 pid, titre, *_r = random.choice(fam["procedures"])
                 rows.append((eid, d.isoformat(), "preventive", None, f"{pid} {titre} réalisée.",
-                             random.choice(techs[famille]), round(random.uniform(0.5, 3), 1)))
+                             random.choice(fam["techs"]), round(random.uniform(0.5, 3), 1)))
     rows.sort(key=lambda r: r[1])
     con.executemany("INSERT INTO interventions (equipment_id,date,type,code_alarme,description,technicien,"
                     "duree_h) VALUES (?,?,?,?,?,?,?)", rows)
     con.executemany("INSERT INTO tickets VALUES (?,?,?,?,?,?,?,?)", [
-        ("TCK-0001", "POMPE-HF350-002", "Fuite garniture mécanique", "Alarme E05 récurrente, fuite visible.",
-         "ouvert", "tech_p01", "2026-10-20", "seed-1"),
-        ("TCK-0002", "COMP-AC30-002", "Purgeur bloqué", "Alarme A07 depuis 2 jours.",
-         "ouvert", "tech_c02", "2026-10-28", "seed-2"),
-        ("TCK-0003", "POMPE-HF200-001", "Remplacement crépine", "Crépine déformée lors du nettoyage.",
-         "ferme", "tech_p02", "2026-08-02", "seed-3"),
+        ("TCK-0001", "BAIE-SN400-002", "Disque défaillant", "Alarme E01 sur le tiroir 7.",
+         "ouvert", "tech_s01", "2026-10-20", "seed-1"),
+        ("TCK-0002", "SW-FL48-002", "Erreurs CRC port 12", "Alarme F01 récurrente sur le port 12.",
+         "ouvert", "tech_r02", "2026-10-28", "seed-2"),
+        ("TCK-0003", "BAIE-SN200-001", "Remplacement batterie de cache", "Alarme E05, batterie remplacée.",
+         "ferme", "tech_s02", "2026-08-02", "seed-3"),
     ])
     con.commit()
     con.close()
@@ -406,12 +537,16 @@ def base_mcp():
 
 def utilisateurs():
     users = [
-        {"user_id": "tech_p01", "nom": "Technicien Pompes 1", "groupes": ["tech_pompes"]},
-        {"user_id": "tech_p02", "nom": "Technicien Pompes 2", "groupes": ["tech_pompes"]},
-        {"user_id": "tech_c01", "nom": "Technicien Compresseurs 1", "groupes": ["tech_compresseurs"]},
-        {"user_id": "tech_c02", "nom": "Technicien Compresseurs 2", "groupes": ["tech_compresseurs"]},
+        {"user_id": "tech_s01", "nom": "Technicien Stockage 1", "groupes": ["tech_stockage"]},
+        {"user_id": "tech_s02", "nom": "Technicien Stockage 2", "groupes": ["tech_stockage"]},
+        {"user_id": "tech_r01", "nom": "Technicien Réseau SAN 1", "groupes": ["tech_reseau"]},
+        {"user_id": "tech_r02", "nom": "Technicien Réseau SAN 2", "groupes": ["tech_reseau"]},
         {"user_id": "resp_01", "nom": "Responsable Maintenance", "groupes": ["responsable"]},
     ]
+    # Comptes de démonstration : mot de passe « <identifiant>-demo », stocké uniquement sous forme hachée.
+    # Sel dérivé de l'identifiant pour que le fichier reste identique d'une génération à l'autre.
+    for u in users:
+        u["password_hash"] = hash_password(f"{u['user_id']}-demo", salt=hashlib.sha256(u["user_id"].encode()).digest()[:16])
     (ROOT / "users.json").write_text(json.dumps(users, ensure_ascii=False, indent=2), encoding="utf-8")
 
 
@@ -420,7 +555,11 @@ def utilisateurs():
 def main():
     for p in (CORPUS, FIGURES, PHOTOS, MCP):
         p.mkdir(parents=True, exist_ok=True)
+    # On repart d'un corpus vide : les fichiers d'un ancien domaine ne doivent pas subsister.
+    for p in (*CORPUS.glob("*.pdf"), *FIGURES.glob("*.png"), *PHOTOS.glob("*.jpg")):
+        p.unlink()
 
+    manuel_pedagogique()
     for famille, fam in FAMILLES.items():
         for modele in fam["modeles"]:
             manuel(famille, modele)

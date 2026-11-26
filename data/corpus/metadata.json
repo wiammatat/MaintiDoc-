@@ -1,242 +1,256 @@
 [
   {
-    "document_id": "manuel_pompe_hf-200",
-    "titre": "Manuel d'utilisation HF-200",
+    "document_id": "manuel_san_pedagogique",
+    "titre": "Manuel SAN pédagogique : principes et maintenance",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-200",
+    "famille": "san",
+    "modele": null,
+    "type": "manuel_pedagogique",
+    "fichier": "corpus/manuel_san_pedagogique.pdf",
+    "groupes_autorises": [
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
+    ]
+  },
+  {
+    "document_id": "manuel_baie_sn-200",
+    "titre": "Manuel d'utilisation SN-200",
+    "version": "v1",
+    "famille": "baie",
+    "modele": "SN-200",
     "type": "manuel",
-    "fichier": "corpus/manuel_pompe_hf-200.pdf",
+    "fichier": "corpus/manuel_baie_sn-200.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_pompe_hf-200",
-    "titre": "Tableau des alarmes HF-200",
+    "document_id": "alarmes_baie_sn-200",
+    "titre": "Tableau des alarmes SN-200",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-200",
+    "famille": "baie",
+    "modele": "SN-200",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_pompe_hf-200.pdf",
+    "fichier": "corpus/alarmes_baie_sn-200.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_pompe_hf-200",
-    "titre": "Fiche technique HF-200",
+    "document_id": "fiche_baie_sn-200",
+    "titre": "Fiche technique SN-200",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-200",
+    "famille": "baie",
+    "modele": "SN-200",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_pompe_hf-200.pdf",
+    "fichier": "corpus/fiche_baie_sn-200.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "manuel_pompe_hf-350",
-    "titre": "Manuel d'utilisation HF-350",
+    "document_id": "manuel_baie_sn-400",
+    "titre": "Manuel d'utilisation SN-400",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-350",
+    "famille": "baie",
+    "modele": "SN-400",
     "type": "manuel",
-    "fichier": "corpus/manuel_pompe_hf-350.pdf",
+    "fichier": "corpus/manuel_baie_sn-400.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_pompe_hf-350",
-    "titre": "Tableau des alarmes HF-350",
+    "document_id": "alarmes_baie_sn-400",
+    "titre": "Tableau des alarmes SN-400",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-350",
+    "famille": "baie",
+    "modele": "SN-400",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_pompe_hf-350.pdf",
+    "fichier": "corpus/alarmes_baie_sn-400.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_pompe_hf-350",
-    "titre": "Fiche technique HF-350",
+    "document_id": "fiche_baie_sn-400",
+    "titre": "Fiche technique SN-400",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-350",
+    "famille": "baie",
+    "modele": "SN-400",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_pompe_hf-350.pdf",
+    "fichier": "corpus/fiche_baie_sn-400.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "manuel_pompe_hf-500",
-    "titre": "Manuel d'utilisation HF-500",
+    "document_id": "manuel_baie_sn-800",
+    "titre": "Manuel d'utilisation SN-800",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-500",
+    "famille": "baie",
+    "modele": "SN-800",
     "type": "manuel",
-    "fichier": "corpus/manuel_pompe_hf-500.pdf",
+    "fichier": "corpus/manuel_baie_sn-800.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_pompe_hf-500",
-    "titre": "Tableau des alarmes HF-500",
+    "document_id": "alarmes_baie_sn-800",
+    "titre": "Tableau des alarmes SN-800",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-500",
+    "famille": "baie",
+    "modele": "SN-800",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_pompe_hf-500.pdf",
+    "fichier": "corpus/alarmes_baie_sn-800.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_pompe_hf-500",
-    "titre": "Fiche technique HF-500",
+    "document_id": "fiche_baie_sn-800",
+    "titre": "Fiche technique SN-800",
     "version": "v1",
-    "famille": "pompe",
-    "modele": "HF-500",
+    "famille": "baie",
+    "modele": "SN-800",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_pompe_hf-500.pdf",
+    "fichier": "corpus/fiche_baie_sn-800.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_pompe_prc-p01",
-    "titre": "PRC-P01 Remplacement de la garniture mécanique",
+    "document_id": "procedure_baie_prc-b01",
+    "titre": "PRC-B01 Remplacement à chaud d'un disque",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_pompe_prc-p01.pdf",
+    "fichier": "corpus/procedure_baie_prc-b01.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_pompe_prc-p02",
-    "titre": "PRC-P02 Contrôle et graissage des roulements",
+    "document_id": "procedure_baie_prc-b02",
+    "titre": "PRC-B02 Remplacement de la batterie de cache",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_pompe_prc-p02.pdf",
+    "fichier": "corpus/procedure_baie_prc-b02.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_pompe_prc-p03",
-    "titre": "PRC-P03 Nettoyage de la crépine d'aspiration",
+    "document_id": "procedure_baie_prc-b03",
+    "titre": "PRC-B03 Mise à jour du firmware des contrôleurs",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_pompe_prc-p03.pdf",
+    "fichier": "corpus/procedure_baie_prc-b03.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_pompe_prc-p04",
-    "titre": "PRC-P04 Contrôle d'alignement moteur-pompe",
+    "document_id": "procedure_baie_prc-b04",
+    "titre": "PRC-B04 Création d'un LUN et masquage",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_pompe_prc-p04.pdf",
+    "fichier": "corpus/procedure_baie_prc-b04.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_pompe_prc-p05",
-    "titre": "PRC-P05 Purge et remise en service",
+    "document_id": "procedure_baie_prc-b05",
+    "titre": "PRC-B05 Remplacement d'un ventilateur ou d'une alimentation",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_pompe_prc-p05.pdf",
+    "fichier": "corpus/procedure_baie_prc-b05.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ]
   },
   {
-    "document_id": "securite_pompe_sec-p01",
-    "titre": "SEC-P01 Consignation des pompes centrifuges",
+    "document_id": "securite_baie_sec-b01",
+    "titre": "SEC-B01 Intervention sur une baie de stockage : protection des données et du matériel",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "securite",
-    "fichier": "corpus/securite_pompe_sec-p01.pdf",
+    "fichier": "corpus/securite_baie_sec-b01.pdf",
     "groupes_autorises": [
-      "tech_pompes",
-      "tech_compresseurs",
-      "responsable"
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
     ]
   },
   {
-    "document_id": "securite_pompe_sec-p02",
-    "titre": "SEC-P02 Équipements de protection individuelle (pompes)",
+    "document_id": "securite_baie_sec-b02",
+    "titre": "SEC-B02 Équipements de protection individuelle (salle informatique)",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "securite",
-    "fichier": "corpus/securite_pompe_sec-p02.pdf",
+    "fichier": "corpus/securite_baie_sec-b02.pdf",
     "groupes_autorises": [
-      "tech_pompes",
-      "tech_compresseurs",
-      "responsable"
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
     ]
   },
   {
-    "document_id": "note_service_pompe_01",
-    "titre": "Note de service : révision du seuil d'alarme E01 sur HF-350",
+    "document_id": "note_service_baie_01",
+    "titre": "Note de service : seuil d'alarme E03 de la baie SN-400",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "note_service",
-    "fichier": "corpus/note_service_pompe_01.pdf",
+    "fichier": "corpus/note_service_baie_01.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ],
     "date_effet": "2026-03-12",
     "contredit": [
-      "manuel_pompe_hf-350",
-      "alarmes_pompe_hf-350",
-      "fiche_pompe_hf-350"
+      "manuel_baie_sn-400",
+      "alarmes_baie_sn-400",
+      "fiche_baie_sn-400"
     ],
     "test_injection": false
   },
   {
-    "document_id": "note_service_pompe_02",
-    "titre": "Retour d'expérience confidentiel : garnitures mécaniques",
+    "document_id": "note_service_baie_02",
+    "titre": "Retour d'expérience confidentiel : lot de disques défaillants",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "note_service",
-    "fichier": "corpus/note_service_pompe_02.pdf",
+    "fichier": "corpus/note_service_baie_02.pdf",
     "groupes_autorises": [
       "responsable"
     ],
@@ -245,271 +259,271 @@
     "test_injection": false
   },
   {
-    "document_id": "scan_pompe_01",
-    "titre": "Ancienne procédure : amorçage manuel de la pompe HF-200",
+    "document_id": "scan_baie_01",
+    "titre": "Ancienne procédure : remplacement d'un disque sur SN-200",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "scan",
-    "fichier": "corpus/scan_pompe_01.pdf",
+    "fichier": "corpus/scan_baie_01.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ],
     "scanne": true
   },
   {
-    "document_id": "scan_pompe_02",
-    "titre": "Check-list de mise en service des pompes",
+    "document_id": "scan_baie_02",
+    "titre": "Check-list de mise en service d'une baie",
     "version": "v1",
-    "famille": "pompe",
+    "famille": "baie",
     "modele": null,
     "type": "scan",
-    "fichier": "corpus/scan_pompe_02.pdf",
+    "fichier": "corpus/scan_baie_02.pdf",
     "groupes_autorises": [
-      "tech_pompes",
+      "tech_stockage",
       "responsable"
     ],
     "scanne": true
   },
   {
-    "document_id": "manuel_compresseur_ac-15",
-    "titre": "Manuel d'utilisation AC-15",
+    "document_id": "manuel_switch_fl-24",
+    "titre": "Manuel d'utilisation FL-24",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-15",
+    "famille": "switch",
+    "modele": "FL-24",
     "type": "manuel",
-    "fichier": "corpus/manuel_compresseur_ac-15.pdf",
+    "fichier": "corpus/manuel_switch_fl-24.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_compresseur_ac-15",
-    "titre": "Tableau des alarmes AC-15",
+    "document_id": "alarmes_switch_fl-24",
+    "titre": "Tableau des alarmes FL-24",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-15",
+    "famille": "switch",
+    "modele": "FL-24",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_compresseur_ac-15.pdf",
+    "fichier": "corpus/alarmes_switch_fl-24.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_compresseur_ac-15",
-    "titre": "Fiche technique AC-15",
+    "document_id": "fiche_switch_fl-24",
+    "titre": "Fiche technique FL-24",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-15",
+    "famille": "switch",
+    "modele": "FL-24",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_compresseur_ac-15.pdf",
+    "fichier": "corpus/fiche_switch_fl-24.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "manuel_compresseur_ac-30",
-    "titre": "Manuel d'utilisation AC-30",
+    "document_id": "manuel_switch_fl-48",
+    "titre": "Manuel d'utilisation FL-48",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-30",
+    "famille": "switch",
+    "modele": "FL-48",
     "type": "manuel",
-    "fichier": "corpus/manuel_compresseur_ac-30.pdf",
+    "fichier": "corpus/manuel_switch_fl-48.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_compresseur_ac-30",
-    "titre": "Tableau des alarmes AC-30",
+    "document_id": "alarmes_switch_fl-48",
+    "titre": "Tableau des alarmes FL-48",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-30",
+    "famille": "switch",
+    "modele": "FL-48",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_compresseur_ac-30.pdf",
+    "fichier": "corpus/alarmes_switch_fl-48.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_compresseur_ac-30",
-    "titre": "Fiche technique AC-30",
+    "document_id": "fiche_switch_fl-48",
+    "titre": "Fiche technique FL-48",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-30",
+    "famille": "switch",
+    "modele": "FL-48",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_compresseur_ac-30.pdf",
+    "fichier": "corpus/fiche_switch_fl-48.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "manuel_compresseur_ac-55",
-    "titre": "Manuel d'utilisation AC-55",
+    "document_id": "manuel_switch_fl-96",
+    "titre": "Manuel d'utilisation FL-96",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-55",
+    "famille": "switch",
+    "modele": "FL-96",
     "type": "manuel",
-    "fichier": "corpus/manuel_compresseur_ac-55.pdf",
+    "fichier": "corpus/manuel_switch_fl-96.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "alarmes_compresseur_ac-55",
-    "titre": "Tableau des alarmes AC-55",
+    "document_id": "alarmes_switch_fl-96",
+    "titre": "Tableau des alarmes FL-96",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-55",
+    "famille": "switch",
+    "modele": "FL-96",
     "type": "alarmes",
-    "fichier": "corpus/alarmes_compresseur_ac-55.pdf",
+    "fichier": "corpus/alarmes_switch_fl-96.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "fiche_compresseur_ac-55",
-    "titre": "Fiche technique AC-55",
+    "document_id": "fiche_switch_fl-96",
+    "titre": "Fiche technique FL-96",
     "version": "v1",
-    "famille": "compresseur",
-    "modele": "AC-55",
+    "famille": "switch",
+    "modele": "FL-96",
     "type": "fiche_technique",
-    "fichier": "corpus/fiche_compresseur_ac-55.pdf",
+    "fichier": "corpus/fiche_switch_fl-96.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_compresseur_prc-c01",
-    "titre": "PRC-C01 Vidange d'huile",
+    "document_id": "procedure_switch_prc-s01",
+    "titre": "PRC-S01 Remplacement d'un module SFP",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_compresseur_prc-c01.pdf",
+    "fichier": "corpus/procedure_switch_prc-s01.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_compresseur_prc-c02",
-    "titre": "PRC-C02 Remplacement du filtre à air",
+    "document_id": "procedure_switch_prc-s02",
+    "titre": "PRC-S02 Sauvegarde et restauration de la configuration",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_compresseur_prc-c02.pdf",
+    "fichier": "corpus/procedure_switch_prc-s02.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_compresseur_prc-c03",
-    "titre": "PRC-C03 Remplacement du séparateur huile/air",
+    "document_id": "procedure_switch_prc-s03",
+    "titre": "PRC-S03 Modification du zoning",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_compresseur_prc-c03.pdf",
+    "fichier": "corpus/procedure_switch_prc-s03.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_compresseur_prc-c04",
-    "titre": "PRC-C04 Contrôle du purgeur de condensats",
+    "document_id": "procedure_switch_prc-s04",
+    "titre": "PRC-S04 Remplacement d'un ventilateur",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_compresseur_prc-c04.pdf",
+    "fichier": "corpus/procedure_switch_prc-s04.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "procedure_compresseur_prc-c05",
-    "titre": "PRC-C05 Contrôle de la tension des courroies",
+    "document_id": "procedure_switch_prc-s05",
+    "titre": "PRC-S05 Mise à jour du firmware du switch",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "procedure",
-    "fichier": "corpus/procedure_compresseur_prc-c05.pdf",
+    "fichier": "corpus/procedure_switch_prc-s05.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ]
   },
   {
-    "document_id": "securite_compresseur_sec-c01",
-    "titre": "SEC-C01 Consignation des compresseurs d'air",
+    "document_id": "securite_switch_sec-s01",
+    "titre": "SEC-S01 Intervention sur un switch Fibre Channel : continuité de service",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "securite",
-    "fichier": "corpus/securite_compresseur_sec-c01.pdf",
+    "fichier": "corpus/securite_switch_sec-s01.pdf",
     "groupes_autorises": [
-      "tech_pompes",
-      "tech_compresseurs",
-      "responsable"
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
     ]
   },
   {
-    "document_id": "securite_compresseur_sec-c02",
-    "titre": "SEC-C02 Équipements de protection individuelle (compresseurs)",
+    "document_id": "securite_switch_sec-s02",
+    "titre": "SEC-S02 Bonnes pratiques de manipulation des fibres optiques",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "securite",
-    "fichier": "corpus/securite_compresseur_sec-c02.pdf",
+    "fichier": "corpus/securite_switch_sec-s02.pdf",
     "groupes_autorises": [
-      "tech_pompes",
-      "tech_compresseurs",
-      "responsable"
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
     ]
   },
   {
-    "document_id": "note_service_compresseur_01",
-    "titre": "Note de service : intervalle de vidange du AC-30",
+    "document_id": "note_service_switch_01",
+    "titre": "Note de service : sauvegarde de configuration du FL-48",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "note_service",
-    "fichier": "corpus/note_service_compresseur_01.pdf",
+    "fichier": "corpus/note_service_switch_01.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ],
     "date_effet": "2026-02-20",
     "contredit": [
-      "procedure_compresseur_prc-c01"
+      "procedure_switch_prc-s02"
     ],
     "test_injection": false
   },
   {
-    "document_id": "note_service_compresseur_02",
-    "titre": "Note de service : purgeurs de condensats",
+    "document_id": "note_service_switch_02",
+    "titre": "Note de service : nouveaux modules SFP",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "note_service",
-    "fichier": "corpus/note_service_compresseur_02.pdf",
+    "fichier": "corpus/note_service_switch_02.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ],
     "date_effet": "2026-06-15",
@@ -517,29 +531,29 @@
     "test_injection": true
   },
   {
-    "document_id": "scan_compresseur_01",
-    "titre": "Check-list de démarrage journalier des compresseurs",
+    "document_id": "scan_switch_01",
+    "titre": "Check-list de vérification quotidienne des switchs",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "scan",
-    "fichier": "corpus/scan_compresseur_01.pdf",
+    "fichier": "corpus/scan_switch_01.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ],
     "scanne": true
   },
   {
-    "document_id": "scan_compresseur_02",
-    "titre": "Procédure de test de la soupape de sécurité",
+    "document_id": "scan_switch_02",
+    "titre": "Procédure de test de basculement de fabric",
     "version": "v1",
-    "famille": "compresseur",
+    "famille": "switch",
     "modele": null,
     "type": "scan",
-    "fichier": "corpus/scan_compresseur_02.pdf",
+    "fichier": "corpus/scan_switch_02.pdf",
     "groupes_autorises": [
-      "tech_compresseurs",
+      "tech_reseau",
       "responsable"
     ],
     "scanne": true

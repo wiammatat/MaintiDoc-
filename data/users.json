@@ -1,37 +1,42 @@
 [
   {
-    "user_id": "tech_p01",
-    "nom": "Technicien Pompes 1",
+    "user_id": "tech_s01",
+    "nom": "Technicien Stockage 1",
     "groupes": [
-      "tech_pompes"
-    ]
+      "tech_stockage"
+    ],
+    "password_hash": "pbkdf2_sha256$200000$ab1483e79fc00eb1eb7841f16d5e26d4$5d3f5842279acde90a2fb453297202360185f2d25ad622984690234b429d1cb7"
   },
   {
-    "user_id": "tech_p02",
-    "nom": "Technicien Pompes 2",
+    "user_id": "tech_s02",
+    "nom": "Technicien Stockage 2",
     "groupes": [
-      "tech_pompes"
-    ]
+      "tech_stockage"
+    ],
+    "password_hash": "pbkdf2_sha256$200000$dc82c2f346e207d689ca604d71019f83$e3551ba25efe4a38f9bfd0b60a24d22e448b34d3484ee96f0e91276c428556df"
   },
   {
-    "user_id": "tech_c01",
-    "nom": "Technicien Compresseurs 1",
+    "user_id": "tech_r01",
+    "nom": "Technicien Réseau SAN 1",
     "groupes": [
-      "tech_compresseurs"
-    ]
+      "tech_reseau"
+    ],
+    "password_hash": "pbkdf2_sha256$200000$0e8f9447d8e71a12bd0ecb323a960fe5$cd58fd16f8bde69a5233d2da497fed629ff058832cd5c4e9d908278a675a9063"
   },
   {
-    "user_id": "tech_c02",
-    "nom": "Technicien Compresseurs 2",
+    "user_id": "tech_r02",
+    "nom": "Technicien Réseau SAN 2",
     "groupes": [
-      "tech_compresseurs"
-    ]
+      "tech_reseau"
+    ],
+    "password_hash": "pbkdf2_sha256$200000$eb7896d8a849f93d2b790d2b977c9451$72aecb9131d46cec360e7144a73a8081572c31a5f7d4d6fb396cae0ab8eaaeab"
   },
   {
     "user_id": "resp_01",
     "nom": "Responsable Maintenance",
     "groupes": [
       "responsable"
-    ]
+    ],
+    "password_hash": "pbkdf2_sha256$200000$b559ce1ef261dd46ea577f5924f845be$8cb434c8a572aa6f881871ac3bd4645eef35ef95f1d46a99e2ddf2e920675b51"
   }
 ]

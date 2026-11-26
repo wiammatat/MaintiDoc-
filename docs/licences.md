@@ -12,7 +12,8 @@
 | Tesseract OCR | OCR local | Apache 2.0 | À vérifier | |
 | Qdrant | Base vectorielle | Apache 2.0 | À vérifier | |
 | PostgreSQL | Métadonnées | PostgreSQL License | À vérifier | |
-| SeaweedFS | Stockage de fichiers (S3) | Apache 2.0 | À vérifier | Remplace MinIO, dont les images Docker ne sont plus distribuées publiquement |
+| MinIO (RELEASE.2025-10-15T17-29-55Z) | Stockage de fichiers (S3) | AGPL 3.0 | À vérifier | Compilé depuis le code source (plus d'images ni de binaires publics) ; usage interne non modifié |
+| LlamaIndex (core, vector-stores-qdrant) | Index textuel | MIT | À vérifier | |
 | LangChain / LangGraph | Orchestration | MIT | À vérifier | |
 | MCP Python SDK | Protocole outils | MIT | À vérifier | |
 | FastAPI / Streamlit | API / interface | MIT / Apache 2.0 | À vérifier | |

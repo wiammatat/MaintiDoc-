@@ -35,7 +35,7 @@ Utilisateur (question + photo)
   -> Réponse, clarification ou brouillon de ticket -> approbation -> création via MCP
 ```
 
-Données stockées : fichiers dans SeaweedFS (stockage compatible S3, en remplacement de MinIO), métadonnées dans PostgreSQL, vecteurs dans Qdrant, expériences dans MLflow. Les journaux contiennent des métadonnées techniques, sans contenu brut.
+Données stockées : fichiers dans MinIO (stockage S3, compilé depuis son code source), métadonnées dans PostgreSQL, vecteurs dans Qdrant, expériences dans MLflow. Les journaux contiennent des métadonnées techniques, sans contenu brut.
 
 ## 5. Analyse des risques
 
