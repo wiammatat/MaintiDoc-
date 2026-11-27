@@ -1,4 +1,4 @@
-"""Profil léger, sans Docker (Lightning AI Studio) : fichiers servis depuis le disque, métadonnées lues dans
+"""Profil léger, sans Docker : fichiers servis depuis le disque, métadonnées lues dans
 le corpus (metadata.json) et dans les éléments préparés (elements.jsonl), au lieu de MinIO et PostgreSQL.
 
 Les informations renvoyées (groupes autorisés compris) sont les mêmes que dans le profil Docker :

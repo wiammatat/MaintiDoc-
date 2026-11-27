@@ -79,17 +79,22 @@ def test_client_api_injoignable():
 # --- Échappement et mise en forme
 
 def test_echappement_du_texte_non_fiable():
-    from ui.render import esc
-    out = esc("[clique ici](http://pirate.example) ![x](y) # Titre <b>gras</b>")
-    assert "\[clique ici\]\(http" in out and "\# Titre" in out and "\<b\>" in out
+    from ui.render import h
+    out = h('<script>alert(1)</script> <a href="http://pirate.example">x</a>')
+    assert "<script>" not in out and "<a " not in out and "&lt;script&gt;" in out and "&quot;" in out
 
 
 def test_reponse_piegee_affichee_comme_du_texte():
-    from ui.render import agent_md
-    r = {"thread_id": "t", "status": "termine", "answer": {"status": "answered", "citations": [],
-         "answer": "Voir [le correctif](http://pirate.example/x.exe) ![](http://pirate.example/p.png)"}}
-    md = agent_md(r)
-    assert "](http" not in md and "\]\(http" in md
+    from ui.render import agent_html, search_html
+    piege = 'Voir <a href="http://pirate.example/x.exe">le correctif</a><img src=x onerror=alert(1)>'
+    r = {"thread_id": "t", "status": "termine", "model_calls": 1, "mcp_calls": 0,
+         "answer": {"status": "answered", "citations": [{"document_id": "<b>doc</b>", "page": 1, "element_id": "e"}],
+                    "answer": piege, "uncertainties": [piege]}}
+    html = agent_html(r)
+    assert "<a href" not in html and "<img" not in html and "<b>doc</b>" not in html and "&lt;a href" in html
+    res = {"index_version": "v1", "images": [], "passages": [
+        {"titre": piege, "page": 1, "type": "text", "text": piege, "section": piege}]}
+    assert "<img" not in search_html(res) and "<a href" not in search_html(res)
 
 
 # --- Interface Gradio (fonctions de rappel appelées directement)
@@ -102,8 +107,9 @@ def ui(api, monkeypatch):
 
 
 def login(ui, user="tech_s01"):
-    session, msg, main = ui.on_login(user, f"{user}-demo", ui.new_session())
-    assert main["visible"] is True, msg
+    session, msg, login_view, app_view, card = ui.on_login(user, f"{user}-demo", ui.new_session())
+    assert app_view["visible"] is True and login_view["visible"] is False, msg
+    assert user in card
     return session
 
 
@@ -113,12 +119,12 @@ def test_interface_construite():
 
 
 def test_connexion(ui):
-    session, msg, main = ui.on_login("tech_s01", "faux", ui.new_session())
-    assert "incorrect" in msg and main["visible"] is False and session["token"] is None
+    session, msg, login_view, app_view, _ = ui.on_login("tech_s01", "faux", ui.new_session())
+    assert "incorrect" in msg and app_view["visible"] is False and session["token"] is None
     session = login(ui)
     assert session["user"]["user_id"] == "tech_s01" and session["token"]
-    session, _, main = ui.on_logout(session)
-    assert session["token"] is None and main["visible"] is False
+    session, _, login_view, app_view, card = ui.on_logout(session)
+    assert session["token"] is None and app_view["visible"] is False and login_view["visible"] is True and card == ""
 
 
 def test_question_sans_connexion(ui):
@@ -130,7 +136,7 @@ def test_parcours_ticket_approuve_apres_modification(ui, api):
     session = login(ui)
     session, result, trace, history, tickets, box, title, desc, pdfs = ui.on_ask(QUESTION, None, session)
     assert box["visible"] is True and title.startswith("BAIE-SN400-002") and "en attente" in result
-    assert not history.empty and session["thread_id"] in trace
+    assert not history.empty and "Date" in history.columns and session["thread_id"] in trace
     session, result, *_ , box, _, _, _ = ui.on_decide(True, "Titre corrigé dans l'interface", desc, session)
     assert box["visible"] is False and "Ticket créé" in result
     titre = sqlite3.connect(api).execute("SELECT titre FROM tickets ORDER BY rowid DESC LIMIT 1").fetchone()[0]
@@ -141,7 +147,7 @@ def test_refus(ui, api):
     session = login(ui)
     session, *_ = ui.on_ask(QUESTION, None, session)
     session, result, *_ = ui.on_decide(False, "x", "y", session)
-    assert "rien n'a été créé" in result
+    assert "Ticket refusé" in result
     assert sqlite3.connect(api).execute("SELECT COUNT(*) FROM tickets").fetchone()[0] == 3
 
 

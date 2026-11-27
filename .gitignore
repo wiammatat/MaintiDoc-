@@ -35,5 +35,5 @@ dist/
 # Notebooks téléchargés depuis Kaggle : leurs sorties peuvent contenir l'adresse du tunnel et le jeton du serveur VLM
 notebooks/notebook*.ipynb
 
-# Qdrant embarqué (profil léger, ex. Lightning AI Studio)
+# Qdrant embarqué (profil léger, sans Docker)
 data/qdrant/

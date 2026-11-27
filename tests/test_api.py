@@ -206,7 +206,7 @@ def test_image_avec_controle_d_acces():
     assert client.get(url, headers=auth("tech_r01")).status_code == 404
 
 
-# --- Même contrôle d'accès en profil léger (STORAGE_BACKEND=local, sans Docker : Lightning AI Studio)
+# --- Même contrôle d'accès en profil léger (STORAGE_BACKEND=local, sans Docker)
 
 @pytest.fixture
 def local_storage(monkeypatch):

@@ -26,9 +26,25 @@ from PIL import Image  # noqa: E402
 
 from common.config import get_settings  # noqa: E402
 from ui.client import ApiClient, ApiError, Photo  # noqa: E402
-from ui.render import agent_md, esc, search_md, trace_md  # noqa: E402
+from ui.render import CSS, agent_html, h, notice, search_html, trace_html, user_html  # noqa: E402
 
 MAX_PDFS = 3
+EMPTY_RESULT = '<div class="md-empty">Posez une question à gauche : la réponse sourcée s\'affichera ici.</div>'
+EXAMPLES = [
+    "Que signifie le voyant L2 orange sur une baie SN-400 ?",
+    "Historique des interventions sur BAIE-SN400-002 ?",
+    "Voyant orange sur BAIE-SN400-002, prépare un ticket.",
+    "Quel est le seuil de température de l'alarme E03 ?",
+]
+HISTORY_COLUMNS = {"date": "Date", "type": "Type", "code_alarme": "Code", "description": "Description",
+                   "technicien": "Technicien", "duree_h": "Durée (h)"}
+TICKET_COLUMNS = {"ticket_id": "Ticket", "titre": "Titre", "cree_par": "Créé par", "cree_le": "Créé le"}
+
+THEME = gr.themes.Soft(
+    primary_hue="blue", secondary_hue="cyan", neutral_hue="slate", radius_size="lg",
+    font=["Segoe UI", "system-ui", "-apple-system", "sans-serif"],   # polices locales : aucun appel externe
+    font_mono=["Cascadia Code", "Consolas", "monospace"],
+)
 
 
 def make_client(token: str | None = None) -> ApiClient:
@@ -52,14 +68,15 @@ def _photo(image: Image.Image | None) -> Photo | None:
 def _error(e: ApiError, session: dict) -> str:
     if e.status == 401:
         session.update(new_session())
-        return "⚠️ Session expirée : reconnectez-vous."
+        return notice("ko", "Session expirée : reconnectez-vous.")
     if e.status == 503:
-        return f"⚠️ {esc(e)} L'onglet « Recherche documentaire » reste utilisable."
-    return f"⚠️ {esc(e)}"
+        return notice("warn", f"{e} L'onglet « Recherche documentaire » reste utilisable.")
+    return notice("ko", str(e))
 
 
-def _empty() -> pd.DataFrame:
-    return pd.DataFrame()
+def _table(rows: list[dict], columns: dict) -> pd.DataFrame:
+    df = pd.DataFrame(rows)
+    return df[[c for c in columns if c in df.columns]].rename(columns=columns) if not df.empty else df
 
 
 def _pdfs(client: ApiClient, r: dict) -> list[str]:
@@ -82,28 +99,37 @@ def _pdfs(client: ApiClient, r: dict) -> list[str]:
 
 def on_health() -> str:
     try:
-        h = make_client().health()
-        vlm = "désactivé" if h.get("vlm_backend") == "disabled" else h.get("vlm_backend")
-        return f"API connectée · index {esc(h.get('index_version'))} · modèle : {esc(vlm)}"
-    except ApiError as e:
-        return f"⚠️ {esc(e)}"
+        hl = make_client().health()
+        vlm = "désactivé" if hl.get("vlm_backend") == "disabled" else hl.get("vlm_backend")
+        return f"● API connectée · index {h(hl.get('index_version'))} · modèle : {h(vlm)}"
+    except ApiError:
+        return "○ API injoignable : lancer « uvicorn api.main:app »"
+
+
+def header_html(status: str = "") -> str:
+    return (f'<div class="md-header"><div><h1>MaintiDoc</h1><p>Assistant de maintenance SAN · réponses sourcées, '
+            f'actions validées par un humain</p></div><span class="md-pill">{status}</span></div>')
+
+
+def on_load() -> str:
+    return header_html(on_health())
 
 
 def on_login(user_id: str, password: str, session: dict):
-    """-> (session, message, zone principale visible)"""
+    """-> (session, message, écran de connexion, espace de travail, carte utilisateur)"""
     client = make_client()
     try:
         user = client.login((user_id or "").strip(), password or "")
     except ApiError as e:
-        msg = "⚠️ Identifiant ou mot de passe incorrect." if e.status == 401 else f"⚠️ {esc(e)}"
-        return session, msg, gr.update(visible=False)
+        msg = notice("ko", "Identifiant ou mot de passe incorrect." if e.status == 401 else str(e))
+        return session, msg, gr.update(visible=True), gr.update(visible=False), ""
     session = new_session() | {"token": client.token, "user": user}
-    msg = f"Connecté : **{esc(user['nom'])}** ({esc(user['user_id'])}) · groupes : {esc(', '.join(user['groupes']))}"
-    return session, msg, gr.update(visible=True)
+    return session, "", gr.update(visible=False), gr.update(visible=True), user_html(user)
 
 
 def on_logout(session: dict):
-    return new_session(), "Déconnecté.", gr.update(visible=False)
+    return (new_session(), notice("muted", "Vous êtes déconnecté."), gr.update(visible=True),
+            gr.update(visible=False), "")
 
 
 def _agent_outputs(client: ApiClient, r: dict, session: dict) -> tuple:
@@ -113,19 +139,20 @@ def _agent_outputs(client: ApiClient, r: dict, session: dict) -> tuple:
     draft = r.get("ticket_draft") or {}
     hist = r.get("historique") or {}
     tickets = (r.get("tickets_ouverts") or {}).get("tickets", [])
-    return (session, agent_md(r), trace_md(r), pd.DataFrame(hist.get("interventions", [])), pd.DataFrame(tickets),
-            gr.update(visible=bool(pending)), draft.get("title", ""), draft.get("description", ""), _pdfs(client, r))
+    return (session, agent_html(r), trace_html(r), _table(hist.get("interventions", []), HISTORY_COLUMNS),
+            _table(tickets, TICKET_COLUMNS), gr.update(visible=bool(pending)), draft.get("title", ""),
+            draft.get("description", ""), _pdfs(client, r))
 
 
 def _failed(message: str, session: dict) -> tuple:
-    return session, message, "", _empty(), _empty(), gr.update(visible=False), "", "", []
+    return session, message, "", pd.DataFrame(), pd.DataFrame(), gr.update(visible=False), "", "", []
 
 
 def on_ask(question: str, image: Image.Image | None, session: dict) -> tuple:
     if not session.get("token"):
-        return _failed("⚠️ Connectez-vous d'abord.", session)
+        return _failed(notice("warn", "Connectez-vous d'abord."), session)
     if not (question or "").strip():
-        return _failed("⚠️ Écrivez une question.", session)
+        return _failed(notice("warn", "Écrivez une question."), session)
     client = make_client(session["token"])
     try:
         return _agent_outputs(client, client.agent(question.strip(), _photo(image)), session)
@@ -135,7 +162,7 @@ def on_ask(question: str, image: Image.Image | None, session: dict) -> tuple:
 
 def on_decide(approved: bool, title: str, description: str, session: dict) -> tuple:
     if not session.get("token") or not session.get("thread_id"):
-        return _failed("⚠️ Aucune demande en cours.", session)
+        return _failed(notice("warn", "Aucune demande en cours."), session)
     client = make_client(session["token"])
     try:
         # Le contenu envoyé est celui affiché (éventuellement corrigé) : c'est lui qui est approuvé puis créé.
@@ -148,9 +175,9 @@ def on_decide(approved: bool, title: str, description: str, session: dict) -> tu
 def on_search(question: str, image: Image.Image | None, session: dict) -> tuple:
     """-> (passages, galerie d'images)"""
     if not session.get("token"):
-        return "⚠️ Connectez-vous d'abord.", []
+        return notice("warn", "Connectez-vous d'abord."), []
     if not (question or "").strip():
-        return "⚠️ Écrivez une question.", []
+        return notice("warn", "Écrivez une question."), []
     client = make_client(session["token"])
     try:
         res = client.search(question.strip(), _photo(image))
@@ -164,66 +191,89 @@ def on_search(question: str, image: Image.Image | None, session: dict) -> tuple:
                                 f"{im['titre']}, page {im['page']}"))
             except (ApiError, OSError):
                 pass
-    return search_md(res), gallery
+    return search_html(res), gallery
 
 
 # --------------------------------------------------------------------------- interface
 
 def build_ui() -> gr.Blocks:
-    with gr.Blocks(title="MaintiDoc") as demo:
+    with gr.Blocks(title="MaintiDoc", theme=THEME, css=CSS) as demo:
         session = gr.State(new_session())
-        gr.Markdown("# MaintiDoc\nAssistant de maintenance SAN : réponses sourcées, avec validation humaine des actions.")
-        health = gr.Markdown()
-        with gr.Row():
-            user_id = gr.Textbox(label="Identifiant", scale=2)
-            password = gr.Textbox(label="Mot de passe", type="password", scale=2)
-            login_btn = gr.Button("Se connecter", variant="primary", scale=1)
-            logout_btn = gr.Button("Se déconnecter", scale=1)
-        login_msg = gr.Markdown()
+        header = gr.HTML(header_html())
 
-        with gr.Column(visible=False) as main:
+        # ------------------------------------------------ écran de connexion
+        with gr.Column(visible=True, elem_classes="md-login") as login_view:
+            gr.Markdown("### Connexion\nVos droits d'accès aux documents et aux équipements dépendent de votre profil.")
+            user_id = gr.Textbox(label="Identifiant", placeholder="ex. tech_s01")
+            password = gr.Textbox(label="Mot de passe", type="password")
+            login_btn = gr.Button("Se connecter", variant="primary", size="lg")
+        login_msg = gr.HTML()
+
+        # ------------------------------------------------ espace de travail
+        with gr.Column(visible=False) as app_view:
+            with gr.Row(equal_height=True):
+                user_card = gr.HTML()
+                logout_btn = gr.Button("Se déconnecter", size="sm", variant="secondary", scale=0, min_width=150)
+
             with gr.Tab("Assistant"):
                 with gr.Row():
-                    with gr.Column(scale=3):
-                        question = gr.Textbox(label="Votre question", lines=3, max_length=1000,
-                                              placeholder="Ex. : Voyant L2 orange sur BAIE-SN400-002, que faire ? "
-                                                          "Prépare un ticket.")
-                        ask_btn = gr.Button("Envoyer", variant="primary")
-                    photo = gr.Image(label="Photo de l'équipement (facultative)", type="pil", sources=["upload"],
-                                     scale=2, height=260)
-                result = gr.Markdown()
-                with gr.Group(visible=False) as ticket_box:
-                    gr.Markdown("### Brouillon de ticket\nRelisez et corrigez : c'est le contenu exact affiché ici qui "
-                                "sera créé, et seulement après votre approbation.")
-                    title = gr.Textbox(label="Titre", max_length=120)
-                    description = gr.Textbox(label="Description", lines=6, max_length=4000)
-                    with gr.Row():
-                        approve_btn = gr.Button("Approuver et créer", variant="primary")
-                        refuse_btn = gr.Button("Refuser", variant="stop")
-                pdfs = gr.File(label="Documents cités (PDF)", file_count="multiple", interactive=False)
-                with gr.Accordion("Historique de l'équipement", open=False):
-                    history = gr.Dataframe(label="Interventions", interactive=False)
-                    open_tickets = gr.Dataframe(label="Tickets ouverts", interactive=False)
-                with gr.Accordion("Traçabilité", open=False):
-                    trace = gr.Markdown()
+                    with gr.Column(scale=2, min_width=320):
+                        question = gr.Textbox(label="Votre question", lines=4, max_length=1000,
+                                              placeholder="Décrivez le symptôme, l'équipement (ex. BAIE-SN400-002) "
+                                                          "et ce que vous voulez (explication, historique, ticket).")
+                        photo = gr.Image(label="Photo de l'équipement (facultative)", type="pil", sources=["upload"],
+                                         height=230)
+                        with gr.Row():
+                            clear_btn = gr.Button("Effacer", variant="secondary")
+                            ask_btn = gr.Button("Envoyer", variant="primary", scale=2)
+                        gr.Examples(EXAMPLES, inputs=question, label="Exemples")
+
+                    with gr.Column(scale=3, min_width=360):
+                        result = gr.HTML(EMPTY_RESULT)
+                        with gr.Group(visible=False, elem_classes="md-ticket-box") as ticket_box:
+                            gr.Markdown("#### Brouillon de ticket à valider\nRelisez et corrigez : c'est le contenu "
+                                        "exact affiché ici qui sera créé, et seulement après votre approbation.")
+                            title = gr.Textbox(label="Titre", max_length=120)
+                            description = gr.Textbox(label="Description", lines=6, max_length=4000)
+                            with gr.Row():
+                                refuse_btn = gr.Button("Refuser", variant="stop")
+                                approve_btn = gr.Button("Approuver et créer", variant="primary", scale=2)
+                        pdfs = gr.File(label="Documents cités (PDF)", file_count="multiple", interactive=False)
+                        with gr.Accordion("Historique de l'équipement (MCP)", open=False):
+                            history = gr.Dataframe(label="Dernières interventions", interactive=False, wrap=True)
+                            open_tickets = gr.Dataframe(label="Tickets ouverts", interactive=False, wrap=True)
+                        with gr.Accordion("Traçabilité", open=False):
+                            trace = gr.HTML()
 
             with gr.Tab("Recherche documentaire"):
+                gr.Markdown("Recherche directe dans les manuels et procédures autorisés pour votre profil : "
+                            "passages, tableaux et figures, avec leur score. Fonctionne sans modèle de génération.")
                 with gr.Row():
-                    s_question = gr.Textbox(label="Rechercher dans la documentation", max_length=1000, scale=3)
-                    s_photo = gr.Image(label="Photo (facultative)", type="pil", sources=["upload"], scale=1, height=160)
-                s_btn = gr.Button("Rechercher")
-                s_result = gr.Markdown()
-                s_gallery = gr.Gallery(label="Figures et pages", columns=3, height="auto")
+                    with gr.Column(scale=3):
+                        s_question = gr.Textbox(label="Rechercher", max_length=1000,
+                                                placeholder="ex. voyant orange reconstruction RAID")
+                        s_btn = gr.Button("Rechercher", variant="primary")
+                    s_photo = gr.Image(label="Photo (facultative)", type="pil", sources=["upload"], height=150,
+                                       scale=1)
+                s_result = gr.HTML()
+                s_gallery = gr.Gallery(label="Figures et pages", columns=3, height="auto", show_label=True)
 
+        # ------------------------------------------------ événements
         agent_out = [session, result, trace, history, open_tickets, ticket_box, title, description, pdfs]
-        demo.load(on_health, outputs=health)
-        login_btn.click(on_login, [user_id, password, session], [session, login_msg, main])
-        password.submit(on_login, [user_id, password, session], [session, login_msg, main])
-        logout_btn.click(on_logout, [session], [session, login_msg, main])
+        login_out = [session, login_msg, login_view, app_view, user_card]
+        demo.load(on_load, outputs=header)
+        login_btn.click(on_login, [user_id, password, session], login_out)
+        password.submit(on_login, [user_id, password, session], login_out)
+        logout_btn.click(on_logout, [session], login_out).then(
+            lambda: (EMPTY_RESULT, "", None, "", None), outputs=[result, question, photo, trace, pdfs])
         ask_btn.click(on_ask, [question, photo, session], agent_out)
+        question.submit(on_ask, [question, photo, session], agent_out)
+        clear_btn.click(lambda: ("", None, EMPTY_RESULT, gr.update(visible=False), None),
+                        outputs=[question, photo, result, ticket_box, pdfs])
         approve_btn.click(lambda t, d, s: on_decide(True, t, d, s), [title, description, session], agent_out)
         refuse_btn.click(lambda t, d, s: on_decide(False, t, d, s), [title, description, session], agent_out)
         s_btn.click(on_search, [s_question, s_photo, session], [s_result, s_gallery])
+        s_question.submit(on_search, [s_question, s_photo, session], [s_result, s_gallery])
     return demo
 
 

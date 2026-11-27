@@ -210,6 +210,10 @@ Supprimés : notebook Kaggle, script et dépendances du bundle Kaggle, tunnel Cl
 authentifié (`generation/vlm_server.py`) et son client, pour faire tourner Qwen sur le PC avec GPU et l'API sur un
 autre PC du même réseau. Les sections précédentes sur Kaggle restent comme historique de la démarche.
 
+Lightning AI (section 2.12) n'étant pas accessible, ses scripts (`setup_lightning.sh`, `start_lightning.sh`) et
+`requirements-lightning.txt` ont aussi été supprimés. Le **profil léger** (`STORAGE_BACKEND=local`, Qdrant embarqué)
+est conservé : c'est le profil par défaut de l'installation sur le PC avec GPU (README, section 1).
+
 ### 2.15 LangChain et boucle contrôlée (compléments de l'étape 3 de la feuille de route)
 **LangChain** (`generation/prompting.py`) : conformément au sujet (« LangChain fournit les composants de récupération,
 de prompting et de validation des sorties »), les prompts versionnés en YAML sont chargés en `ChatPromptTemplate`
@@ -292,7 +296,8 @@ l'équipe) : composants prêts pour l'image et les fichiers, et modèle « fonct
 |---|---|
 | Aucun contrôle de sécurité dans l'interface | Droits, garde-fous et approbation restent vérifiés par l'API et le serveur MCP : contourner l'interface ne donne rien de plus |
 | Jeton dans l'état de session Gradio (côté serveur) | Jamais dans une URL ni dans le navigateur ; effacé à la déconnexion |
-| Texte des documents, du modèle et des outils échappé (`ui/render.py`) | Un document piégé ne peut pas injecter de lien, d'image ou de mise en page (injection indirecte) |
+| Réponses mises en forme en HTML (`ui/render.py`), tout texte non fiable échappé | Cartes, badges et voyants colorés ; un document piégé ne peut injecter ni balise, ni lien, ni script (injection indirecte) |
+| Thème Gradio avec polices système | Aucun appel à Google Fonts ; mode sombre géré par les variables du thème |
 | Brouillon de ticket modifiable avant approbation | Le contenu affiché est exactement celui qui est approuvé puis créé (jeton d'approbation lié à son empreinte) |
 | PDF cités récupérés par l'API | L'accès est revérifié à l'ouverture, comme le demande le sujet |
 | Écoute sur 127.0.0.1, `share=False`, statistiques Gradio désactivées | Pas d'exposition sur le réseau, pas de lien public, aucune donnée envoyée à l'extérieur |
