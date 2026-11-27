@@ -220,3 +220,11 @@ def test_identifiants_conserves_dans_la_reformulation():
     fixed = keep_identifiers(question, "température contrôleur alarme baie de stockage")
     assert all(i in fixed for i in ("BAIE-SN400-002", "SN-400", "E03"))
     assert keep_identifiers(question, "alarme E03 SN-400 BAIE-SN400-002") == "alarme E03 SN-400 BAIE-SN400-002"
+
+
+def test_journal_d_audit_relie_a_la_demande(db_copy):
+    agent, _ = make(ANSWER, CHECK)
+    _, config = run(agent, "tech_s01", "Historique des interventions sur BAIE-SN400-002 ?")
+    rows = sqlite3.connect(db_copy).execute("SELECT outil, user_id, request_id, resultat FROM audit_mcp").fetchall()
+    thread = config["configurable"]["thread_id"]
+    assert rows == [("get_equipment_history", "tech_s01", thread, "ok"), ("get_open_tickets", "tech_s01", thread, "ok")]

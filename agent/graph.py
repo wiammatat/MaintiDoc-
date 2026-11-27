@@ -88,7 +88,8 @@ def build_agent(vlm: VLM | None, mcp: MCPClient, search_fn: Callable[..., Search
         if calls >= s.max_mcp_calls:
             return None, {"errors": state.get("errors", []) + [f"Budget MCP atteint ({s.max_mcp_calls} appels) : {tool} non appelé"]}
         try:
-            result = mcp.call(tool, args | {"auth_token": _token(config)})
+            request_id = config["configurable"].get("thread_id", "")   # relie le journal d'audit MCP à la demande
+            result = mcp.call(tool, args | {"auth_token": _token(config), "request_id": request_id})
             return result, {"mcp_calls": calls + 1}
         except MCPError as e:
             return None, {"mcp_calls": calls + 1, "errors": state.get("errors", []) + [f"{tool} : {e}"]}

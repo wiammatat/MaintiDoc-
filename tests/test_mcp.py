@@ -127,3 +127,60 @@ def test_contenu_vide_ou_trop_long_refuse(mcp):
 
 def _k(t: dict) -> dict:
     return {"eq": t["equipment_id"], "title": t["title"], "desc": t["description"]}
+
+
+# --- Journal d'audit (traçabilité)
+
+def _journal(path) -> list[sqlite3.Row]:
+    con = sqlite3.connect(path)
+    con.row_factory = sqlite3.Row
+    return con.execute("SELECT * FROM audit_mcp ORDER BY id").fetchall()
+
+
+@pytest.fixture
+def db_path(mcp, tmp_path):
+    return tmp_path / "maintenance.db"
+
+
+def test_journal_appels_acceptes_et_refuses(mcp, db_path):
+    mcp.call("get_equipment_history", {"equipment_id": "BAIE-SN400-002", "auth_token": tok("tech_s01"),
+                                       "request_id": "demande-42"})
+    with pytest.raises(MCPError):
+        mcp.call("get_open_tickets", {"equipment_id": "BAIE-SN400-002", "auth_token": tok("tech_r01")})
+    with pytest.raises(MCPError):
+        mcp.call("get_open_tickets", {"equipment_id": "BAIE-SN400-002", "auth_token": "faux"})
+    rows = _journal(db_path)
+    assert [(r["outil"], r["user_id"], r["resultat"]) for r in rows] == [
+        ("get_equipment_history", "tech_s01", "ok"), ("get_open_tickets", "tech_r01", "refuse"),
+        ("get_open_tickets", None, "refuse")]
+    assert rows[0]["request_id"] == "demande-42" and "non autorisé" in rows[1]["motif"]
+
+
+def test_journal_creation_doublon_et_contenu_non_conserve(mcp, db_path):
+    t = ticket(desc="Description confidentielle à ne pas journaliser")
+    args = t | {"approval_token": approve("tech_s01", **_k(t)), "auth_token": tok("tech_s01")}
+    first = mcp.call("create_ticket", args)
+    mcp.call("create_ticket", args)
+    with pytest.raises(MCPError):
+        mcp.call("create_ticket", ticket(title="") | {"approval_token": "x", "auth_token": tok("tech_s01")})
+    rows = _journal(db_path)
+    assert [r["resultat"] for r in rows] == ["ok", "doublon", "invalide"]
+    assert rows[0]["ticket_id"] == rows[1]["ticket_id"] == first["ticket_id"]
+    assert rows[0]["empreinte_contenu"] == ticket_hash(t["equipment_id"], t["title"], t["description"])
+    dump = " ".join(str(v) for r in rows for v in tuple(r))
+    assert "confidentielle" not in dump and args["auth_token"] not in dump and args["approval_token"] not in dump
+
+
+def test_journal_falsification_detectee(mcp, db_path):
+    for _ in range(3):
+        mcp.call("get_open_tickets", {"equipment_id": "BAIE-SN400-002", "auth_token": tok("tech_s01")})
+    con = sqlite3.connect(db_path)
+    con.row_factory = sqlite3.Row
+    assert server.verify_audit(con) == []
+    with con:
+        con.execute("UPDATE audit_mcp SET user_id = 'resp_01' WHERE id = 2")
+    assert server.verify_audit(con) == [2]
+    with con:
+        con.execute("UPDATE audit_mcp SET user_id = 'tech_s01' WHERE id = 2")
+        con.execute("DELETE FROM audit_mcp WHERE id = 2")   # suppression d'une ligne : chaîne rompue
+    assert server.verify_audit(con) == [3]

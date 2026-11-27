@@ -263,6 +263,26 @@ Principe : **le modèle observe, le code décide** (`agent/vision.py`, prompt `v
 L'analyse coûte un appel au modèle, compté dans le budget de 6. Elle est renvoyée par l'API (`photo_analysis`).
 Sans photo, le parcours de l'agent est inchangé.
 
+### 2.17 Journal d'audit MCP (traçabilité, étape 4 de la feuille de route)
+Le journal est tenu **par le serveur MCP** (table `audit_mcp` de `data/mcp/maintenance.db`) : c'est lui qui vérifie
+les droits, il ne dépend donc pas de l'honnêteté de l'agent qui l'appelle.
+
+| Choix | Raison |
+|---|---|
+| Chaque appel est journalisé, **accepté ou refusé** | Les tentatives refusées (droits, approbation invalide, jeton faux) sont les plus utiles en audit |
+| Résultats : `ok`, `doublon`, `refuse`, `invalide`, `erreur` | Distinguer une création, un renvoi idempotent, un refus de droits et une entrée invalide |
+| `request_id` = identifiant du thread de l'agent | Relier les appels MCP à la demande de l'utilisateur et à son approbation |
+| Ni jeton, ni titre, ni description | Minimisation des données : seule l'empreinte SHA-256 du contenu est conservée, ce qui suffit à prouver quel contenu a été approuvé puis créé |
+| Lignes chaînées par hachage | Une modification ou une suppression de ligne rompt la chaîne (`verify_audit`) |
+| Transaction séparée | L'échec de l'opération journalisée n'efface pas sa trace |
+
+Consultation : `python scripts/audit_mcp.py [--user tech_s01] [--request <thread_id>] [--limit 50]`, qui vérifie aussi
+l'intégrité (code de sortie 1 si la chaîne est rompue).
+
+Limite du prototype : la chaîne de hachage détecte une modification, mais pas une réécriture complète du journal par
+quelqu'un qui a accès au fichier. En production, il faudrait l'envoyer vers un stockage en ajout seul (WORM) ou
+signer périodiquement le dernier hachage.
+
 ## 3. Ajouts non demandés par le sujet
 
 | Ajout | Raison |
