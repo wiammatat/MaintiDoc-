@@ -81,8 +81,8 @@ def get_vlm() -> VLM:
     if s.vlm_backend == "remote" and s.vlm_remote_url and s.vlm_remote_token.get_secret_value():
         return _remote_vlm()
     raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
-                        "VLM indisponible : utiliser /search, ou VLM_BACKEND=qwen sur un PC avec GPU NVIDIA, ou VLM_BACKEND=remote avec "
-                        "VLM_REMOTE_URL et VLM_REMOTE_TOKEN), ou VLM_BACKEND=qwen sur une machine avec GPU.")
+                        "VLM indisponible : utiliser /search, ou VLM_BACKEND=qwen sur un PC avec GPU NVIDIA, "
+                        "ou VLM_BACKEND=remote avec VLM_REMOTE_URL et VLM_REMOTE_TOKEN.")
 
 
 def get_optional_vlm() -> VLM | None:

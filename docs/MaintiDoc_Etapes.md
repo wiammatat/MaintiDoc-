@@ -19,7 +19,7 @@ Chaque étape indique **l'objectif**, **ce qu'il faut faire**, **les outils** et
    ├── agent/           # graphe LangGraph
    ├── mcp_server/      # serveur MCP de démonstration
    ├── api/             # FastAPI
-   ├── ui/              # Streamlit
+   ├── ui/              # Gradio
    ├── prompts/         # prompts versionnés (YAML)
    ├── finetuning/      # données et entraînement du reranker
    ├── eval/            # jeu de test et scripts d'évaluation

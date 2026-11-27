@@ -83,6 +83,8 @@ class Settings(BaseSettings):
     vlm_remote_token: SecretStr = SecretStr("")   # jeton affiché par python -m generation.vlm_server
     vlm_remote_timeout: int = 180             # secondes par génération
     max_upload_mb: int = 5                                    # taille maximale d'une photo envoyée
+    ui_api_url: str = "http://localhost:8000"                 # adresse de l'API pour l'application Gradio
+    ui_timeout: int = 300                                     # secondes : l'agent peut faire 6 appels au modèle
 
     @property
     def corpus_dir(self) -> Path:

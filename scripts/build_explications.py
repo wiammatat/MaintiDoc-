@@ -95,7 +95,7 @@ def architecture():
     d = Drawing(W, H)
     cx, bw, bh = W / 2, 9.2 * cm, 1.15 * cm
     steps = [
-        ("Interface : question + photo", "Streamlit (à venir)", colors.white),
+        ("Interface : question + photo", "Gradio", colors.white),
         ("API : authentification, groupes de l'utilisateur", "FastAPI (à venir)", colors.white),
         ("Recherche multimodale (étape 1.4)", "BGE-M3 + CLIP -> Qdrant, filtre par groupe, RRF, reranker", LIGHT),
         ("Génération (étape 1.5)", "Qwen2.5-VL-7B sur Kaggle : JSON + citations [S1]", LIGHT),
@@ -463,7 +463,7 @@ table([["Ordre", "Partie", "Contenu"],
        ["1", "Essai Kaggle n° 5", "Valider le prompt v3 sur les 6 questions de démonstration"],
        ["2", "Brique 3 : agent + MCP", "Serveur MCP (get_equipment_history, get_open_tickets, create_ticket), workflow LangGraph, validation humaine avec jeton lié au contenu et clé anti-doublon"],
        ["3", "Brique 4", "Finaliser la gestion de l'incertitude (sources contradictoires, observations visuelles)"],
-       ["4", "Brique 5", "API FastAPI, interface Streamlit, jeu de 150 scénarios, mesures (Recall@5, nDCG@5, MRR@10, fidélité des citations), 20 tests d'injection, suivi MLflow, CI"],
+       ["4", "Brique 5", "API FastAPI, interface Gradio, jeu de 150 scénarios, mesures (Recall@5, nDCG@5, MRR@10, fidélité des citations), 20 tests d'injection, suivi MLflow, CI"],
        ["5", "Brique 2", "Construire 800 à 1 500 triplets (question, bon passage, passage piège), fine-tuner le reranker sur Kaggle, comparer sans reranker / reranker d'origine / reranker adapté"],
        ["6", "Livrables", "Fiche de limites, démonstration (7 points), soutenance"]],
       [1.4, 4.0, 11.6])

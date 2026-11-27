@@ -25,7 +25,7 @@ pipeline/        commandes : ingest (étapes 1-2) et index (étape 3)
 agent/           6. agent LangGraph : analyse, historique MCP, réponse, ticket, validation humaine
 mcp_server/      serveur MCP de maintenance (historique, tickets) avec contrôle des droits à chaque appel
 api/          API FastAPI
-ui/           interface Streamlit
+ui/           interface Gradio (client de l'API)
 prompts/      prompts versionnés (YAML)
 finetuning/   données et entraînement du reranker
 eval/         jeu de test et scripts d'évaluation
@@ -112,6 +112,21 @@ L'agent (`agent/graph.py`, LangGraph) appelle le serveur MCP de maintenance (`mc
 stdio : `get_equipment_history`, `get_open_tickets`, `create_ticket`. La base fictive se crée avec
 `python scripts/generate_corpus.py --mcp-only`. Exemple : « Voyant orange sur BAIE-SN400-002, prépare un ticket »
 renvoie la réponse, l'historique et un brouillon ; le ticket n'est créé qu'après `POST /agent/{id}/approval`.
+Chaque appel MCP est journalisé : `python scripts/audit_mcp.py` affiche le journal et vérifie son intégrité.
+
+## Application Gradio
+
+```bash
+uvicorn api.main:app                # terminal 1 : l'API
+python -m ui.app                    # terminal 2 : http://127.0.0.1:7860
+```
+
+- **Assistant** : question et photo facultative. Affiche l'analyse de la photo, l'historique de l'équipement,
+  la réponse avec ses sources (PDF récupérés après contrôle d'accès) et la vérification des affirmations. Si un
+  ticket est demandé, le brouillon est modifiable et n'est créé qu'après un clic sur « Approuver et créer ».
+- **Recherche documentaire** : passages, tableaux et figures accessibles au profil ; fonctionne sans VLM.
+
+L'adresse de l'API se règle avec `UI_API_URL` dans le `.env`.
 
 ### Qwen sur un autre PC du réseau local
 

@@ -283,6 +283,26 @@ Limite du prototype : la chaîne de hachage détecte une modification, mais pas 
 quelqu'un qui a accès au fichier. En production, il faudrait l'envoyer vers un stockage en ajout seul (WORM) ou
 signer périodiquement le dernier hachage.
 
+### 2.18 Application Gradio (étape 7 de la feuille de route)
+`ui/app.py` est un **client de l'API**, et non une seconde application : elle n'importe ni la recherche ni l'agent,
+et passe par HTTP avec le jeton de l'utilisateur (`ui/client.py`). Gradio a été préféré à Streamlit (choix de
+l'équipe) : composants prêts pour l'image et les fichiers, et modèle « fonctions de rappel » facile à tester.
+
+| Choix | Raison |
+|---|---|
+| Aucun contrôle de sécurité dans l'interface | Droits, garde-fous et approbation restent vérifiés par l'API et le serveur MCP : contourner l'interface ne donne rien de plus |
+| Jeton dans l'état de session Gradio (côté serveur) | Jamais dans une URL ni dans le navigateur ; effacé à la déconnexion |
+| Texte des documents, du modèle et des outils échappé (`ui/render.py`) | Un document piégé ne peut pas injecter de lien, d'image ou de mise en page (injection indirecte) |
+| Brouillon de ticket modifiable avant approbation | Le contenu affiché est exactement celui qui est approuvé puis créé (jeton d'approbation lié à son empreinte) |
+| PDF cités récupérés par l'API | L'accès est revérifié à l'ouverture, comme le demande le sujet |
+| Écoute sur 127.0.0.1, `share=False`, statistiques Gradio désactivées | Pas d'exposition sur le réseau, pas de lien public, aucune donnée envoyée à l'extérieur |
+| Onglet « Recherche documentaire » | Utilisable sans GPU ; montre les preuves brutes et leur score |
+| Traçabilité visible | Identifiant de la demande (le même que dans le journal d'audit MCP), appels au modèle et MCP, recherches successives |
+
+Tests (`tests/test_ui.py`) : client contre la vraie API en mémoire ; fonctions de rappel de l'interface appelées
+directement (connexion, ticket approuvé après modification, ticket refusé, photo, modèle indisponible, recherche) ;
+échappement d'une réponse piégée.
+
 ## 3. Ajouts non demandés par le sujet
 
 | Ajout | Raison |

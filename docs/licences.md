@@ -16,6 +16,6 @@
 | LlamaIndex (core, vector-stores-qdrant) | Index textuel | MIT | À vérifier | |
 | LangChain / LangGraph | Orchestration | MIT | À vérifier | |
 | MCP Python SDK | Protocole outils | MIT | À vérifier | |
-| FastAPI / Streamlit | API / interface | MIT / Apache 2.0 | À vérifier | |
+| FastAPI / Gradio | API / interface | MIT / Apache 2.0 | À vérifier | |
 | MLflow | Suivi d'expériences | Apache 2.0 | À vérifier | |
 | Corpus MaintiDoc | Documents | Synthétique, généré par le projet | OK | Aucune donnée réelle ni personnelle |
