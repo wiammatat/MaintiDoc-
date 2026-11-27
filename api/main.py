@@ -23,9 +23,11 @@ from fastapi.security import OAuth2PasswordRequestForm
 from PIL import Image, UnidentifiedImageError
 
 from api.auth import create_token, current_user
-from api.schemas import Evidence, Me, SearchResponse, Token
+from api.schemas import AgentResponse, ApprovalRequest, Evidence, Me, SearchResponse, Token
 from common.access import User, authenticate, can_access
 from common.config import get_settings
+from agent.graph import CHECKPOINTER, build_agent
+from agent.mcp_client import MCPClient, StdioMCPClient
 from generation.answer import answer
 from generation.schema import Answer
 from generation.vlm import VLM, RemoteVLM, VLMUnavailable, default_vlm
@@ -81,6 +83,19 @@ def get_vlm() -> VLM:
     raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
                         "VLM indisponible : utiliser /search, ou brancher Qwen sur Kaggle (VLM_BACKEND=remote avec "
                         "VLM_REMOTE_URL et VLM_REMOTE_TOKEN), ou VLM_BACKEND=qwen sur une machine avec GPU.")
+
+
+def get_optional_vlm() -> VLM | None:
+    """Pour reprendre un agent après approbation : le VLM n'est plus nécessaire (création du ticket seulement)."""
+    try:
+        return get_vlm()
+    except HTTPException:
+        return None
+
+
+@lru_cache
+def get_mcp() -> MCPClient:
+    return StdioMCPClient()
 
 
 # --------------------------------------------------------------------------- validation des entrées
@@ -211,3 +226,72 @@ def element_image(uid: str, user: CurrentUser) -> Response:
         raise NOT_FOUND
     media = "image/jpeg" if found[2].lower().endswith((".jpg", ".jpeg")) else "image/png"
     return Response(found[1](), media_type=media)
+
+
+# --------------------------------------------------------------------------- agent (LangGraph + MCP)
+
+def _agent_response(thread_id: str, values: dict, pending: bool) -> AgentResponse:
+    return AgentResponse(thread_id=thread_id, status="en_attente_approbation" if pending else values.get("status", "termine"),
+                         answer=values.get("answer"), clarification_question=values.get("clarification_question"),
+                         historique=values.get("history"), tickets_ouverts=values.get("open_tickets"),
+                         ticket_draft=values.get("ticket_draft"), ticket=values.get("ticket"),
+                         errors=values.get("errors", []), mcp_calls=values.get("mcp_calls", 0),
+                         model_calls=values.get("model_calls", 0))
+
+
+def _photo_b64(photo: UploadFile | None) -> str | None:
+    if photo is None or not photo.filename:
+        return None
+    import base64
+    limit = get_settings().max_upload_mb * 1024 * 1024
+    data = photo.file.read(limit + 1)
+    if len(data) > limit:
+        raise HTTPException(status.HTTP_413_REQUEST_ENTITY_TOO_LARGE,
+                            f"Photo trop volumineuse ({get_settings().max_upload_mb} Mo maximum).")
+    try:
+        Image.open(io.BytesIO(data)).verify()
+    except (UnidentifiedImageError, OSError):
+        raise HTTPException(status.HTTP_415_UNSUPPORTED_MEDIA_TYPE, "Le fichier envoyé n'est pas une image valide.")
+    return base64.b64encode(data).decode()
+
+
+@app.post("/agent", response_model=AgentResponse)
+def agent_route(request: Request, user: CurrentUser, question: Annotated[str, Form()],
+                photo: Annotated[UploadFile | None, File()] = None, vlm: VLM = Depends(get_vlm),
+                mcp: MCPClient = Depends(get_mcp),
+                search_fn: Callable[..., SearchResult] = Depends(get_search_fn)) -> AgentResponse:
+    """Agent complet : analyse, historique MCP si besoin, réponse sourcée, brouillon de ticket à approuver.
+
+    Route synchrone : le client MCP (stdio) gère sa propre boucle asynchrone dans le fil d'exécution de la requête.
+    """
+    thread_id = uuid.uuid4().hex
+    token = request.headers["Authorization"].split(" ", 1)[1]
+    config = {"configurable": {"thread_id": thread_id, "auth_token": token}}
+    agent = build_agent(vlm, mcp, search_fn, CHECKPOINTER)
+    try:
+        values = agent.invoke({"user_id": user.user_id, "question": check_question(question),
+                               "photo_b64": _photo_b64(photo)}, config)
+    except VLMUnavailable as e:
+        raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE, str(e)) from None
+    return _agent_response(thread_id, values, pending=bool(agent.get_state(config).next))
+
+
+@app.post("/agent/{thread_id}/approval", response_model=AgentResponse)
+def approval_route(thread_id: str, decision: ApprovalRequest, request: Request, user: CurrentUser,
+                   vlm: VLM | None = Depends(get_optional_vlm), mcp: MCPClient = Depends(get_mcp)) -> AgentResponse:
+    """Approbation humaine du brouillon (éventuellement modifié) ou refus. Seul l'auteur de la demande peut décider."""
+    from langgraph.types import Command
+    token = request.headers["Authorization"].split(" ", 1)[1]
+    config = {"configurable": {"thread_id": thread_id, "auth_token": token}}
+    agent = build_agent(vlm, mcp, get_search_fn(), CHECKPOINTER)
+    state = agent.get_state(config)
+    if not state.values or state.values.get("user_id") != user.user_id:   # demande d'un autre : même 404
+        raise NOT_FOUND
+    if not state.next:
+        raise HTTPException(status.HTTP_409_CONFLICT, "Aucune approbation en attente pour cette demande.")
+    draft = state.values["ticket_draft"]
+    resume = {"approved": decision.approved,
+              "title": (decision.title if decision.title is not None else draft["title"]).strip(),
+              "description": (decision.description if decision.description is not None else draft["description"]).strip()}
+    values = agent.invoke(Command(resume=resume), config)
+    return _agent_response(thread_id, values, pending=bool(agent.get_state(config).next))

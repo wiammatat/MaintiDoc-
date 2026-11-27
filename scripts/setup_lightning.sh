@@ -59,8 +59,9 @@ else
   echo "   .env existant conservé (le supprimer pour le régénérer)"
 fi
 
-echo "== 4/5 Préparation du corpus (extraction, OCR)"
+echo "== 4/5 Préparation du corpus (extraction, OCR) et base MCP"
 python -m pipeline.ingest
+[ -f data/mcp/maintenance.db ] || python scripts/generate_corpus.py --mcp-only
 
 echo "== 5/5 Index textuel (LlamaIndex + BGE-M3) et visuel (CLIP)"
 python -m pipeline.index --recreate

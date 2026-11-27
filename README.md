@@ -23,8 +23,8 @@ retrieval/    4. recherche texte + image, fusion RRF, reranker, paquet de preuve
 generation/   5. VLM (Qwen2.5-VL), réponse JSON sourcée, vérification des citations
 pipeline/        commandes : ingest (étapes 1-2) et index (étape 3)
 notebooks/       notebook Kaggle (partie GPU)
-agent/        workflow LangGraph
-mcp_server/   serveur MCP de démonstration (historique, tickets)
+agent/           6. agent LangGraph : analyse, historique MCP, réponse, ticket, validation humaine
+mcp_server/      serveur MCP de maintenance (historique, tickets) avec contrôle des droits à chaque appel
 api/          API FastAPI
 ui/           interface Streamlit
 prompts/      prompts versionnés (YAML)
@@ -103,6 +103,15 @@ Comptes de démonstration (fictifs) : `tech_s01`, `tech_s02` (stockage), `tech_r
 | `POST /search` | Recherche multimodale (question + photo facultative) -> preuves citables |
 | `POST /ask` | Réponse sourcée par le VLM (nécessite `VLM_BACKEND=qwen` ou `remote`) |
 | `GET /documents/{id}/pdf`, `GET /elements/{uid}/image` | Fichiers, après contrôle d'accès |
+| `POST /agent` | Agent LangGraph : réponse sourcée, historique MCP, brouillon de ticket à approuver |
+| `POST /agent/{id}/approval` | Approbation humaine (contenu éventuellement modifié) ou refus ; création via MCP |
+
+### Agent et serveur MCP
+
+L'agent (`agent/graph.py`, LangGraph) appelle le serveur MCP de maintenance (`mcp_server/server.py`) en transport
+stdio : `get_equipment_history`, `get_open_tickets`, `create_ticket`. La base fictive se crée avec
+`python scripts/generate_corpus.py --mcp-only`. Exemple : « Voyant orange sur BAIE-SN400-002, prépare un ticket »
+renvoie la réponse, l'historique et un brouillon ; le ticket n'est créé qu'après `POST /agent/{id}/approval`.
 
 ### Brancher l'API sur Qwen qui tourne sur Kaggle
 

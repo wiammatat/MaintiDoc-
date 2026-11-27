@@ -34,3 +34,25 @@ class SearchResponse(BaseModel):
     passages: list[Evidence]
     images: list[Evidence]
     index_version: str
+
+
+class AgentResponse(BaseModel):
+    """Résultat de l'agent : réponse sourcée, historique MCP et, si demandé, brouillon de ticket à approuver."""
+    thread_id: str
+    status: str                        # termine | en_attente_approbation | ticket_cree | ticket_refuse | echec_creation
+    answer: dict | None = None
+    clarification_question: str | None = None
+    historique: dict | None = None
+    tickets_ouverts: dict | None = None
+    ticket_draft: dict | None = None
+    ticket: dict | None = None
+    errors: list[str] = []
+    mcp_calls: int = 0
+    model_calls: int = 0
+
+
+class ApprovalRequest(BaseModel):
+    """Décision humaine. Le contenu envoyé est celui qui sera créé : s'il diffère du brouillon, c'est lui qui est approuvé."""
+    approved: bool
+    title: str | None = None
+    description: str | None = None

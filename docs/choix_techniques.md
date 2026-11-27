@@ -173,6 +173,33 @@ deux profils ; une tentative de chemin `../.env` est refusée.
 **Profil complet** : Docker (Qdrant serveur, PostgreSQL, MinIO, MLflow) reste le profil de référence sur le PC ;
 le choix se fait dans `.env` (`STORAGE_BACKEND`, `QDRANT_PATH`).
 
+### 2.13 Agent LangGraph et serveur MCP (étapes 3 et 4 de la feuille de route)
+**Workflow** (`agent/graph.py`, section 6 du sujet) : vérifier l'accès → analyser la demande → historique via MCP
+(si un équipement est cité et que l'historique ou un ticket est demandé) → rechercher et répondre (RAG, vérification
+des citations) → préparer un ticket (si demandé) → **pause** (interruption LangGraph) → approbation humaine → création
+via MCP. L'état est mémorisé par demande (checkpointer) entre la pause et la reprise.
+
+**Serveur MCP** (`mcp_server/server.py`, SDK MCP officiel, transport stdio) : `get_equipment_history`,
+`get_open_tickets`, `create_ticket` sur une base SQLite fictive.
+
+| Exigence du sujet | Mise en œuvre |
+|---|---|
+| Le serveur contrôle les autorisations à chaque appel | Chaque outil reçoit le jeton de connexion de l'utilisateur et vérifie identité et droit sur l'équipement ; équipement inexistant ou interdit : même message |
+| L'utilisateur visualise et approuve le contenu exact | Le brouillon est renvoyé par `POST /agent` ; rien n'est créé avant `POST /agent/{id}/approval` |
+| Approbation liée à l'utilisateur et au contenu | Jeton d'approbation HMAC sur (utilisateur, empreinte SHA-256 du contenu, expiration 15 min), vérifié par le serveur MCP |
+| Toute modification impose une nouvelle validation | Un contenu différent de celui approuvé est refusé par le serveur ; si l'humain modifie le brouillon, c'est le contenu modifié qu'il approuve |
+| Clé d'idempotence contre les doublons | Clé = empreinte (utilisateur, contenu) en contrainte UNIQUE : un second envoi renvoie le ticket existant |
+| 3 appels MCP au maximum | Compteur dans l'état de l'agent ; au-delà, l'appel n'est pas fait et l'erreur est signalée |
+| Seul l'auteur décide | La reprise vérifie que l'utilisateur est celui qui a lancé la demande (sinon 404) |
+
+**Choix : routage déterministe** (`agent/intent.py`). La décision de déclencher un outil qui agit (MCP, ticket) est
+prise par des règles testées (identifiant d'équipement, mots « historique », « ticket »...) et non par le VLM 7B,
+jugé insuffisamment fiable lors des essais Kaggle. Le VLM rédige la réponse et le brouillon de ticket (prompt
+`ticket_draft_v1`) ; si sa sortie est invalide, un modèle de texte déterministe prend le relais.
+
+**Limites** : les demandes en attente d'approbation sont en mémoire (perdues au redémarrage de l'API) ; l'historique
+MCP alimente le brouillon de ticket mais n'est pas injecté dans la réponse documentaire (il est renvoyé à côté).
+
 ## 3. Ajouts non demandés par le sujet
 
 | Ajout | Raison |

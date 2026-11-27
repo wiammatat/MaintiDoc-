@@ -1,6 +1,7 @@
 """Génère le corpus synthétique MaintiDoc (maintenance SAN) dans data/.
 
-Usage : python scripts/generate_corpus.py
+Usage : python scripts/generate_corpus.py              # tout le corpus
+        python scripts/generate_corpus.py --mcp-only   # seulement la base MCP (data/mcp/maintenance.db)
 Toutes les données sont fictives. Le générateur est déterministe (graine fixe).
 """
 
@@ -555,6 +556,10 @@ def utilisateurs():
 def main():
     for p in (CORPUS, FIGURES, PHOTOS, MCP):
         p.mkdir(parents=True, exist_ok=True)
+    if "--mcp-only" in sys.argv:   # la base MCP n'est pas versionnée : la recréer sans toucher aux PDF
+        nb_eq, nb_int = base_mcp()
+        print(f"Base MCP : {nb_eq} équipements, {nb_int} interventions, 3 tickets -> {MCP / 'maintenance.db'}")
+        return
     # On repart d'un corpus vide : les fichiers d'un ancien domaine ne doivent pas subsister.
     for p in (*CORPUS.glob("*.pdf"), *FIGURES.glob("*.png"), *PHOTOS.glob("*.jpg")):
         p.unlink()
