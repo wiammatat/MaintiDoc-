@@ -70,7 +70,7 @@ def test_serveur_injoignable():
         remote.generate("s", "u", [])
 
 
-def test_api_ask_renvoie_503_si_kaggle_injoignable(monkeypatch):
+def test_api_ask_renvoie_503_si_serveur_vlm_injoignable(monkeypatch):
     from api.main import app, get_search_fn, get_vlm
     from tests.test_api import FAKE, auth
 

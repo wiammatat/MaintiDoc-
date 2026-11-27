@@ -49,6 +49,8 @@ class AgentResponse(BaseModel):
     errors: list[str] = []
     mcp_calls: int = 0
     model_calls: int = 0
+    search_attempts: list[dict] = []   # boucle contrôlée : requête et résultat de chaque recherche
+    photo_analysis: dict | None = None  # analyse vérifiée de la photo (famille, modèle, voyants, code)
 
 
 class ApprovalRequest(BaseModel):

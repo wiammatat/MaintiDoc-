@@ -4,12 +4,12 @@ Le contrôle d'existence (la citation pointe vers une source récupérée) est f
 Ici, un second appel au modèle juge le soutien réel, affirmation par affirmation.
 """
 
-import json
 import re
 
 from pydantic import ValidationError
 
 from generation.guards import models_in_question
+from generation.prompting import parse, render
 from generation.schema import ClaimCheck, EvidenceOutput
 from generation.vlm import VLM
 from retrieval.fusion import Hit
@@ -36,21 +36,19 @@ def split_claims(text: str, known: set[str], cited: list[str] | None = None) -> 
     return claims
 
 
-def build_user_message(template: str, claims: list[tuple[str, list[str]]], labels: dict[str, Hit]) -> str:
+def claims_block(claims: list[tuple[str, list[str]]], labels: dict[str, Hit]) -> str:
+    """Affirmations numérotées et texte des sources qu'elles citent (variable {claims} du prompt)."""
     blocks = []
     for i, (claim, cited) in enumerate(claims, 1):
         # Le titre de la source permet au vérificateur de repérer une information attribuée au mauvais équipement.
         sources = "\n".join(f"  [{l}] ({labels[l].payload['titre']}, page {labels[l].payload['page']}) "
                             f"{labels[l].payload.get('text') or '(image sans texte)'}" for l in cited)
         blocks.append(f"Affirmation {i} : {claim}\nSources citées :\n{sources}")
-    return template.format(claims="\n\n".join(blocks))
+    return "\n\n".join(blocks)
 
 
 def parse_checks(raw: str, n_claims: int) -> EvidenceOutput:
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-    if not match:
-        raise ValueError("aucun objet JSON dans la vérification")
-    out = EvidenceOutput.model_validate(json.loads(match.group(0)))
+    out = parse(EvidenceOutput, raw)   # validation par PydanticOutputParser (LangChain)
     if sorted(c.id for c in out.checks) != list(range(1, n_claims + 1)):
         raise ValueError("la vérification ne couvre pas exactement toutes les affirmations")
     return out
@@ -77,7 +75,7 @@ def values_supported(claim: str, sources: list[Hit]) -> bool:
     return values <= {v.replace(",", ".") for v in NUMBER_RE.findall(corpus)}
 
 
-def check_evidence(vlm: VLM, prompt: dict, answer_text: str, labels: dict[str, Hit],
+def check_evidence(vlm: VLM, prompt_name: str, answer_text: str, labels: dict[str, Hit],
                    max_calls: int, cited: list[str] | None = None) -> tuple[list[ClaimCheck], set[str], list[str], int]:
     """Renvoie (vérifications, étiquettes à retirer, incertitudes, nombre d'appels au modèle).
 
@@ -88,12 +86,12 @@ def check_evidence(vlm: VLM, prompt: dict, answer_text: str, labels: dict[str, H
     if not claims or max_calls <= 0:
         return [], set(), [], 0
 
-    user_msg = build_user_message(prompt["user"], claims, labels)
+    system, user_msg = render(prompt_name, claims=claims_block(claims, labels))
     calls = 0
     for _ in range(min(2, max_calls)):
         calls += 1
         try:
-            out = parse_checks(vlm.generate(prompt["system"], user_msg, []), len(claims))
+            out = parse_checks(vlm.generate(system, user_msg, []), len(claims))
             break
         except (ValueError, ValidationError):
             continue

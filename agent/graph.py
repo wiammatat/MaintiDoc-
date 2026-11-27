@@ -1,12 +1,18 @@
 """Agent MaintiDoc (LangGraph) : workflow de la section 6 du sujet.
 
-    vérifier l'accès -> analyser la demande -> [historique via MCP] -> rechercher et répondre (RAG + vérification)
+    vérifier l'accès -> analyser la demande -> [analyser la photo] -> [historique via MCP] -> rechercher et répondre (RAG + vérification)
+    -> [boucle contrôlée : si les preuves sont insuffisantes, reformuler et rechercher à nouveau]
     -> [préparer un ticket] -> attendre l'approbation humaine -> créer le ticket via MCP
 
 - L'état est mémorisé par thread (checkpointer) : le graphe s'interrompt avant toute action et reprend
   quand un humain approuve ou refuse le contenu EXACT du ticket.
 - Budgets : au plus MAX_MCP_CALLS appels MCP et MAX_MODEL_CALLS appels au modèle par demande ; au-delà du temps
-  maximal, les étapes facultatives (ticket) sont abandonnées.
+  maximal, les étapes facultatives (relance de recherche, ticket) sont abandonnées.
+- Boucle contrôlée : au plus AGENT_MAX_SEARCH_ROUNDS recherches, et seulement si le budget permet un tour complet
+  (reformulation + réponse + vérification). Pas de relance quand le garde-fou d'équipement a bloqué la demande.
+- Analyse de la photo (prompt visual_analysis_v1) : le VLM décrit, le code vérifie (agent/vision.py). Famille
+  identifiée -> recherche filtrée sur cette famille ; équipement non identifiable ou contradictoire -> clarification,
+  sans recherche ni réponse.
 - Le jeton de connexion de l'utilisateur est passé dans la configuration de chaque appel, jamais dans l'état
   mémorisé : le serveur MCP vérifie lui-même les droits à chaque appel.
 """
@@ -25,6 +31,8 @@ from PIL import Image
 
 from agent.intent import analyze
 from agent.mcp_client import MCPClient, MCPError
+from agent.rewrite import rewrite_query
+from agent.vision import analyze_photo
 from agent.ticket import draft_ticket
 from common.access import get_user
 from common.config import get_settings
@@ -43,9 +51,15 @@ class AgentState(TypedDict, total=False):
     started: float
     intent: dict
     clarification_question: str | None
+    photo_analysis: dict | None
+    search_filters: dict | None
+    photo_context: str | None
     history: dict | None
     open_tickets: dict | None
     answer: dict | None
+    search_query: str | None
+    search_rounds: int
+    search_attempts: list[dict]
     ticket_draft: dict | None
     draft_origin: str | None
     decision: dict | None
@@ -58,6 +72,10 @@ class AgentState(TypedDict, total=False):
 
 def _token(config: RunnableConfig) -> str:
     return config["configurable"]["auth_token"]
+
+
+def _photo(state: AgentState) -> Image.Image | None:
+    return Image.open(io.BytesIO(base64.b64decode(state["photo_b64"]))) if state.get("photo_b64") else None
 
 
 def build_agent(vlm: VLM | None, mcp: MCPClient, search_fn: Callable[..., SearchResult] = search,
@@ -91,6 +109,19 @@ def build_agent(vlm: VLM | None, mcp: MCPClient, search_fn: Callable[..., Search
                                                 "(par exemple BAIE-SN400-002 ou SW-FL48-002) ?")
         return update
 
+    def analyser_image(state: AgentState) -> dict:
+        used = state.get("model_calls", 0)
+        if vlm is None or used >= s.max_model_calls:
+            return {"errors": state.get("errors", []) + ["Photo non analysée (modèle indisponible ou budget atteint)"]}
+        analysis, calls = analyze_photo(vlm, state["question"], _photo(state))
+        update: dict[str, Any] = {"photo_analysis": analysis.to_dict(), "model_calls": used + calls}
+        if analysis.clarification:
+            update["clarification_question"] = analysis.clarification
+        else:
+            update["search_filters"] = {"famille": analysis.famille}
+            update["photo_context"] = analysis.context()
+        return update
+
     def consulter_historique(state: AgentState, config: RunnableConfig) -> dict:
         eq = state["intent"]["equipment_id"]
         history, update = mcp_call(state, config, "get_equipment_history", {"equipment_id": eq})
@@ -99,9 +130,30 @@ def build_agent(vlm: VLM | None, mcp: MCPClient, search_fn: Callable[..., Search
         return update | update2 | {"history": history, "open_tickets": tickets}
 
     def repondre(state: AgentState) -> dict:
-        photo = Image.open(io.BytesIO(base64.b64decode(state["photo_b64"]))) if state.get("photo_b64") else None
-        res = answer(get_user(state["user_id"]), state["question"], photo, vlm=vlm, search_fn=search_fn)
-        return {"answer": res.model_dump(), "model_calls": state.get("model_calls", 0) + res.model_calls}
+        photo = _photo(state)
+        query = state.get("search_query") or state["question"]
+        used = state.get("model_calls", 0)
+        filters = state.get("search_filters")
+
+        def run_search(user, _question, image=None):
+            # La recherche utilise la requête courante (éventuellement reformulée), filtrée sur la famille de la photo.
+            return search_fn(user, query, image, filters=filters) if filters else search_fn(user, query, image)
+        res = answer(get_user(state["user_id"]), state["question"], photo, vlm=vlm, search_fn=run_search,
+                     max_calls=s.max_model_calls - used, photo_context=state.get("photo_context"))
+        attempts = state.get("search_attempts", []) + [{"round": state.get("search_rounds", 0) + 1, "query": query,
+                                                        "status": res.status, "citations": len(res.citations)}]
+        return {"answer": res.model_dump(), "model_calls": used + res.model_calls,
+                "search_rounds": state.get("search_rounds", 0) + 1, "search_attempts": attempts}
+
+    def reformuler(state: AgentState) -> dict:
+        previous = state.get("search_query") or state["question"]
+        query = rewrite_query(vlm, state["question"], previous, outcome=state["answer"]["answer"])
+        update: dict[str, Any] = {"model_calls": state.get("model_calls", 0) + 1}
+        if query is None:   # pas de reformulation exploitable : on n'insiste pas
+            update["errors"] = state.get("errors", []) + ["Reformulation impossible : pas de nouvelle recherche"]
+        else:
+            update["search_query"] = query
+        return update
 
     def preparer_ticket(state: AgentState) -> dict:
         if time.time() - state["started"] > s.max_processing_seconds:
@@ -136,28 +188,55 @@ def build_agent(vlm: VLM | None, mcp: MCPClient, search_fn: Callable[..., Search
     # ----------------------------------------------------------------- routes
 
     def apres_analyse(state: AgentState) -> str:
+        if state.get("photo_b64"):
+            return "analyser_image"
+        return apres_photo(state)
+
+    def apres_photo(state: AgentState) -> str:
+        if (state.get("photo_analysis") or {}).get("clarification"):
+            return "conclure"   # équipement non identifiable : on demande une précision au lieu de répondre
         i = state["intent"]
         return "consulter_historique" if i["equipment_id"] and (i["wants_history"] or i["wants_ticket"]) else "repondre"
 
+    def doit_relancer(state: AgentState) -> bool:
+        """Boucle contrôlée : preuves insuffisantes, limite de tours, budget et temps."""
+        a = state["answer"]
+        insuffisant = a["status"] == "abstained" and not a.get("citations")
+        bloque = any(u.startswith("Équipement cité sans source accessible") for u in a.get("uncertainties", []))
+        budget_ok = state.get("model_calls", 0) + 3 <= s.max_model_calls   # reformulation + réponse + vérification
+        temps_ok = time.time() - state["started"] <= s.max_processing_seconds
+        return (insuffisant and not bloque and vlm is not None and budget_ok and temps_ok
+                and state.get("search_rounds", 1) < s.agent_max_search_rounds)
+
     def apres_reponse(state: AgentState) -> str:
+        if doit_relancer(state):
+            return "reformuler"
         i = state["intent"]
         # Pas de ticket si l'accès MCP à l'équipement a échoué (droits) : rien à proposer.
+        return "preparer_ticket" if i["wants_ticket"] and i["equipment_id"] and state.get("history") else "conclure"
+
+    def apres_reformulation(state: AgentState) -> str:
+        if state.get("search_query") and state["search_query"] != (state["search_attempts"][-1]["query"]):
+            return "repondre"
+        i = state["intent"]
         return "preparer_ticket" if i["wants_ticket"] and i["equipment_id"] and state.get("history") else "conclure"
 
     def apres_preparation(state: AgentState) -> str:
         return "attendre_approbation" if state.get("ticket_draft") else "conclure"
 
     g = StateGraph(AgentState)
-    for name, fn in [("verifier_acces", verifier_acces), ("analyser", analyser),
-                     ("consulter_historique", consulter_historique), ("repondre", repondre),
+    for name, fn in [("verifier_acces", verifier_acces), ("analyser", analyser), ("analyser_image", analyser_image),
+                     ("consulter_historique", consulter_historique), ("repondre", repondre), ("reformuler", reformuler),
                      ("preparer_ticket", preparer_ticket), ("attendre_approbation", attendre_approbation),
                      ("creer_ticket", creer_ticket), ("conclure", conclure)]:
         g.add_node(name, fn)
     g.add_edge(START, "verifier_acces")
     g.add_edge("verifier_acces", "analyser")
-    g.add_conditional_edges("analyser", apres_analyse, ["consulter_historique", "repondre"])
+    g.add_conditional_edges("analyser", apres_analyse, ["analyser_image", "consulter_historique", "repondre"])
+    g.add_conditional_edges("analyser_image", apres_photo, ["consulter_historique", "repondre", "conclure"])
     g.add_edge("consulter_historique", "repondre")
-    g.add_conditional_edges("repondre", apres_reponse, ["preparer_ticket", "conclure"])
+    g.add_conditional_edges("repondre", apres_reponse, ["reformuler", "preparer_ticket", "conclure"])
+    g.add_conditional_edges("reformuler", apres_reformulation, ["repondre", "preparer_ticket", "conclure"])
     g.add_conditional_edges("preparer_ticket", apres_preparation, ["attendre_approbation", "conclure"])
     g.add_edge("attendre_approbation", "creer_ticket")
     g.add_edge("creer_ticket", END)

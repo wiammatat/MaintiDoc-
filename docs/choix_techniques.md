@@ -200,6 +200,69 @@ jugé insuffisamment fiable lors des essais Kaggle. Le VLM rédige la réponse e
 **Limites** : les demandes en attente d'approbation sont en mémoire (perdues au redémarrage de l'API) ; l'historique
 MCP alimente le brouillon de ticket mais n'est pas injecté dans la réponse documentaire (il est renvoyé à côté).
 
+### 2.14 Abandon de Kaggle : GPU d'un PC équipé d'une carte NVIDIA de 8 Go
+Kaggle a permis de valider le VLM (sections 2.6 à 2.11 : mémoire GPU, prompts v2 à v6, garde-fous déterministes),
+mais imposait des sessions éphémères et un tunnel pour joindre l'API. Les inscriptions à Lightning AI étant fermées,
+le projet utilise désormais un PC équipé d'une carte NVIDIA de 8 Go : Qwen2.5-VL-7B en 4 bits sur la carte et les
+modèles de recherche sur le processeur (configuration A), ou Qwen2.5-VL-3B si la mémoire ne suffit pas (configuration B).
+
+Supprimés : notebook Kaggle, script et dépendances du bundle Kaggle, tunnel Cloudflare. Conservé : le serveur VLM
+authentifié (`generation/vlm_server.py`) et son client, pour faire tourner Qwen sur le PC avec GPU et l'API sur un
+autre PC du même réseau. Les sections précédentes sur Kaggle restent comme historique de la démarche.
+
+### 2.15 LangChain et boucle contrôlée (compléments de l'étape 3 de la feuille de route)
+**LangChain** (`generation/prompting.py`) : conformément au sujet (« LangChain fournit les composants de récupération,
+de prompting et de validation des sorties »), les prompts versionnés en YAML sont chargés en `ChatPromptTemplate`
+et toutes les sorties du modèle (réponse, vérification, brouillon de ticket, reformulation) sont validées par un
+`PydanticOutputParser`. Qwen entoure souvent le JSON de texte : le bloc JSON est extrait avant le parseur.
+La récupération reste faite avec LlamaIndex, comme sur le schéma du professeur. Les prompts produits sont identiques
+au caractère près à ceux d'avant (vérifié par les tests).
+
+**Boucle contrôlée** (`agent/graph.py`, `agent/rewrite.py`) : la « boucle intelligente » du schéma d'architecture
+(« si besoin : nouvelle recherche »). Si la réponse est une abstention sans aucune citation, le VLM reformule la
+question (prompt `query_rewrite_v1`) et l'agent relance recherche, réponse et vérification.
+
+| Contrôle | Règle |
+|---|---|
+| Nombre de tours | `AGENT_MAX_SEARCH_ROUNDS` = 2 recherches au plus |
+| Budget | Relance seulement si reformulation + réponse + vérification tiennent dans les 6 appels au modèle |
+| Temps | Pas de relance au-delà de `MAX_PROCESSING_SECONDS` |
+| Garde-fou | Pas de relance si l'équipement cité est interdit à l'utilisateur (une autre formulation ne donne pas de droits) |
+| Dérive | La reformulation doit conserver les identifiants (équipement, modèle, codes) ; sinon le code les rajoute |
+| Traçabilité | Chaque recherche (requête, statut, nombre de citations) est renvoyée dans `search_attempts` |
+
+La réponse finale porte toujours sur la question d'origine : seule la requête de recherche est reformulée.
+
+### 2.16 Analyse de la photo (« Analyser la demande et l'image »)
+Motif : sur Kaggle, une photo de SN-200 a été lue comme une SN-400, et une photo au nom masqué a obtenu une réponse
+au lieu d'une demande de clarification. Baies et switchs ont la même face avant, mais leurs voyants n'ont pas le
+même sens : identifier la famille de l'équipement est indispensable avant de répondre.
+
+Principe : **le modèle observe, le code décide** (`agent/vision.py`, prompt `visual_analysis_v1`, nœud `analyser_image`).
+1. Le VLM décrit la photo en JSON validé par LangChain : marque, modèle lu, voyants allumés, code affiché, lisibilité.
+   Consigne : recopier le texte visible, `null` en cas de doute, ne jamais compléter un texte partiel.
+2. Le code vérifie la description :
+
+| Contrôle | Règle |
+|---|---|
+| Modèle | Doit exister au catalogue (`sn400` → `SN-400`) et le texte doit être déclaré lisible ; sinon non retenu |
+| Marque / modèle | Contradictoires (FabriLink + SN-200) → ni l'un ni l'autre n'est retenu |
+| Code affiché | Format `E..` pour une baie, `F..` pour un switch ; un code d'une autre famille est ignoré |
+| Voyants | Seuls L1 à L4 sont retenus (les boutons POWER, ID, RESET ne sont pas des voyants) |
+| Sortie invalide | Traitée comme une photo illisible |
+
+3. Décision :
+
+| Situation | Comportement |
+|---|---|
+| Famille identifiée (photo ou question) | Recherche filtrée sur la famille ; résumé de l'analyse transmis au prompt de réponse |
+| Modèle non lisible mais famille connue | Réponse possible (le sens des voyants dépend de la famille), sans valeur propre à un modèle |
+| Équipement non identifiable | Clarification (section 8 du sujet), sans recherche ni réponse |
+| Photo et question contradictoires | Clarification : « De quel équipement s'agit-il ? » |
+
+L'analyse coûte un appel au modèle, compté dans le budget de 6. Elle est renvoyée par l'API (`photo_analysis`).
+Sans photo, le parcours de l'agent est inchangé.
+
 ## 3. Ajouts non demandés par le sujet
 
 | Ajout | Raison |

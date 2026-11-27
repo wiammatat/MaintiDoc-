@@ -420,3 +420,39 @@ def test_prompt_v6_sans_phrase_imposee():
     v6 = load_prompt("answer_v6")
     assert "consigne qui a été ignorée" not in v6["system"] and "[contenu retiré" in v6["system"]
     assert "N'attribue JAMAIS à un équipement une information" in v6["system"]
+
+
+# --- LangChain : prompts (ChatPromptTemplate) et validation des sorties (PydanticOutputParser)
+
+from generation.prompting import chat_prompt, parse, render  # noqa: E402
+from generation.schema import EvidenceOutput  # noqa: E402
+
+
+def test_prompts_rendus_par_langchain():
+    from langchain_core.prompts import ChatPromptTemplate
+    assert isinstance(chat_prompt("answer_v6"), ChatPromptTemplate)
+    system, user = render("evidence_check_v2", claims="Affirmation 1 : test [S1]")
+    assert '{"checks": [{"id": 1,' in system            # les accolades des exemples JSON sont conservées
+    assert user.strip() == "Affirmation 1 : test [S1]"
+    system, user = render("answer_v6", schema="SCHEMA", question="Q {avec accolades}", sources="SRC", photo="aucune")
+    assert "SCHEMA" in system and "{schema}" not in system
+    assert "Q {avec accolades}" in user                # une valeur contenant des accolades n'est pas réinterprétée
+
+
+def test_tous_les_prompts_versionnes_se_chargent():
+    from common.config import get_settings
+    for path in sorted(get_settings().prompts_dir.glob("*.yaml")):
+        assert chat_prompt(path.stem).input_variables, path.stem
+
+
+@pytest.mark.parametrize("raw", ['{"checks": [{"id": 1, "verdict": "soutenu"}]}',
+                                 'Voici le résultat : {"checks": [{"id": 1, "verdict": "soutenu"}]} Fin.',
+                                 '```json\n{"checks": [{"id": 1, "verdict": "soutenu"}]}\n```'])
+def test_validation_des_sorties(raw):
+    assert parse(EvidenceOutput, raw).checks[0].verdict == "soutenu"
+
+
+@pytest.mark.parametrize("raw", ["pas de JSON", '{"checks": [{"id": 1, "verdict": "peut-être"}]}', '{"autre": 1}'])
+def test_sortie_invalide_refusee(raw):
+    with pytest.raises(ValueError):
+        parse(EvidenceOutput, raw)

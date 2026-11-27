@@ -28,9 +28,9 @@ class Settings(BaseSettings):
     # instructions bfloat16 natives (ex. Intel i5 de 12e génération), bfloat16 est émulé et
     # des dizaines de fois plus lent (voir docs/choix_techniques.md). bfloat16 reste utile sur GPU.
     model_dtype: Literal["float32", "float16", "bfloat16"] = "float32"
-    device: str = "cpu"   # "cuda" sur Kaggle
+    device: str = "cpu"   # modèles de recherche : "cuda" si la carte a assez de mémoire, sinon "cpu"
 
-    # VLM (exécuté sur GPU, Kaggle)
+    # VLM (exécuté sur un GPU NVIDIA)
     vlm_quantization: Literal["none", "4bit"] = "4bit"   # 7B en fp16 dépasse 16 Go : 4 bits sur un seul T4
     vlm_max_new_tokens: int = 512
     vlm_max_pixels: int = 384 * 28 * 28   # images récupérées : ~300 000 pixels, ~384 tokens visuels au plus
@@ -43,7 +43,7 @@ class Settings(BaseSettings):
 
     # Index vectoriel (le numéro de version est porté par le nom des collections)
     index_version: str = "v1"
-    qdrant_path: Path | None = None   # si défini : Qdrant embarqué sur disque, sans serveur (Kaggle)
+    qdrant_path: Path | None = None   # si défini : Qdrant embarqué sur disque, sans serveur (profil léger)
 
     # OCR
     tesseract_cmd: str = "tesseract"
@@ -72,14 +72,15 @@ class Settings(BaseSettings):
     max_mcp_calls: int = 3
     max_model_calls: int = 6
     max_processing_seconds: int = 60
+    agent_max_search_rounds: int = 2   # boucle contrôlée : recherches au plus par demande (1re + relances)
 
     # Stockage des fichiers et des métadonnées : docker (MinIO + PostgreSQL) ou local (disque, sans Docker)
     storage_backend: Literal["docker", "local"] = "docker"
 
     # API
-    vlm_backend: Literal["disabled", "qwen", "remote"] = "disabled"   # qwen : GPU local ; remote : serveur distant (Kaggle)
-    vlm_remote_url: str = ""                  # adresse du tunnel affichée par le notebook Kaggle
-    vlm_remote_token: SecretStr = SecretStr("")   # jeton affiché par le notebook Kaggle
+    vlm_backend: Literal["disabled", "qwen", "remote"] = "disabled"   # qwen : GPU de ce PC ; remote : serveur VLM d'un autre PC
+    vlm_remote_url: str = ""                  # adresse affichée par python -m generation.vlm_server
+    vlm_remote_token: SecretStr = SecretStr("")   # jeton affiché par python -m generation.vlm_server
     vlm_remote_timeout: int = 180             # secondes par génération
     max_upload_mb: int = 5                                    # taille maximale d'une photo envoyée
 

@@ -3,17 +3,22 @@
 Le brouillon n'est qu'une proposition : sa création exige l'approbation humaine du contenu exact.
 """
 
-import json
 import re
 
 from pydantic import BaseModel, Field, ValidationError
 
-from generation.answer import load_prompt
+from generation.prompting import parse, render
 from generation.vlm import VLM, VLMUnavailable
 from retrieval.sanitize import neutralize
 
 MAX_TITLE = 120
 MAX_DESCRIPTION = 4000
+
+
+class DraftOutput(BaseModel):
+    """Ce que le VLM doit produire."""
+    title: str = Field(min_length=1, max_length=MAX_TITLE)
+    description: str = Field(min_length=1, max_length=MAX_DESCRIPTION)
 
 
 class TicketDraft(BaseModel):
@@ -54,15 +59,12 @@ def draft_ticket(vlm: VLM | None, equipment_id: str, question: str, answer: dict
     """Renvoie (brouillon, appels au modèle, origine : « modele » ou « modele_de_texte »)."""
     if vlm is None or max_calls <= 0:
         return template_draft(equipment_id, question, answer, history, open_tickets), 0, "modele_de_texte"
-    prompt = load_prompt("ticket_draft_v1")
-    user = prompt["user"].format(equipment_id=equipment_id, question=question, answer=answer.get("answer", ""),
-                                 citations=_citation_lines(answer), history=_history_lines(history, limit=5),
-                                 open_tickets=_open_lines(open_tickets))
+    system, user = render("ticket_draft_v1", equipment_id=equipment_id, question=question,
+                          answer=answer.get("answer", ""), citations=_citation_lines(answer),
+                          history=_history_lines(history, limit=5), open_tickets=_open_lines(open_tickets))
     try:
-        raw = vlm.generate(prompt["system"], user, [])
-        match = re.search(r"\{.*\}", raw, re.DOTALL)
-        data = json.loads(match.group(0)) if match else {}
-        return TicketDraft(equipment_id=equipment_id, **{k: data.get(k, "") for k in ("title", "description")}), 1, "modele"
+        out = parse(DraftOutput, vlm.generate(system, user, []))   # validation par PydanticOutputParser (LangChain)
+        return TicketDraft(equipment_id=equipment_id, title=out.title, description=out.description), 1, "modele"
     except (VLMUnavailable, ValueError, TypeError, AttributeError, ValidationError):
         # Sortie invalide ou VLM indisponible : on retombe sur le modèle de texte plutôt que d'échouer.
         return template_draft(equipment_id, question, answer, history, open_tickets), 1, "modele_de_texte"

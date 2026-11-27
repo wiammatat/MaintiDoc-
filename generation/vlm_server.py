@@ -1,6 +1,10 @@
-"""Serveur du VLM, lancé sur une machine avec GPU (Kaggle) et appelé à distance par RemoteVLM.
+"""Serveur du VLM, lancé sur une machine avec GPU et appelé à distance par RemoteVLM (VLM_BACKEND=remote).
 
-Il n'expose que la génération : la recherche, le contrôle d'accès et la vérification restent sur le PC.
+Cas d'usage : Qwen tourne sur le PC équipé de la carte NVIDIA, l'API tourne sur un autre PC du même réseau.
+Il n'expose que la génération : la recherche, le contrôle d'accès et la vérification restent côté API.
+
+Lancement sur le PC avec GPU :   python -m generation.vlm_server --host 0.0.0.0 --port 8001
+(le jeton à recopier dans le .env de l'autre PC est affiché au démarrage)
 Protections :
 - jeton secret obligatoire (comparaison à temps constant), sinon 401 ;
 - nombre et taille des images bornés, textes bornés ;
@@ -11,13 +15,8 @@ import base64
 import binascii
 import hmac
 import io
-import re
-import shutil
-import subprocess
 import threading
 import time
-import urllib.request
-from pathlib import Path
 
 from fastapi import FastAPI, Header, HTTPException, status
 from PIL import Image, UnidentifiedImageError
@@ -28,7 +27,6 @@ from generation.vlm import VLM
 MAX_IMAGES = 4
 MAX_IMAGE_BYTES = 5 * 1024 * 1024
 MAX_TEXT_CHARS = 60_000
-CLOUDFLARED_URL = "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-amd64"
 
 
 class GenerateRequest(BaseModel):
@@ -84,7 +82,7 @@ def create_app(vlm: VLM, token: str) -> FastAPI:
 
 
 def serve_in_background(app: FastAPI, port: int = 8001) -> threading.Thread:
-    """Lance uvicorn dans un fil d'exécution (le notebook reste utilisable)."""
+    """Lance uvicorn dans un fil d'exécution (utilisé par les tests)."""
     import uvicorn
     server = uvicorn.Server(uvicorn.Config(app, host="127.0.0.1", port=port, log_level="warning"))
     thread = threading.Thread(target=server.run, daemon=True)
@@ -96,21 +94,24 @@ def serve_in_background(app: FastAPI, port: int = 8001) -> threading.Thread:
     raise RuntimeError("Le serveur VLM n'a pas démarré")
 
 
-def start_tunnel(port: int = 8001, workdir: Path = Path("/kaggle/working"), timeout: int = 90) -> tuple[str, subprocess.Popen]:
-    """Ouvre un tunnel Cloudflare rapide (sans compte) vers le port local. Renvoie (adresse publique, processus)."""
-    binary = shutil.which("cloudflared") or str(workdir / "cloudflared")
-    if not Path(binary).exists():
-        urllib.request.urlretrieve(CLOUDFLARED_URL, binary)
-        Path(binary).chmod(0o755)
-    proc = subprocess.Popen([binary, "tunnel", "--no-autoupdate", "--url", f"http://127.0.0.1:{port}"],
-                            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True)
-    deadline = time.time() + timeout
-    while time.time() < deadline:
-        line = proc.stdout.readline()
-        match = re.search(r"https://[a-z0-9-]+\.trycloudflare\.com", line)
-        if match:
-            # Continuer à lire la sortie de cloudflared : sinon le tampon se remplit et le tunnel se bloque.
-            threading.Thread(target=lambda: [None for _ in proc.stdout], daemon=True).start()
-            return match.group(0), proc
-    proc.terminate()
-    raise RuntimeError("Adresse du tunnel introuvable : vérifier que l'accès Internet est activé dans Kaggle")
+def main() -> None:
+    import argparse
+    import secrets
+
+    import uvicorn
+
+    from generation.vlm import QwenVL
+
+    parser = argparse.ArgumentParser(description="Serveur VLM MaintiDoc (Qwen sur ce GPU)")
+    parser.add_argument("--host", default="127.0.0.1", help="0.0.0.0 pour accepter les autres PC du réseau local")
+    parser.add_argument("--port", type=int, default=8001)
+    args = parser.parse_args()
+    token = secrets.token_urlsafe(32)   # nouveau jeton à chaque lancement
+    app = create_app(QwenVL(), token)
+    print(f"Serveur VLM prêt. Dans le .env du PC qui fait tourner l'API :\n"
+          f"VLM_BACKEND=remote\nVLM_REMOTE_URL=http://<adresse-IP-de-ce-PC>:{args.port}\nVLM_REMOTE_TOKEN={token}")
+    uvicorn.run(app, host=args.host, port=args.port, log_level="warning")
+
+
+if __name__ == "__main__":
+    main()

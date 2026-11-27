@@ -22,7 +22,6 @@ indexing/     3. index textuel (LlamaIndex + BGE-M3) et index visuel (CLIP), dan
 retrieval/    4. recherche texte + image, fusion RRF, reranker, paquet de preuves
 generation/   5. VLM (Qwen2.5-VL), réponse JSON sourcée, vérification des citations
 pipeline/        commandes : ingest (étapes 1-2) et index (étape 3)
-notebooks/       notebook Kaggle (partie GPU)
 agent/           6. agent LangGraph : analyse, historique MCP, réponse, ticket, validation humaine
 mcp_server/      serveur MCP de maintenance (historique, tickets) avec contrôle des droits à chaque appel
 api/          API FastAPI
@@ -76,16 +75,17 @@ pytest                              # vérifie tout le pipeline (corpus, extract
 | MinIO (API S3) | http://localhost:9000 (console : http://localhost:9001) |
 | MLflow | http://localhost:5000 |
 
-## Génération des réponses (VLM sur Kaggle)
+## Génération des réponses : PC avec carte NVIDIA
 
-Le VLM Qwen2.5-VL-7B nécessite un GPU : il tourne sur Kaggle.
+Qwen2.5-VL-7B nécessite un GPU NVIDIA. Avec une carte de **8 Go**, tout ne tient pas en même temps :
 
-1. En local : `python scripts/make_kaggle_bundle.py` crée `dist/maintidoc_kaggle.zip` (code + données, sans secret).
-2. Sur Kaggle : créer un dataset privé **maintidoc-bundle** à partir de ce zip.
-3. Importer `notebooks/kaggle_maintidoc.ipynb`, activer **GPU T4 x2** et **Internet**, ajouter le dataset, tout exécuter.
-4. Télécharger `resultats_vlm.json` (onglet *Output*) pour la démonstration locale.
+| Configuration | Réglages `.env` | Remarque |
+|---|---|---|
+| **A** (recommandée) : Qwen 7B en 4 bits sur la carte, recherche sur le processeur | `VLM_BACKEND=qwen`, `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Modèle du sujet ; mémoire juste, reranker plus lent sur processeur |
+| **B** (si A manque de mémoire) : Qwen 3B en 4 bits, tout sur la carte | `VLM_MODEL=Qwen/Qwen2.5-VL-3B-Instruct`, `VLM_QUANTIZATION=4bit`, `DEVICE=cuda`, `MODEL_DTYPE=float16` | Plus rapide, modèle plus petit (licence différente, voir docs/licences.md) |
 
-En local, les tests de génération utilisent un faux VLM (`ScriptedVLM`) : ni GPU ni téléchargement.
+Installer PyTorch avec CUDA (et non la version CPU) sur ce PC, ainsi que `bitsandbytes`.
+Sans GPU, `POST /ask` et `POST /agent` renvoient 503 ; `POST /search` fonctionne. Les tests utilisent un faux VLM.
 
 ## API FastAPI
 
@@ -113,13 +113,15 @@ stdio : `get_equipment_history`, `get_open_tickets`, `create_ticket`. La base fi
 `python scripts/generate_corpus.py --mcp-only`. Exemple : « Voyant orange sur BAIE-SN400-002, prépare un ticket »
 renvoie la réponse, l'historique et un brouillon ; le ticket n'est créé qu'après `POST /agent/{id}/approval`.
 
-### Brancher l'API sur Qwen qui tourne sur Kaggle
+### Qwen sur un autre PC du réseau local
 
-1. Sur Kaggle : exécuter les sections 1 à 4 du notebook, puis la section **7. Serveur VLM pour le PC**.
-2. Copier les trois lignes affichées (`VLM_BACKEND=remote`, `VLM_REMOTE_URL=...`, `VLM_REMOTE_TOKEN=...`) dans `.env`.
-3. Relancer l'API : `POST /ask` utilise alors Qwen sur le GPU de Kaggle.
+Si l'API tourne sur un PC sans GPU et Qwen sur le PC équipé de la carte NVIDIA :
 
-L'adresse et le jeton changent à chaque session Kaggle. Si la session s'arrête, `POST /ask` renvoie 503.
+1. Sur le PC avec GPU : `python -m generation.vlm_server --host 0.0.0.0 --port 8001` (affiche un jeton).
+2. Dans le `.env` du PC qui fait tourner l'API : `VLM_BACKEND=remote`, `VLM_REMOTE_URL=http://<IP du PC GPU>:8001`,
+   `VLM_REMOTE_TOKEN=<jeton affiché>`.
+
+Le jeton change à chaque lancement du serveur ; sans lui, le serveur refuse toute requête.
 
 ## Lightning AI Studio (profil léger, sans Docker)
 

@@ -1,6 +1,6 @@
 """Modèles vision-langage interchangeables.
 
-- QwenVL : Qwen2.5-VL sur GPU (Kaggle), en 4 bits ou en fp16.
+- QwenVL : Qwen2.5-VL sur GPU NVIDIA, en 4 bits ou en fp16.
 - ScriptedVLM : renvoie des réponses prédéfinies, pour les tests sur CPU.
 """
 
@@ -49,7 +49,7 @@ class VLMUnavailable(RuntimeError):
 
 
 class RemoteVLM:
-    """Client du serveur VLM distant (generation/vlm_server.py), par exemple Qwen sur le GPU de Kaggle via un tunnel."""
+    """Client du serveur VLM distant (generation/vlm_server.py), par exemple Qwen sur le GPU d'un autre PC du réseau."""
 
     def __init__(self, url: str, token: str, timeout: float = 180, client=None, name: str | None = None):
         import httpx
@@ -73,7 +73,7 @@ class RemoteVLM:
             r = self.client.post(f"{self.url}/generate", json={"system": system, "user": user, "images": encoded},
                                  headers={"Authorization": f"Bearer {self.token}"}, timeout=self.timeout)
         except httpx.HTTPError as e:
-            raise VLMUnavailable("Serveur VLM injoignable : session Kaggle arrêtée ou adresse du tunnel changée "
+            raise VLMUnavailable("Serveur VLM injoignable : serveur arrêté ou adresse incorrecte (VLM_REMOTE_URL) "
                                  f"({type(e).__name__})") from None
         if r.status_code == 401:
             raise VLMUnavailable("Jeton refusé par le serveur VLM : vérifier VLM_REMOTE_TOKEN dans .env")

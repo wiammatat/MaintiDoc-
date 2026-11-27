@@ -81,7 +81,7 @@ def get_vlm() -> VLM:
     if s.vlm_backend == "remote" and s.vlm_remote_url and s.vlm_remote_token.get_secret_value():
         return _remote_vlm()
     raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
-                        "VLM indisponible : utiliser /search, ou brancher Qwen sur Kaggle (VLM_BACKEND=remote avec "
+                        "VLM indisponible : utiliser /search, ou VLM_BACKEND=qwen sur un PC avec GPU NVIDIA, ou VLM_BACKEND=remote avec "
                         "VLM_REMOTE_URL et VLM_REMOTE_TOKEN), ou VLM_BACKEND=qwen sur une machine avec GPU.")
 
 
@@ -236,7 +236,8 @@ def _agent_response(thread_id: str, values: dict, pending: bool) -> AgentRespons
                          historique=values.get("history"), tickets_ouverts=values.get("open_tickets"),
                          ticket_draft=values.get("ticket_draft"), ticket=values.get("ticket"),
                          errors=values.get("errors", []), mcp_calls=values.get("mcp_calls", 0),
-                         model_calls=values.get("model_calls", 0))
+                         model_calls=values.get("model_calls", 0),
+                         search_attempts=values.get("search_attempts", []), photo_analysis=values.get("photo_analysis"))
 
 
 def _photo_b64(photo: UploadFile | None) -> str | None:

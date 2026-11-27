@@ -3,18 +3,16 @@
 recherche -> paquet de preuves -> prompt -> VLM -> JSON validé -> citations vérifiées.
 """
 
-import json
 import re
 from collections.abc import Callable
-from functools import lru_cache
 
-import yaml
 from PIL import Image
 from pydantic import ValidationError
 
 from common.access import User
 from common.config import get_settings
 from generation.guards import models_without_access
+from generation.prompting import load_prompt, parse, render
 from generation.schema import Answer, Citation, ModelOutput, output_schema_hint
 from generation.verify import check_evidence
 from generation.vlm import VLM, default_vlm, fit_image
@@ -27,19 +25,6 @@ LABEL_RE = re.compile(r"\[(S\d+)\]")
 INJECTION_CLAIM = re.compile(r"consigne.{0,60}(ignor|suspect|retir)|injection", re.IGNORECASE)
 
 
-@lru_cache
-def load_prompt(name: str) -> dict:
-    return yaml.safe_load((get_settings().prompts_dir / f"{name}.yaml").read_text(encoding="utf-8"))
-
-
-def parse_output(raw: str) -> ModelOutput:
-    """Extrait le premier objet JSON de la sortie du modèle et le valide."""
-    match = re.search(r"\{.*\}", raw, re.DOTALL)
-    if not match:
-        raise ValueError("aucun objet JSON dans la sortie du modèle")
-    return ModelOutput.model_validate(json.loads(match.group(0)))
-
-
 def resolve_citations(output: ModelOutput, labels: dict[str, Hit]) -> tuple[list[Citation], list[str]]:
     """Ne garde que les citations vers des sources réellement récupérées."""
     cited = list(dict.fromkeys(output.citations + LABEL_RE.findall(output.answer)))
@@ -49,9 +34,13 @@ def resolve_citations(output: ModelOutput, labels: dict[str, Hit]) -> tuple[list
 
 
 def answer(user: User, question: str, photo: Image.Image | None = None, *, vlm: VLM | None = None,
-           search_fn: Callable[..., SearchResult] = search, verify: bool = True) -> Answer:
+           search_fn: Callable[..., SearchResult] = search, verify: bool = True,
+           max_calls: int | None = None, photo_context: str | None = None) -> Answer:
     """verify : second appel au modèle pour vérifier que les sources soutiennent les affirmations (étape 1.6)."""
+    # max_calls : appels au modèle autorisés pour cette réponse (l'agent passe le reste de son budget).
+    # photo_context : résumé vérifié de l'analyse de la photo (agent, prompt visual_analysis_v1).
     s = get_settings()
+    budget = s.max_model_calls if max_calls is None else max_calls
     vlm = vlm or default_vlm()
     prompt = load_prompt(s.answer_prompt)
     evidence_prompt = load_prompt(s.evidence_prompt)
@@ -76,17 +65,19 @@ def answer(user: User, question: str, photo: Image.Image | None = None, *, vlm: 
     # Réduction des images ici : la photo de l'utilisateur garde une meilleure résolution que les images récupérées.
     images = ([fit_image(photo, s.vlm_photo_max_pixels)] if photo is not None else []) + [
         fit_image(Image.open(s.data_dir / h.payload["image_path"]), s.vlm_max_pixels) for h in image_hits]
-    system = prompt["system"].replace("{schema}", output_schema_hint())
-    user_msg = prompt["user"].format(
-        question=question, sources="\n\n".join(lines),
-        photo="jointe (IMAGE n°1)" if photo is not None else "aucune")
+    photo_label = "aucune"
+    if photo is not None:
+        photo_label = "jointe (IMAGE n°1)" + (f" ; {photo_context}" if photo_context else "")
+    # Prompt versionné rendu par LangChain (ChatPromptTemplate).
+    system, user_msg = render(s.answer_prompt, schema=output_schema_hint(), question=question,
+                              sources="\n\n".join(lines), photo=photo_label)
 
     errors, calls = [], 0
-    for _ in range(min(MAX_ATTEMPTS, s.max_model_calls)):
+    for _ in range(min(MAX_ATTEMPTS, budget)):
         calls += 1
         raw = vlm.generate(system, user_msg, images)
         try:
-            output = parse_output(raw)
+            output = parse(ModelOutput, raw)   # validation par PydanticOutputParser (LangChain)
             break
         except (ValueError, ValidationError) as e:
             errors.append(str(e)[:200])
@@ -105,8 +96,8 @@ def answer(user: User, question: str, photo: Image.Image | None = None, *, vlm: 
         output.clarification_question = None
     checks, unsupported = [], set()
     if verify:
-        checks, unsupported, notes, n = check_evidence(vlm, evidence_prompt, output.answer, labels,
-                                                       max_calls=s.max_model_calls - calls, cited=output.citations)
+        checks, unsupported, notes, n = check_evidence(vlm, s.evidence_prompt, output.answer, labels,
+                                                       max_calls=budget - calls, cited=output.citations)
         calls += n
         uncertainties += notes
         output.citations = [c for c in output.citations if c not in unsupported]

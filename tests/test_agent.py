@@ -151,3 +151,72 @@ def test_brouillon_de_secours_si_sortie_invalide(db_copy):
     assert out["draft_origin"] == "modele_de_texte"
     assert out["ticket_draft"]["title"].startswith("BAIE-SN400-002")
     assert "manuel_baie_sn-400, page 2" in out["ticket_draft"]["description"]
+
+
+# --- Boucle contrôlée (nouvelle recherche si les preuves sont insuffisantes)
+
+from agent.rewrite import identifiers, keep_identifiers  # noqa: E402
+
+ABSTAINED = json.dumps({"status": "abstained", "answer": "Aucune source ne répond à cette question.", "citations": [],
+                        "uncertainties": [], "clarification_question": None, "proposed_action": None})
+REWRITE = json.dumps({"query": "voyant orange L2 baie de stockage disque défaillant reconstruction RAID"})
+
+
+def make_recording(*replies):
+    """Agent dont la recherche enregistre les requêtes reçues."""
+    queries = []
+
+    def search_fn(user, query, photo=None):
+        queries.append(query)
+        return FAKE
+    mcp = InMemoryMCPClient()
+    agent = build_agent(ScriptedVLM(*replies), mcp, search_fn=search_fn, checkpointer=InMemorySaver())
+    return agent, queries
+
+
+def test_relance_reussie_apres_reformulation(db_copy):
+    agent, queries = make_recording(ABSTAINED, REWRITE, ANSWER, CHECK)
+    out, _ = run(agent, "tech_s01", "Que veut dire la lumière orange ?")
+    assert queries == ["Que veut dire la lumière orange ?", json.loads(REWRITE)["query"]]
+    assert out["answer"]["status"] == "answered" and out["search_rounds"] == 2
+    assert [a["status"] for a in out["search_attempts"]] == ["abstained", "answered"]
+    assert out["model_calls"] == 4   # réponse 1 + reformulation + réponse 2 + vérification
+
+
+def test_limite_de_tours(db_copy):
+    agent, queries = make_recording(ABSTAINED, REWRITE, ABSTAINED, REWRITE, ABSTAINED)
+    out, _ = run(agent, "tech_s01", "Que veut dire la lumière orange ?")
+    assert len(queries) == S.agent_max_search_rounds == 2 and out["answer"]["status"] == "abstained"
+
+
+def test_pas_de_relance_si_le_budget_ne_permet_pas_un_tour_complet(db_copy, monkeypatch):
+    monkeypatch.setattr(S, "max_model_calls", 3)   # 1 appel déjà utilisé + 3 nécessaires > 3
+    agent, queries = make_recording(ABSTAINED, REWRITE, ANSWER, CHECK)
+    out, _ = run(agent, "tech_s01", "Que veut dire la lumière orange ?")
+    assert len(queries) == 1 and out["search_rounds"] == 1 and out["model_calls"] <= 3
+
+
+def test_pas_de_relance_quand_le_garde_fou_bloque(db_copy):
+    agent, queries = make_recording(ABSTAINED, REWRITE, ANSWER, CHECK)
+    out, _ = run(agent, "tech_r01", "Que signifie le voyant orange de la baie SN-400 ?")
+    assert out["answer"]["status"] == "abstained" and out["search_rounds"] == 1 and out["model_calls"] == 0
+
+
+def test_pas_de_relance_si_la_reponse_est_etayee(db_copy):
+    agent, queries = make_recording(ANSWER, CHECK)
+    out, _ = run(agent, "tech_s01", "Que signifie le voyant orange ?")
+    assert len(queries) == 1 and out["search_rounds"] == 1
+
+
+def test_reformulation_invalide_arrete_la_boucle(db_copy):
+    agent, queries = make_recording(ABSTAINED, "pas de JSON")
+    out, _ = run(agent, "tech_s01", "Que veut dire la lumière orange ?")
+    assert len(queries) == 1 and any("Reformulation impossible" in e for e in out["errors"])
+
+
+def test_identifiants_conserves_dans_la_reformulation():
+    question = "Seuil E03 de la SN-400 sur BAIE-SN400-002 ?"
+    assert set(identifiers(question)) == {"BAIE-SN400-002", "SN-400", "E03"}
+    fixed = keep_identifiers(question, "température contrôleur alarme baie de stockage")
+    assert all(i in fixed for i in ("BAIE-SN400-002", "SN-400", "E03"))
+    assert keep_identifiers(question, "alarme E03 SN-400 BAIE-SN400-002") == "alarme E03 SN-400 BAIE-SN400-002"
