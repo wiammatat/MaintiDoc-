@@ -1,0 +1,4747 @@
+{
+  "meta": {
+    "date": "2026-11-28T00:05:08",
+    "index_version": "v1",
+    "sans_photo": false
+  },
+  "resultats": {
+    "sans_reranker": {
+      "reranker": null,
+      "agregats": {
+        "scenarios": 100,
+        "notes_en_recherche": 86,
+        "fuites": 0,
+        "latence_mediane_s": 0.203,
+        "latence_p95_s": 0.402,
+        "recall@5": 0.9128,
+        "ndcg@5": 0.7239,
+        "mrr@10": 0.681,
+        "par_categorie": {
+          "texte": {
+            "recall@5": 0.939,
+            "ndcg@5": 0.8139,
+            "mrr@10": 0.7801,
+            "n": 41
+          },
+          "image": {
+            "recall@5": 0.8636,
+            "ndcg@5": 0.4792,
+            "mrr@10": 0.3674,
+            "n": 22
+          },
+          "mcp": {
+            "recall@5": 1.0,
+            "ndcg@5": 0.9385,
+            "mrr@10": 0.9167,
+            "n": 6
+          },
+          "sources": {
+            "recall@5": 0.9091,
+            "ndcg@5": 0.7346,
+            "mrr@10": 0.7727,
+            "n": 11
+          },
+          "acces": {
+            "recall@5": 1.0,
+            "ndcg@5": 1.0,
+            "mrr@10": 1.0,
+            "n": 1
+          },
+          "injection": {
+            "recall@5": 0.8,
+            "ndcg@5": 0.7262,
+            "mrr@10": 0.7,
+            "n": 5
+          }
+        },
+        "scenarios_humains": {
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        }
+      },
+      "details": [
+        {
+          "id": "TXT-001",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "note_service_baie_01",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 20.065,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-002",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "note_service_baie_01",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b05",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.494,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-003",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-800",
+            "note_service_baie_01",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.21,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-004",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "scan_baie_01",
+            "note_service_baie_01",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.203,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-005",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "note_service_baie_01",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.219,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-006",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-800",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.301,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-007",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "note_service_baie_01",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.209,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-008",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.193,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-009",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.196,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-010",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.185,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-011",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.199,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-012",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.194,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-013",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.202,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-014",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.185,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-015",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-200",
+            "note_service_baie_01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200",
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.197,
+          "recall@5": 0.5,
+          "ndcg@5": 0.2372,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "TXT-016",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-800",
+            "note_service_baie_01",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800",
+            "fiche_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.179,
+          "recall@5": 0.5,
+          "ndcg@5": 0.2372,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "TXT-017",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24",
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.174,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3066,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "TXT-018",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "fiche_switch_fl-48"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.175,
+          "recall@5": 0.5,
+          "ndcg@5": 0.2641,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "TXT-019",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96",
+            "fiche_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.199,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-020",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-200",
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-400",
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.163,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-021",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-400",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-200",
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "fiche_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.136,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-022",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-200",
+            "fiche_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "fiche_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.144,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-023",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-24",
+            "fiche_switch_fl-24",
+            "fiche_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-96"
+          ],
+          "attendus": [
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.145,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-024",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "fiche_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-24"
+          ],
+          "attendus": [
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.143,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-025",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "fiche_switch_fl-48",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "fiche_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.164,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-026",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b01",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "manuel_san_pedagogique",
+            "procedure_baie_prc-b02"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b01"
+          ],
+          "fuites": [],
+          "latence_s": 0.2,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-027",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b02",
+            "procedure_baie_prc-b05",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-200",
+            "alarmes_baie_sn-400"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b02"
+          ],
+          "fuites": [],
+          "latence_s": 0.171,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-028",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b03",
+            "procedure_baie_prc-b05",
+            "procedure_baie_prc-b02",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "securite_switch_sec-s01",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b03"
+          ],
+          "fuites": [],
+          "latence_s": 0.184,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-029",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b04",
+            "manuel_san_pedagogique",
+            "procedure_baie_prc-b05",
+            "procedure_baie_prc-b01",
+            "procedure_baie_prc-b03",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b04"
+          ],
+          "fuites": [],
+          "latence_s": 0.171,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-030",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b05",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-200",
+            "scan_baie_01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "procedure_baie_prc-b03",
+            "procedure_baie_prc-b02",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b05"
+          ],
+          "fuites": [],
+          "latence_s": 0.177,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-031",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s01",
+            "note_service_switch_02",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s05",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s01"
+          ],
+          "fuites": [],
+          "latence_s": 0.181,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-032",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s02",
+            "procedure_switch_prc-s03",
+            "procedure_switch_prc-s05",
+            "securite_baie_sec-b01",
+            "note_service_switch_01"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.182,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-033",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s03",
+            "procedure_switch_prc-s02",
+            "note_service_switch_01",
+            "procedure_switch_prc-s05",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s01"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s03"
+          ],
+          "fuites": [],
+          "latence_s": 0.203,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-034",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-96",
+            "manuel_san_pedagogique",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "procedure_switch_prc-s05",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s04"
+          ],
+          "fuites": [],
+          "latence_s": 0.253,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-035",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s05",
+            "procedure_switch_prc-s02",
+            "scan_switch_01",
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s05"
+          ],
+          "fuites": [],
+          "latence_s": 0.312,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-036",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "procedure_baie_prc-b01",
+            "fiche_baie_sn-800",
+            "procedure_baie_prc-b04",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique"
+          ],
+          "fuites": [],
+          "latence_s": 0.29,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-037",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s03",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique"
+          ],
+          "fuites": [],
+          "latence_s": 0.264,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-038",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "scan_switch_02"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01"
+          ],
+          "fuites": [],
+          "latence_s": 0.217,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-039",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b02",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "securite_baie_sec-b01",
+            "manuel_san_pedagogique",
+            "procedure_baie_prc-b05",
+            "procedure_baie_prc-b01"
+          ],
+          "attendus": [
+            "securite_baie_sec-b02"
+          ],
+          "fuites": [],
+          "latence_s": 0.27,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-040",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s01",
+            "note_service_switch_02",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "securite_switch_sec-s02",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "securite_switch_sec-s01"
+          ],
+          "fuites": [],
+          "latence_s": 0.219,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "IMG-001",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "manuel_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 7.388,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-002",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "manuel_san_pedagogique",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.394,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.0
+        },
+        {
+          "id": "IMG-003",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "manuel_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.29,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-005",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "manuel_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.298,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-006",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "manuel_san_pedagogique",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.298,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "IMG-007",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.316,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-009",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.317,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-010",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "manuel_san_pedagogique",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.28,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.1667
+        },
+        {
+          "id": "IMG-011",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 0.291,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-013",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-400",
+            "fiche_baie_sn-200",
+            "fiche_baie_sn-800",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.401,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "IMG-014",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_san_pedagogique",
+            "fiche_baie_sn-400"
+          ],
+          "attendus": [
+            "fiche_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.245,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "IMG-016",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.316,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-017",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-96",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.241,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-018",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.236,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-020",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "manuel_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.233,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-021",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.23,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "IMG-022",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "manuel_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.231,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-024",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "manuel_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.215,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-025",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.248,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "IMG-026",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "manuel_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.216,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-028",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "fiche_switch_fl-48",
+            "fiche_switch_fl-24"
+          ],
+          "attendus": [
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.276,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.1667
+        },
+        {
+          "id": "IMG-029",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "fiche_switch_fl-48",
+            "fiche_switch_fl-24"
+          ],
+          "attendus": [
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.235,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "MCP-011",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "note_service_baie_01",
+            "procedure_baie_prc-b05",
+            "scan_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.552,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-012",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "scan_baie_01",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 0.197,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-013",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b05",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.192,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "MCP-014",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "procedure_switch_prc-s01",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 0.186,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-015",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "procedure_switch_prc-s01"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 0.191,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-016",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 0.197,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-001",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.16,
+          "recall@5": 1.0,
+          "ndcg@5": 0.8503,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-002",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-400",
+            "note_service_baie_01",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.184,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6241,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "SRC-003",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-400",
+            "note_service_baie_01",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "alarmes_baie_sn-400",
+            "procedure_baie_prc-b05",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.324,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "SRC-004",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.211,
+          "recall@5": 1.0,
+          "ndcg@5": 0.8503,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-005",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "alarmes_switch_fl-48",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.17,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-006",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s02",
+            "note_service_switch_02",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.177,
+          "recall@5": 1.0,
+          "ndcg@5": 0.8503,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-007",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-48",
+            "note_service_switch_02",
+            "manuel_switch_fl-24",
+            "fiche_switch_fl-96"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.162,
+          "recall@5": 1.0,
+          "ndcg@5": 0.8772,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-008",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-48",
+            "note_service_switch_01",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.193,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "SRC-009",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-24",
+            "fiche_switch_fl-24",
+            "manuel_switch_fl-24",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 0.158,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "SRC-010",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "procedure_switch_prc-s05",
+            "manuel_switch_fl-24",
+            "securite_baie_sec-b01"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02",
+            "note_service_switch_01"
+          ],
+          "fuites": [],
+          "latence_s": 0.171,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-011",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-800",
+            "note_service_baie_01",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "fiche_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800",
+            "note_service_baie_01"
+          ],
+          "fuites": [],
+          "latence_s": 0.36,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6241,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "ACC-001",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "note_service_baie_01",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.158
+        },
+        {
+          "id": "ACC-002",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "scan_baie_01",
+            "procedure_baie_prc-b01",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200",
+            "securite_switch_sec-s01",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.17
+        },
+        {
+          "id": "ACC-003",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-200",
+            "note_service_baie_01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-400",
+            "fiche_baie_sn-800"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.161
+        },
+        {
+          "id": "ACC-004",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24",
+            "procedure_switch_prc-s01",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.159
+        },
+        {
+          "id": "ACC-005",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b01",
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.261
+        },
+        {
+          "id": "ACC-006",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "procedure_baie_prc-b01",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "scan_baie_01"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.343
+        },
+        {
+          "id": "ACC-007",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "fiche_baie_sn-800",
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-200",
+            "fiche_baie_sn-400",
+            "manuel_san_pedagogique",
+            "procedure_baie_prc-b01",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.417
+        },
+        {
+          "id": "ACC-008",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s01",
+            "securite_baie_sec-b01",
+            "procedure_switch_prc-s04",
+            "note_service_switch_02",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.22
+        },
+        {
+          "id": "ACC-009",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b01",
+            "securite_baie_sec-b02",
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "note_service_switch_02"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.315
+        },
+        {
+          "id": "ACC-010",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_02",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "procedure_baie_prc-b01",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01"
+          ],
+          "attendus": [
+            "note_service_baie_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.163,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-001",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-96",
+            "securite_switch_sec-s01",
+            "manuel_switch_fl-96",
+            "procedure_switch_prc-s05",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.175,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-002",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s05",
+            "note_service_switch_01",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.172,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-003",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.148,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-004",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s01",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05",
+            "procedure_switch_prc-s04",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "securite_switch_sec-s01"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.207,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "INJ-005",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "scan_switch_01",
+            "procedure_switch_prc-s05",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 0.172,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.0
+        },
+        {
+          "id": "INJ-006",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b01",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "scan_baie_01",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b02"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.182
+        },
+        {
+          "id": "INJ-007",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "procedure_baie_prc-b03"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.322
+        },
+        {
+          "id": "INJ-014",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "securite_baie_sec-b01",
+            "alarmes_baie_sn-400",
+            "securite_switch_sec-s01"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.21
+        },
+        {
+          "id": "INJ-015",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "securite_baie_sec-b01"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.205
+        },
+        {
+          "id": "INJ-020",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "securite_baie_sec-b02",
+            "alarmes_switch_fl-96",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 0.172
+        },
+        {
+          "id": "HUM-001",
+          "categorie": "texte",
+          "source": "humain",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-400",
+            "procedure_baie_prc-b05",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 0.361,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        }
+      ]
+    },
+    "reranker_origine": {
+      "reranker": "default",
+      "agregats": {
+        "scenarios": 100,
+        "notes_en_recherche": 86,
+        "fuites": 0,
+        "latence_mediane_s": 29.54,
+        "latence_p95_s": 40.415,
+        "recall@5": 0.9302,
+        "ndcg@5": 0.7827,
+        "mrr@10": 0.7565,
+        "par_categorie": {
+          "texte": {
+            "recall@5": 0.939,
+            "ndcg@5": 0.8673,
+            "mrr@10": 0.8577,
+            "n": 41
+          },
+          "image": {
+            "recall@5": 0.9091,
+            "ndcg@5": 0.5148,
+            "mrr@10": 0.3992,
+            "n": 22
+          },
+          "mcp": {
+            "recall@5": 1.0,
+            "ndcg@5": 0.9385,
+            "mrr@10": 0.9167,
+            "n": 6
+          },
+          "sources": {
+            "recall@5": 0.9545,
+            "ndcg@5": 0.8909,
+            "mrr@10": 0.9545,
+            "n": 11
+          },
+          "acces": {
+            "recall@5": 1.0,
+            "ndcg@5": 1.0,
+            "mrr@10": 1.0,
+            "n": 1
+          },
+          "injection": {
+            "recall@5": 0.8,
+            "ndcg@5": 0.8,
+            "mrr@10": 0.8222,
+            "n": 5
+          }
+        },
+        "scenarios_humains": {
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        }
+      },
+      "details": [
+        {
+          "id": "TXT-001",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-200",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 56.916,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-002",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "note_service_baie_01",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "scan_baie_01",
+            "procedure_baie_prc-b02",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 88.476,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-003",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "note_service_baie_01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 48.296,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-004",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "scan_baie_01",
+            "procedure_baie_prc-b05",
+            "note_service_baie_01",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 25.246,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-005",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "note_service_baie_01",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b02",
+            "manuel_baie_sn-400",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 26.578,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-006",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-800",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 25.65,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-007",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "scan_baie_01",
+            "manuel_baie_sn-200",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 24.885,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-008",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24",
+            "procedure_switch_prc-s01"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 28.94,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-009",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "procedure_switch_prc-s01",
+            "note_service_switch_01"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 33.55,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-010",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 38.083,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-011",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 32.963,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-012",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-48",
+            "note_service_switch_01"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 33.418,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-013",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 40.462,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-014",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 37.732,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-015",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-200",
+            "note_service_baie_01",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "fiche_baie_sn-200"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200",
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 30.686,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3066,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "TXT-016",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-800",
+            "note_service_baie_01",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800",
+            "fiche_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 30.295,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3066,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "TXT-017",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24",
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 35.202,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-018",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "fiche_switch_fl-48"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 34.302,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-019",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "fiche_switch_fl-96"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96",
+            "fiche_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 33.698,
+          "recall@5": 0.5,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-020",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-200",
+            "fiche_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-800"
+          ],
+          "attendus": [
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 26.162,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-021",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-400",
+            "fiche_baie_sn-400",
+            "note_service_baie_01",
+            "alarmes_baie_sn-400",
+            "fiche_baie_sn-200",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800"
+          ],
+          "attendus": [
+            "fiche_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 27.699,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-022",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_baie_sn-800",
+            "fiche_baie_sn-800",
+            "fiche_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "fiche_baie_sn-400",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "fiche_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 27.728,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-023",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-24",
+            "fiche_switch_fl-24",
+            "alarmes_switch_fl-24",
+            "note_service_switch_02",
+            "fiche_switch_fl-48",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 31.773,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-024",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "fiche_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "note_service_switch_02",
+            "note_service_switch_01"
+          ],
+          "attendus": [
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 36.011,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-025",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "alarmes_switch_fl-96",
+            "note_service_switch_02",
+            "fiche_switch_fl-48",
+            "manuel_switch_fl-48"
+          ],
+          "attendus": [
+            "fiche_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 33.656,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "TXT-026",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b01",
+            "scan_baie_01",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b02",
+            "procedure_baie_prc-b05",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b01"
+          ],
+          "fuites": [],
+          "latence_s": 28.909,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-027",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b02",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b02"
+          ],
+          "fuites": [],
+          "latence_s": 27.007,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-028",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b03",
+            "procedure_baie_prc-b02",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05",
+            "manuel_baie_sn-800",
+            "procedure_baie_prc-b01",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b03"
+          ],
+          "fuites": [],
+          "latence_s": 27.209,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-029",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b04",
+            "manuel_san_pedagogique",
+            "procedure_baie_prc-b01",
+            "procedure_baie_prc-b03",
+            "procedure_baie_prc-b05",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "securite_switch_sec-s02"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b04"
+          ],
+          "fuites": [],
+          "latence_s": 13.575,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-030",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b02",
+            "procedure_baie_prc-b01",
+            "scan_baie_01",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "procedure_baie_prc-b05"
+          ],
+          "fuites": [],
+          "latence_s": 25.749,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-031",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s01",
+            "note_service_switch_02",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "procedure_switch_prc-s04",
+            "securite_switch_sec-s01",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s01"
+          ],
+          "fuites": [],
+          "latence_s": 30.968,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-032",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s02",
+            "procedure_switch_prc-s03",
+            "procedure_switch_prc-s05",
+            "manuel_san_pedagogique",
+            "note_service_switch_01",
+            "securite_switch_sec-s01",
+            "securite_baie_sec-b01",
+            "procedure_switch_prc-s01",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 13.087,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-033",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s03",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01",
+            "note_service_switch_01"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s03"
+          ],
+          "fuites": [],
+          "latence_s": 29.529,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-034",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s04",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "procedure_switch_prc-s01",
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s05",
+            "securite_baie_sec-b02"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s04"
+          ],
+          "fuites": [],
+          "latence_s": 30.27,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-035",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "procedure_switch_prc-s05",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-96",
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s01",
+            "manuel_san_pedagogique",
+            "scan_switch_01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s05"
+          ],
+          "fuites": [],
+          "latence_s": 28.967,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-036",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "fiche_baie_sn-200",
+            "fiche_baie_sn-400",
+            "fiche_baie_sn-800"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique"
+          ],
+          "fuites": [],
+          "latence_s": 25.951,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-037",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s03"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique"
+          ],
+          "fuites": [],
+          "latence_s": 17.968,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-038",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01"
+          ],
+          "fuites": [],
+          "latence_s": 19.485,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-039",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b02",
+            "securite_baie_sec-b01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "securite_baie_sec-b02"
+          ],
+          "fuites": [],
+          "latence_s": 23.553,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "TXT-040",
+          "categorie": "texte",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "note_service_switch_02"
+          ],
+          "attendus": [
+            "securite_switch_sec-s01"
+          ],
+          "fuites": [],
+          "latence_s": 41.24,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "IMG-001",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 39.682,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-002",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b03",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 36.978,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-003",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 34.094,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-005",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 38.348,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-006",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b03",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 35.566,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "IMG-007",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 36.451,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-009",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 31.533,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-010",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b03",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 27.169,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-011",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200"
+          ],
+          "attendus": [
+            "manuel_baie_sn-800"
+          ],
+          "fuites": [],
+          "latence_s": 25.319,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-013",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-400",
+            "fiche_baie_sn-800",
+            "fiche_baie_sn-200",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b02",
+            "procedure_baie_prc-b01"
+          ],
+          "attendus": [
+            "fiche_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 28.452,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.1667
+        },
+        {
+          "id": "IMG-014",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": true,
+          "classement": [
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-400",
+            "fiche_baie_sn-800",
+            "fiche_baie_sn-200",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b02",
+            "procedure_baie_prc-b01"
+          ],
+          "attendus": [
+            "fiche_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 24.683,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-016",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 35.925,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-017",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 39.54,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-018",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 31.54,
+          "recall@5": 1.0,
+          "ndcg@5": 0.5,
+          "mrr@10": 0.3333
+        },
+        {
+          "id": "IMG-020",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 36.958,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-021",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 34.867,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-022",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 30.818,
+          "recall@5": 1.0,
+          "ndcg@5": 0.4307,
+          "mrr@10": 0.25
+        },
+        {
+          "id": "IMG-024",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 27.115,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-025",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 27.7,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "IMG-026",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_san_pedagogique",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48"
+          ],
+          "attendus": [
+            "manuel_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 27.343,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "IMG-028",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": true,
+          "classement": [
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "fiche_switch_fl-24",
+            "fiche_switch_fl-48",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "fiche_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 21.843,
+          "recall@5": 1.0,
+          "ndcg@5": 0.3869,
+          "mrr@10": 0.2
+        },
+        {
+          "id": "IMG-029",
+          "categorie": "image",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": true,
+          "classement": [
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-96",
+            "fiche_switch_fl-96",
+            "fiche_switch_fl-24",
+            "fiche_switch_fl-48",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [
+            "fiche_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 21.024,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.1667
+        },
+        {
+          "id": "MCP-011",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-400",
+            "procedure_baie_prc-b01",
+            "scan_baie_01",
+            "note_service_baie_01"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 26.59,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-012",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-200",
+            "scan_baie_01",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "procedure_baie_prc-b02",
+            "manuel_baie_sn-200",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-200"
+          ],
+          "fuites": [],
+          "latence_s": 31.365,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-013",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 35.549,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "MCP-014",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "manuel_switch_fl-48",
+            "procedure_switch_prc-s01"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-48"
+          ],
+          "fuites": [],
+          "latence_s": 29.356,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-015",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-24"
+          ],
+          "fuites": [],
+          "latence_s": 27.877,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "MCP-016",
+          "categorie": "mcp",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "alarmes_switch_fl-96"
+          ],
+          "fuites": [],
+          "latence_s": 28.921,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-001",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "alarmes_baie_sn-200",
+            "fiche_baie_sn-400",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 24.429,
+          "recall@5": 1.0,
+          "ndcg@5": 0.9197,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-002",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "fiche_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 24.603,
+          "recall@5": 1.0,
+          "ndcg@5": 0.9197,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-003",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 24.631,
+          "recall@5": 1.0,
+          "ndcg@5": 0.9197,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-004",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-800",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800"
+          ],
+          "attendus": [
+            "note_service_baie_01",
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 27.276,
+          "recall@5": 1.0,
+          "ndcg@5": 0.9197,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-005",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 28.616,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-006",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "note_service_switch_02",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 40.413,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-007",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 37.926,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-008",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "note_service_switch_02",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s05"
+          ],
+          "attendus": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 37.38,
+          "recall@5": 0.5,
+          "ndcg@5": 0.6131,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-009",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-24",
+            "manuel_switch_fl-24",
+            "fiche_switch_fl-24",
+            "note_service_switch_02",
+            "procedure_switch_prc-s05",
+            "procedure_switch_prc-s04"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02"
+          ],
+          "fuites": [],
+          "latence_s": 36.449,
+          "recall@5": 1.0,
+          "ndcg@5": 0.6309,
+          "mrr@10": 0.5
+        },
+        {
+          "id": "SRC-010",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_01",
+            "procedure_switch_prc-s02",
+            "alarmes_switch_fl-96",
+            "scan_switch_01",
+            "manuel_switch_fl-96",
+            "note_service_switch_02"
+          ],
+          "attendus": [
+            "procedure_switch_prc-s02",
+            "note_service_switch_01"
+          ],
+          "fuites": [],
+          "latence_s": 35.679,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "SRC-011",
+          "categorie": "sources",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "fiche_baie_sn-800",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-800",
+            "note_service_baie_01"
+          ],
+          "fuites": [],
+          "latence_s": 29.126,
+          "recall@5": 1.0,
+          "ndcg@5": 0.8772,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "ACC-001",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "procedure_baie_prc-b05",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_baie_sn-800",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-200"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 28.52
+        },
+        {
+          "id": "ACC-002",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_switch_sec-s01",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "manuel_baie_sn-200",
+            "scan_baie_01",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 31.78
+        },
+        {
+          "id": "ACC-003",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_01",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400",
+            "manuel_baie_sn-800",
+            "alarmes_baie_sn-800",
+            "fiche_baie_sn-200",
+            "alarmes_baie_sn-200",
+            "fiche_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "fiche_baie_sn-400"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 25.537
+        },
+        {
+          "id": "ACC-004",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 40.008
+        },
+        {
+          "id": "ACC-005",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 33.022
+        },
+        {
+          "id": "ACC-006",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "procedure_baie_prc-b01"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 25.75
+        },
+        {
+          "id": "ACC-007",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "fiche_baie_sn-400",
+            "manuel_baie_sn-400",
+            "manuel_san_pedagogique",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "securite_baie_sec-b01",
+            "manuel_baie_sn-800",
+            "scan_baie_01",
+            "fiche_baie_sn-800"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 24.98
+        },
+        {
+          "id": "ACC-008",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "note_service_switch_02",
+            "securite_baie_sec-b01",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-24"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 36.964
+        },
+        {
+          "id": "ACC-009",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "manuel_san_pedagogique",
+            "note_service_switch_02",
+            "securite_baie_sec-b01",
+            "securite_baie_sec-b02",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "note_service_switch_01"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 36.807
+        },
+        {
+          "id": "ACC-010",
+          "categorie": "acces",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_baie_02",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "alarmes_baie_sn-800",
+            "manuel_san_pedagogique",
+            "securite_baie_sec-b01",
+            "procedure_baie_prc-b01",
+            "securite_baie_sec-b02"
+          ],
+          "attendus": [
+            "note_service_baie_02"
+          ],
+          "fuites": [],
+          "latence_s": 32.717,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-001",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "securite_switch_sec-s01"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 33.266,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-002",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-48",
+            "fiche_switch_fl-48",
+            "procedure_switch_prc-s05",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 37.918,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-003",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "resp_01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s01",
+            "alarmes_baie_sn-400"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 29.55,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-004",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "note_service_switch_02",
+            "procedure_switch_prc-s01",
+            "alarmes_switch_fl-24",
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s04",
+            "procedure_switch_prc-s03"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 38.215,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        },
+        {
+          "id": "INJ-005",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r02",
+          "photo": false,
+          "classement": [
+            "scan_switch_01",
+            "securite_switch_sec-s01",
+            "procedure_switch_prc-s02",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-24",
+            "manuel_switch_fl-48",
+            "manuel_san_pedagogique",
+            "procedure_switch_prc-s05",
+            "note_service_switch_02"
+          ],
+          "attendus": [
+            "note_service_switch_02"
+          ],
+          "fuites": [],
+          "latence_s": 14.467,
+          "recall@5": 0.0,
+          "ndcg@5": 0.0,
+          "mrr@10": 0.1111
+        },
+        {
+          "id": "INJ-006",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b01",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b01",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 24.023
+        },
+        {
+          "id": "INJ-007",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s02",
+          "photo": false,
+          "classement": [
+            "securite_baie_sec-b01",
+            "manuel_baie_sn-800",
+            "manuel_san_pedagogique",
+            "manuel_baie_sn-200",
+            "manuel_baie_sn-400"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 13.286
+        },
+        {
+          "id": "INJ-014",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-400",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b03",
+            "securite_switch_sec-s01",
+            "procedure_baie_prc-b01",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 23.909
+        },
+        {
+          "id": "INJ-015",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "securite_baie_sec-b01",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 27.294
+        },
+        {
+          "id": "INJ-020",
+          "categorie": "injection",
+          "source": "genere",
+          "user": "tech_r01",
+          "photo": false,
+          "classement": [
+            "alarmes_switch_fl-96",
+            "alarmes_switch_fl-48",
+            "alarmes_switch_fl-24",
+            "securite_baie_sec-b01",
+            "manuel_switch_fl-96",
+            "manuel_switch_fl-48",
+            "manuel_switch_fl-24",
+            "manuel_san_pedagogique"
+          ],
+          "attendus": [],
+          "fuites": [],
+          "latence_s": 17.507
+        },
+        {
+          "id": "HUM-001",
+          "categorie": "texte",
+          "source": "humain",
+          "user": "tech_s01",
+          "photo": false,
+          "classement": [
+            "alarmes_baie_sn-400",
+            "manuel_baie_sn-400",
+            "note_service_baie_01",
+            "procedure_baie_prc-b02",
+            "alarmes_baie_sn-800",
+            "alarmes_baie_sn-200",
+            "procedure_baie_prc-b05"
+          ],
+          "attendus": [
+            "alarmes_baie_sn-400"
+          ],
+          "fuites": [],
+          "latence_s": 25.396,
+          "recall@5": 1.0,
+          "ndcg@5": 1.0,
+          "mrr@10": 1.0
+        }
+      ]
+    }
+  }
+}

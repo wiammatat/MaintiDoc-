@@ -29,6 +29,12 @@ class Settings(BaseSettings):
     # des dizaines de fois plus lent (voir docs/choix_techniques.md). bfloat16 reste utile sur GPU.
     model_dtype: Literal["float32", "float16", "bfloat16"] = "float32"
     device: str = "cpu"   # modèles de recherche : "cuda" si la carte a assez de mémoire, sinon "cpu"
+    # Reranker : le plus coûteux des modèles de recherche (environ 30 s par question sur CPU, voir
+    # docs/choix_techniques.md 2.19). Il peut tourner seul sur la carte (environ 1 Go en float16) pendant que les
+    # embeddings restent sur le processeur. Vide = mêmes valeurs que DEVICE et MODEL_DTYPE.
+    reranker_device: str | None = None
+    reranker_dtype: Literal["float32", "float16", "bfloat16"] | None = None
+    rerank_candidates: int = 20   # candidats relus par le reranker (les premiers de la fusion) ; 0 = tous
 
     # VLM (exécuté sur un GPU NVIDIA)
     vlm_quantization: Literal["none", "4bit"] = "4bit"   # 7B en fp16 dépasse 16 Go : 4 bits sur un seul T4

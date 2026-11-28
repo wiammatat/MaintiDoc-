@@ -308,6 +308,86 @@ Tests (`tests/test_ui.py`) : client contre la vraie API en mémoire ; fonctions 
 directement (connexion, ticket approuvé après modification, ticket refusé, photo, modèle indisponible, recherche) ;
 échappement d'une réponse piégée.
 
+### 2.19 Jeu d'évaluation (étape 6 de la feuille de route)
+Le sujet demande environ 150 scénarios ; `eval/scenarios.py` en génère exactement 150, selon la répartition du
+plan (texte 40, image 30, MCP 20, sources absentes ou contradictoires 20, accès et validation humaine 20,
+injections 20). Les scénarios écrits à la main par l'équipe (`eval/scenarios_humains.yaml`) s'y ajoutent et sont
+comptés à part.
+
+| Choix | Raison |
+|---|---|
+| Vérité attendue tirée du générateur du corpus (`corpus_content.py`, `photos.json`, base MCP) et non d'une sortie du modèle | Le jeu ne dépend pas du modèle évalué ; une erreur du modèle ne peut pas devenir la « bonne » réponse |
+| Pertinence binaire au niveau du document, classement par document distinct | Le corpus est petit et chaque question vise un document précis ; cinq passages du même tableau ne comptent qu'une fois |
+| Contrôle des réponses par mots attendus et interdits, sans accents ni majuscules (`55 °C` = `55°C`) | Reproductible et sans juge LLM ; limite : une réponse juste mais formulée autrement peut échouer, d'où la relecture des échecs |
+| Mots interdits cherchés dans la réponse, pas dans les « incertitudes » | Le prompt demande justement de signaler une consigne piégée ignorée dans les incertitudes |
+| Deux scripts : recherche (`run_retrieval`, CPU) et agent complet par l'API (`run_agent`, GPU) | Les métriques de recherche et la comparaison des rerankers se mesurent sans VLM ; l'agent est évalué comme un utilisateur réel (connexion, droits, approbation) |
+| Citations jugées deux fois : document attendu cité, et taux d'affirmations « soutenues » selon le vérificateur | Le second chiffre est donné par le système lui-même : il est rapporté, mais il ne remplace pas la vérité attendue |
+| Échec du script si un ticket est créé sans approbation ou si un document d'un autre groupe fuit | Ce sont les objectifs « 0 » du sujet : ils doivent bloquer, pas seulement apparaître dans un tableau |
+
+**Limites.** Les questions générées sont formulées de façon régulière, plus facile qu'un vrai technicien : c'est
+pourquoi l'équipe écrit elle-même des scénarios dans ses mots. Les scénarios « approuver » créent de vrais tickets :
+il faut régénérer la base MCP après une évaluation (`generate_corpus.py --mcp-only`).
+
+**Premier passage de la recherche (2026-11-28, CPU, 101 scénarios notés, aucune fuite).**
+
+| Configuration | Jeu | Recall@5 | nDCG@5 | MRR@10 | Latence médiane |
+|---|---|---|---|---|---|
+| Sans reranker | v1 | 0,913 | 0,724 | 0,681 | 0,2 s |
+| Reranker d'origine | v1 | 0,930 | 0,783 | 0,757 | 29,5 s |
+| Sans reranker | v2 | 0,920 | 0,874 | 0,906 | 0,2 s |
+| Reranker d'origine | v2 | 0,940 | 0,942 | 0,976 | 29,5 s |
+
+- **Correction du jeu (v1 → v2).** L'analyse des échecs a montré une vérité attendue trop stricte, et non des
+  erreurs de recherche. La correction est faite d'après le contenu du corpus (`generate_corpus.py`), pas d'après
+  les résultats :
+  - le manuel de chaque modèle donne aussi sa capacité ou ses ports et son seuil d'alarme ;
+  - le sens d'un voyant ou d'un code est le même pour les trois modèles d'une famille ;
+  - les notes de service sont pertinentes pour les modèles qu'elles citent.
+
+  Les scores v2 sont recalculés sur les classements enregistrés lors du même passage. Le fichier
+  `eval/results/recherche_20261128_0005.json` garde les scores v1.
+- **Apport du reranker** : MRR@10 passe de 0,906 à 0,976 et nDCG@5 de 0,874 à 0,942. Le gain est le plus net sur
+  les images (MRR de 0,84 à 0,95) et sur les sources contradictoires (MRR de 0,95 à 1). Il remonte le bon modèle
+  quand les tableaux des trois modèles se ressemblent.
+- **Coût du reranker** : sur le processeur, il fait passer la recherche de 0,2 s à 29,5 s en médiane (88 s au
+  maximum). À lui seul, il atteint l'objectif de 30 s du sujet pour une question simple. Deux réglages ont été
+  ajoutés. `RERANK_CANDIDATES` (20 par défaut, 0 = tous) limite les passages relus aux premiers de la fusion.
+  `RERANKER_DEVICE` et `RERANKER_DTYPE` placent le reranker seul sur la carte, en float16 (environ 1 Go), à côté de
+  Qwen. L'effet sur la qualité se mesure avec `python -m eval.run_retrieval --candidats 10 20 0`.
+- **Échec restant** : « Résume la dernière note de service sur les switchs » (INJ-005) ne retrouve pas la note,
+  car la question ne contient aucun mot de son contenu. Elle cherche par date, ce que la recherche par le sens ne
+  sait pas faire.
+- **Plaques signalétiques** : sans le VLM, la recherche ne lit pas le nom du modèle sur la photo. Le bon modèle n'est
+  retrouvé qu'en partie, et l'agent complète par l'analyse de la photo.
+
+### 2.20 Choix des modèles
+Les familles de modèles viennent du sujet (tableau « Composant / Choix possible ») : « Qwen2.5-VL-7B-Instruct, à poids
+ouverts », « BGE-M3 ou modèle multilingue comparable », « encodeur texte-image multilingue compatible CLIP »,
+« PyMuPDF et OCR local », et un « reranking adapté ». Les variantes précises ont été choisies pendant le
+développement, sous les contraintes du projet :
+- **local** : documents et photos ne quittent pas la machine ;
+- **libre et à poids ouverts** ;
+- **français** ;
+- **matériel** : un processeur pour la recherche, une carte NVIDIA de 8 Go pour le VLM.
+
+| Rôle | Modèle retenu | Raisons | Limites |
+|---|---|---|---|
+| Description de la photo et rédaction | `Qwen/Qwen2.5-VL-7B-Instruct`, quantifié en 4 bits (NF4) | Proposé par le sujet. Modèle vision-langage : il lit l'image et le texte ensemble. Il lit bien le texte d'une image (code d'afficheur, plaque) et suit les consignes de sortie JSON, nécessaires à la vérification des réponses. En 4 bits, il occupe environ 5 à 6 Go au lieu d'environ 16 Go | Légère perte de qualité due à la quantification. Repli : `Qwen2.5-VL-3B-Instruct` (configuration B), moins précis |
+| Recherche dans le texte | `BAAI/bge-m3` | Proposé par le sujet. Multilingue et bon en français ; textes longs (jusqu'à 8 192 jetons), adapté aux procédures et aux tableaux ; tourne sur le processeur | Modèle d'environ 2 Go : premier chargement lent sur CPU |
+| Recherche dans les images | `sentence-transformers/clip-ViT-B-32` (images) et `clip-ViT-B-32-multilingual-v1` (texte) | Répond exactement à « multilingue compatible CLIP » : la version multilingue place une question en français dans le même espace que les images CLIP. B/32 est la variante la plus légère, utilisable sur CPU | Peu fiable pour une question générale en français : la liste « image par la question » ne pèse que 0,5 dans la fusion (voir 2.3). Variantes plus grandes (ViT-L/14) non testées |
+| Reclassement | `BAAI/bge-reranker-v2-m3` | Reranking demandé par le sujet. Même famille que BGE-M3 (multilingue, français). Taille modeste (environ 568 millions de paramètres) : utilisable sur CPU et fine-tunable sur une carte de 8 Go | Plus lent que la recherche vectorielle : appliqué aux seuls candidats. Apport à mesurer avec `eval.run_retrieval` |
+| Lecture des scans | Tesseract 5, pack français | OCR local demandé par le sujet ; libre, sans envoi à l'extérieur, sur CPU | Sensible à la qualité du scan ; pas de compréhension de la mise en page complexe |
+
+**Ce qui n'a pas été fait.** Aucun autre modèle n'a été comparé à ceux-ci : les choix reposent sur le sujet, les
+contraintes ci-dessus et les essais réels (mémoire GPU, temps de réponse, qualité observée sur Kaggle puis sur la
+carte de 8 Go). Le jeu d'évaluation permet de compléter :
+- le reranker est comparé sans reranking, puis avec la version d'origine et avec la version adaptée par fine-tuning ;
+- une autre variante de CLIP ou d'embeddings peut être testée avec le même script, en changeant le modèle dans `.env`
+  et en reconstruisant l'index.
+
+Les licences de chaque modèle sont listées dans `docs/licences.md` et restent à vérifier sur les pages officielles.
+Celle de la variante 3B de Qwen peut être différente de celle de la 7B.
+
 ## 3. Ajouts non demandés par le sujet
 
 | Ajout | Raison |

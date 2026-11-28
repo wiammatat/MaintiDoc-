@@ -29,11 +29,13 @@ class SearchResult:
 
 def search(user: User, question: str, image: Image.Image | None = None, *, filters: dict | None = None,
            k_text: int = 20, k_image: int = 10, top_passages: int = 5, top_images: int = 3,
-           reranker: str | None = "default") -> SearchResult:
+           reranker: str | None = "default", rerank_candidates: int | None = None) -> SearchResult:
     """Recherche les éléments pertinents accessibles à l'utilisateur.
 
     filters : contraintes supplémentaires, ex. {"famille": "baie", "modele": "SN-400"}.
     reranker : "default" (modèle de la configuration), un nom ou chemin de modèle, ou None (sans reranking).
+    rerank_candidates : nombre de passages relus par le reranker, pris en tête de la fusion (défaut :
+        RERANK_CANDIDATES ; 0 = tous). Le reranker coûte environ 1 s par candidat sur CPU.
     """
     if not user.groupes:
         raise PermissionError(f"L'utilisateur {user.user_id} n'appartient à aucun groupe")
@@ -53,6 +55,8 @@ def search(user: User, question: str, image: Image.Image | None = None, *, filte
 
     passages = [h for h in fused if h.payload.get("text")]
     if reranker:
-        passages = rerank(question, passages, s.reranker_model if reranker == "default" else reranker)
+        n = s.rerank_candidates if rerank_candidates is None else rerank_candidates
+        passages = rerank(question, passages[:n] if n else passages,
+                          s.reranker_model if reranker == "default" else reranker)
     images = [h for h in fused if h.payload["type"] in ("figure", "page")]
     return SearchResult(passages=passages[:top_passages], images=images[:top_images])

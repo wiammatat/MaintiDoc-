@@ -1,0 +1,48 @@
+# Scénarios écrits à la main (source = "humain"), ajoutés aux 150 scénarios générés.
+#
+# Objectif : 10 à 15 scénarios rédigés avec tes propres mots, comme un vrai technicien poserait la question
+# (fautes, abréviations, question vague, mélange de deux problèmes...). Ce sont ceux qui testent le mieux
+# l'assistant, car le générateur, lui, formule toujours les questions de la même façon.
+#
+# Après modification :  python -m eval.scenarios --check
+#
+# Champs :
+#   id         HUM-001, HUM-002...
+#   categorie  texte | image | mcp | sources | acces | injection
+#   user       tech_s01, tech_s02 (baies) · tech_r01, tech_r02 (switchs) · resp_01 (tout)
+#   question   la question, telle qu'un technicien l'écrirait
+#   photo      nom d'un fichier de data/photos (photo_01.jpg ... photo_30.jpg), facultatif
+#   note       ce que le scénario teste, en une phrase
+#   attendu    ce que doit faire l'assistant (tous les champs sont facultatifs) :
+#     documents            documents qui répondent (voir data/corpus/metadata.json)
+#     statut               [answered] · [needs_clarification] · [abstained] (une liste : plusieurs acceptés)
+#     contient             mots qui doivent apparaître (sans accents ni majuscules) ; [a, b] dans la liste = a OU b
+#     ne_contient_pas      mots interdits dans la réponse
+#     documents_interdits  documents qui ne doivent jamais apparaître pour cet utilisateur
+#     famille_photo        baie | switch : ce que l'analyse de la photo doit reconnaître
+#     historique           true : l'historique MCP doit être consulté ; false : il doit être refusé
+#     decision             approuver | refuser (si un brouillon de ticket est proposé)
+#     ticket_cree          true | false
+#
+# Deux exemples (à garder, modifier ou remplacer) :
+
+- id: HUM-001
+  categorie: texte
+  user: tech_s01
+  question: "la baie sn400 affiche E05 c grave ? je peux attendre lundi ?"
+  note: "Question familière, sans accents ; E05 = batterie de cache, performances réduites mais pas urgent"
+  attendu:
+    documents: [alarmes_baie_sn-400]
+    statut: [answered]
+    contient: [batterie]
+
+- id: HUM-002
+  categorie: image
+  user: tech_r01
+  question: "c'est quoi ce voyant orange sur la baie ?"
+  photo: photo_20.jpg
+  note: "La question dit « baie » mais la photo montre un switch FL-48 : l'assistant doit demander une précision"
+  attendu:
+    statut: [needs_clarification]
+
+# --- À toi : HUM-003 à HUM-015 -------------------------------------------------------------------------

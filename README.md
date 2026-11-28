@@ -88,11 +88,23 @@ puis régler les lignes suivantes :
 STORAGE_BACKEND=local
 QDRANT_PATH=data/qdrant
 
+<<<<<<< ours
 # Configuration avec Ollama : le modèle vision doit être installé et Ollama démarré
 VLM_BACKEND=ollama
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=qwen3-vl:8b
 OLLAMA_NUM_CTX=8192
+=======
+# Configuration A (recommandée) : Qwen 7B en 4 bits sur la carte, recherche sur le processeur
+VLM_BACKEND=qwen
+VLM_QUANTIZATION=4bit
+DEVICE=cpu
+MODEL_DTYPE=float32
+# Reranker seul sur la carte (~1 Go) : ~30 s -> moins d'1 s par recherche
+RERANKER_DEVICE=cuda
+RERANKER_DTYPE=float16
+RERANK_CANDIDATES=20
+>>>>>>> theirs
 ```
 
 Installer le modèle une fois avec `ollama pull qwen3-vl:8b`, laisser Ollama tourner, puis redémarrer l'API.
@@ -101,8 +113,13 @@ Pour exécuter le modèle via Transformers plutôt que Ollama, choisir `VLM_BACK
 
 | Configuration | Réglages | Quand l'utiliser |
 |---|---|---|
+<<<<<<< ours
 | **Ollama** | `VLM_BACKEND=ollama`, `OLLAMA_MODEL=qwen3-vl:8b` | Utilise Ollama sur ce PC ; nécessite le modèle téléchargé et le serveur actif |
 | **Transformers** | `VLM_BACKEND=qwen`, `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Charge le modèle Hugging Face directement sur le GPU NVIDIA |
+=======
+| **A** (recommandée) | `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32`, `RERANKER_DEVICE=cuda`, `RERANKER_DTYPE=float16` | Modèle du sujet (Qwen2.5-VL-7B) ; les embeddings tournent sur le processeur, Qwen et le reranker sur la carte. En cas de `CUDA out of memory`, retirer d'abord les deux lignes `RERANKER_*` |
+| **B** (repli) | `VLM_MODEL=Qwen/Qwen2.5-VL-3B-Instruct`, `VLM_QUANTIZATION=4bit`, `DEVICE=cuda`, `MODEL_DTYPE=float16` | Si A manque de mémoire (`CUDA out of memory`) ; plus rapide, modèle plus petit (licence différente, voir `docs/licences.md`) |
+>>>>>>> theirs
 
 Le fichier `.env` n'est **jamais** versionné.
 
@@ -198,6 +215,29 @@ python scripts/audit_mcp.py
 
 Attendu : une ligne par appel, avec l'utilisateur, l'outil, le résultat (`ok`, `refuse`, `doublon`), et
 `Intégrité : OK`. Pour repartir d'une base propre : `python scripts/generate_corpus.py --mcp-only`.
+
+### 3.5 Évaluation automatique (150 scénarios)
+
+Le jeu `eval/scenarios.jsonl` compte 150 scénarios : texte 40, image 30, MCP 20, sources absentes ou
+contradictoires 20, contrôle d'accès et validation humaine 20, injections 20. Les scénarios écrits à la main
+s'ajoutent depuis `eval/scenarios_humains.yaml`.
+
+```powershell
+python -m eval.scenarios --check      # cohérence du jeu (après avoir modifié scenarios_humains.yaml)
+
+# Recherche seule, sur le processeur. Arrêter l'API d'abord : Qdrant embarqué n'accepte qu'un processus.
+python -m eval.run_retrieval                  # Recall@5, nDCG@5, MRR@10 : sans reranker et reranker d'origine
+python -m eval.run_retrieval --sans-photo     # même chose sans les photos (apport de la multimodalité)
+
+# Agent complet, sur le PC avec GPU, API démarrée (terminal 1 de la section 2)
+python -m eval.run_agent --limite 10          # essai rapide
+python -m eval.run_agent                      # les 150 + les scénarios écrits à la main
+python scripts/generate_corpus.py --mcp-only  # ensuite : supprimer les tickets créés par l'évaluation
+```
+
+Ajouter `--mlflow` pour enregistrer les résultats dans MLflow (profil Docker). Les résultats détaillés sont
+écrits dans `eval/results/`. Le script se termine en erreur si un ticket est créé sans approbation ou si un
+document d'un autre groupe apparaît, car ce sont les deux objectifs « 0 » du sujet.
 
 ---
 
@@ -308,6 +348,7 @@ journalisé (`python scripts/audit_mcp.py`).
 - [Sujet du projet](docs/sujet_projet.pdf)
 - [Note de cadrage et risques](docs/cadrage.md)
 - [Étapes détaillées](docs/MaintiDoc_Etapes.md)
+- [Schéma du fonctionnement](docs/schema_maintidoc.html) (à ouvrir dans un navigateur)
 - [Licences des composants](docs/licences.md)
 - [Choix techniques et écarts au sujet](docs/choix_techniques.md)
 - [Corpus](data/README.md)

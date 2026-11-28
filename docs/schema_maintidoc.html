@@ -1,0 +1,374 @@
+<!doctype html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>MaintiDoc en schémas</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;500;600;700&display=swap">
+<style>
+/* Mise en page : une colonne de lecture, schémas pleine largeur avec défilement horizontal sur téléphone. */
+:root{
+  --bg:#f3f6f7; --surface:#ffffff; --ink:#14202b; --muted:#5a6a77; --line:#c8d2da;
+  --accent:#0d6b76; --model:#ddf0f1; --human:#d9731f; --human-fill:#fcebdc;
+  --led-green:#2e9e5b; --led-orange:#e8822a; --led-red:#d64541; --led-blue:#2f6fd6;
+  --code-bg:#e9eef1;
+  --font-body:"IBM Plex Sans",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-mono:"IBM Plex Mono",ui-monospace,Consolas,monospace;
+}
+@media (prefers-color-scheme: dark){:root:not([data-theme="light"]){
+  --bg:#0f161c; --surface:#17212a; --ink:#e4ecf1; --muted:#93a4b2; --line:#2e3c48;
+  --accent:#56bcc8; --model:#143338; --human:#f0a050; --human-fill:#3a2715; --code-bg:#1d2933; color-scheme:dark}}
+:root[data-theme="dark"]{
+  --bg:#0f161c; --surface:#17212a; --ink:#e4ecf1; --muted:#93a4b2; --line:#2e3c48;
+  --accent:#56bcc8; --model:#143338; --human:#f0a050; --human-fill:#3a2715; --code-bg:#1d2933; color-scheme:dark}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.55;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:32px 56px}
+.wrap{max-width:1040px;margin:0 auto;display:flex;flex-direction:column;gap:44px}
+h1,h2,h3{text-wrap:balance;line-height:1.2;margin:0}
+h1{font-size:2.1rem;font-weight:700;letter-spacing:-.01em}
+h2{font-size:1.35rem;font-weight:600}
+h3{font-size:1rem;font-weight:600}
+p{margin:0;max-width:68ch}
+.eyebrow{font-family:var(--font-mono);font-size:.78rem;letter-spacing:.08em;text-transform:uppercase;color:var(--accent)}
+.lead{font-size:1.1rem;color:var(--muted)}
+code,.mono{font-family:var(--font-mono);font-size:.86em}
+code{background:var(--code-bg);padding:1px 5px;border-radius:4px}
+section{display:flex;flex-direction:column;gap:16px}
+header{display:flex;flex-direction:column;gap:12px}
+.principle{border-left:3px solid var(--accent);padding:4px 0 4px 16px;font-size:1.05rem;max-width:68ch}
+.principle strong{color:var(--accent)}
+.diagram{background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:16px;overflow-x:auto}
+.diagram svg{display:block;width:100%;min-width:760px;height:auto}
+.legend{display:flex;flex-wrap:wrap;gap:8px 22px;font-size:.88rem;color:var(--muted)}
+.legend span{display:inline-flex;align-items:center;gap:8px}
+.sw{width:18px;height:12px;border-radius:3px;border:1.5px solid var(--line);background:var(--surface)}
+.sw.model{background:var(--model);border-color:var(--accent)}
+.sw.human{background:var(--human-fill);border-color:var(--human)}
+/* SVG */
+.n{fill:var(--surface);stroke:var(--line);stroke-width:1.5}
+.n-model{fill:var(--model);stroke:var(--accent);stroke-width:1.5}
+.n-human{fill:var(--human-fill);stroke:var(--human);stroke-width:2}
+.n-key{fill:var(--model);stroke:var(--accent);stroke-width:2.5}
+.frame{fill:none;stroke:var(--accent);stroke-width:1.5;stroke-dasharray:6 5}
+.t{fill:var(--ink);font:600 15px var(--font-body)}
+.s{fill:var(--muted);font:400 11.5px var(--font-body)}
+.lbl{fill:var(--muted);font:500 11px var(--font-mono)}
+.fl{fill:var(--accent);font:600 12px var(--font-mono);letter-spacing:.06em}
+.num{fill:var(--accent)}
+.numt{fill:var(--surface);font:700 11px var(--font-mono)}
+.a{stroke:var(--muted);stroke-width:1.6;fill:none}
+.a-dash{stroke:var(--muted);stroke-width:1.3;fill:none;stroke-dasharray:4 4}
+.a-loop{stroke:var(--accent);stroke-width:1.6;fill:none}
+.head{fill:var(--muted)}
+.head-acc{fill:var(--accent)}
+.banner{fill:var(--code-bg);stroke:none}
+/* étapes de préparation */
+.steps{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px;counter-reset:st}
+.step{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.step .k{font-family:var(--font-mono);font-size:.78rem;color:var(--accent)}
+.step p{font-size:.92rem;color:var(--muted)}
+/* panneau de voyants */
+.panel{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+.dev{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:14px;display:flex;flex-direction:column;gap:10px;min-width:0}
+.leds{display:flex;gap:14px;font-family:var(--font-mono);font-size:.8rem;color:var(--muted)}
+.leds span{display:inline-flex;align-items:center;gap:5px}
+.leds i{width:11px;height:11px;border-radius:50%;display:inline-block}
+.g{background:var(--led-green)}.o{background:var(--led-orange);box-shadow:0 0 0 3px color-mix(in srgb,var(--led-orange) 30%,transparent)}.r{background:var(--led-red)}.b{background:var(--led-blue)}
+.dev p{font-size:.94rem}
+/* tableaux */
+.tbl{overflow-x:auto;background:var(--surface);border:1px solid var(--line);border-radius:8px}
+table{border-collapse:collapse;width:100%;font-size:.93rem}
+th,td{text-align:left;padding:10px 14px;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+th{font-size:.78rem;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);font-weight:600}
+td.f{font-family:var(--font-mono);font-size:.82rem;color:var(--muted);white-space:nowrap}
+/* barres du jeu d'évaluation */
+.bars{display:flex;flex-direction:column;gap:8px;max-width:640px}
+.bar{display:grid;grid-template-columns:150px 1fr 34px;align-items:center;gap:10px;font-size:.9rem}
+.bar .track{height:12px;background:var(--code-bg);border-radius:3px;overflow:hidden}
+.bar .fill{height:100%;background:var(--accent)}
+.bar .v{font-family:var(--font-mono);font-variant-numeric:tabular-nums;text-align:right;color:var(--muted)}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:24px;align-items:start}
+.two>*{min-width:0}
+footer{font-size:.85rem;color:var(--muted)}
+@media (max-width:480px){h1{font-size:1.7rem}.bar{grid-template-columns:110px 1fr 30px}}
+</style>
+</head>
+<body>
+
+<div class="wrap">
+<header>
+  <div class="eyebrow">Projet MaintiDoc · maintenance SAN</div>
+  <h1>Comment MaintiDoc répond à un technicien</h1>
+  <p class="lead">Un technicien pose une question, avec ou sans photo d'une baie de stockage ou d'un switch Fibre Channel. MaintiDoc cherche dans les seuls documents qu'il a le droit de voir, répond en citant ses sources, consulte l'historique de l'équipement et prépare un ticket qui n'est créé qu'après son accord.</p>
+  <p class="principle">Principe : <strong>le modèle observe, le code décide.</strong> Qwen lit, décrit et rédige. Les droits, les vérifications et la création des tickets sont du code ordinaire, testable.</p>
+</header>
+
+<section>
+  <div class="eyebrow">Vue d'ensemble</div>
+  <h2>Le trajet d'une demande</h2>
+  <div class="diagram">
+  <svg viewBox="0 0 1000 570" role="img" aria-label="Trajet d'une demande : interface Gradio, API, puis les huit étapes de l'agent LangGraph et les services utilisés">
+    <defs>
+      <marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="head"/></marker>
+      <marker id="ahc" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="head-acc"/></marker>
+    </defs>
+    <!-- ligne du haut -->
+    <rect class="n" x="20" y="20" width="220" height="70" rx="8"/>
+    <text class="t" x="36" y="50">Technicien · Gradio</text>
+    <text class="s" x="36" y="70">ne décide rien, envoie à l'API</text>
+    <rect class="n" x="390" y="20" width="220" height="70" rx="8"/>
+    <text class="t" x="406" y="50">API FastAPI</text>
+    <text class="s" x="406" y="70">jeton JWT · groupes · limites</text>
+    <rect class="n" x="760" y="20" width="220" height="70" rx="8"/>
+    <text class="t" x="776" y="50">Réponse sourcée</text>
+    <text class="s" x="776" y="70">ou précision, abstention, ticket</text>
+    <line class="a" x1="240" y1="55" x2="388" y2="55" marker-end="url(#ah)"/>
+    <text class="lbl" x="314" y="46" text-anchor="middle">question + photo</text>
+    <line class="a" x1="500" y1="90" x2="500" y2="123" marker-end="url(#ah)"/>
+    <line class="a" x1="870" y1="125" x2="870" y2="92" marker-end="url(#ah)"/>
+    <text class="lbl" x="880" y="113">résultat</text>
+
+    <!-- cadre de l'agent -->
+    <rect class="frame" x="20" y="125" width="960" height="310" rx="12"/>
+    <text class="fl" x="36" y="150">AGENT LANGGRAPH · BOUCLE CONTRÔLÉE</text>
+
+    <!-- rangée 1 -->
+    <rect class="n" x="45" y="170" width="190" height="80" rx="8"/>
+    <rect class="n-model" x="285" y="170" width="190" height="80" rx="8"/>
+    <rect class="n" x="525" y="170" width="190" height="80" rx="8"/>
+    <rect class="n-model" x="765" y="170" width="190" height="80" rx="8"/>
+    <!-- rangée 2 -->
+    <rect class="n-human" x="45" y="320" width="190" height="80" rx="8"/>
+    <rect class="n-model" x="285" y="320" width="190" height="80" rx="8"/>
+    <rect class="n" x="525" y="320" width="190" height="80" rx="8"/>
+    <rect class="n" x="765" y="320" width="190" height="80" rx="8"/>
+
+    <g>
+      <circle class="num" cx="60" cy="185" r="9"/><text class="numt" x="60" y="189" text-anchor="middle">1</text>
+      <text class="t" x="76" y="190">Analyser la demande</text>
+      <text class="s" x="58" y="215">Code, pas d'IA : équipement</text>
+      <text class="s" x="58" y="231">cité, historique, ticket ?</text>
+
+      <circle class="num" cx="300" cy="185" r="9"/><text class="numt" x="300" y="189" text-anchor="middle">2</text>
+      <text class="t" x="316" y="190">Analyser la photo</text>
+      <text class="s" x="298" y="215">Qwen décrit les voyants,</text>
+      <text class="s" x="298" y="231">le code vérifie et décide</text>
+
+      <circle class="num" cx="540" cy="185" r="9"/><text class="numt" x="540" y="189" text-anchor="middle">3</text>
+      <text class="t" x="556" y="190">Historique MCP</text>
+      <text class="s" x="538" y="215">si un équipement est cité ;</text>
+      <text class="s" x="538" y="231">droits revérifiés au serveur</text>
+
+      <circle class="num" cx="780" cy="185" r="9"/><text class="numt" x="780" y="189" text-anchor="middle">4</text>
+      <text class="t" x="796" y="190">Chercher + répondre</text>
+      <text class="s" x="778" y="215">5 passages autorisés ;</text>
+      <text class="s" x="778" y="231">Qwen rédige avec [S1]…[S5]</text>
+
+      <circle class="num" cx="780" cy="335" r="9"/><text class="numt" x="780" y="339" text-anchor="middle">5</text>
+      <text class="t" x="796" y="340">Vérifier les sources</text>
+      <text class="s" x="778" y="365">affirmation par affirmation ;</text>
+      <text class="s" x="778" y="381">citations douteuses retirées</text>
+
+      <circle class="num" cx="540" cy="335" r="9"/><text class="numt" x="540" y="339" text-anchor="middle">6</text>
+      <text class="t" x="556" y="340">Relancer ?</text>
+      <text class="s" x="538" y="365">reformuler si preuves faibles ;</text>
+      <text class="s" x="538" y="381">limite : tours, appels, temps</text>
+
+      <circle class="num" cx="300" cy="335" r="9"/><text class="numt" x="300" y="339" text-anchor="middle">7</text>
+      <text class="t" x="316" y="340">Brouillon de ticket</text>
+      <text class="s" x="298" y="365">rédigé par Qwen,</text>
+      <text class="s" x="298" y="381">modifiable par le technicien</text>
+
+      <circle class="num" cx="60" cy="335" r="9"/><text class="numt" x="60" y="339" text-anchor="middle">8</text>
+      <text class="t" x="76" y="340">Approbation humaine</text>
+      <text class="s" x="58" y="365">l'agent s'arrête (interrupt) ;</text>
+      <text class="s" x="58" y="381">rien n'est créé sans accord</text>
+    </g>
+
+    <!-- flèches de l'agent -->
+    <line class="a" x1="235" y1="210" x2="283" y2="210" marker-end="url(#ah)"/>
+    <line class="a" x1="475" y1="210" x2="523" y2="210" marker-end="url(#ah)"/>
+    <line class="a" x1="715" y1="210" x2="763" y2="210" marker-end="url(#ah)"/>
+    <line class="a" x1="900" y1="250" x2="900" y2="318" marker-end="url(#ah)"/>
+    <line class="a" x1="765" y1="360" x2="717" y2="360" marker-end="url(#ah)"/>
+    <line class="a" x1="525" y1="360" x2="477" y2="360" marker-end="url(#ah)"/>
+    <text class="lbl" x="500" y="350" text-anchor="middle">ticket</text>
+    <line class="a" x1="285" y1="360" x2="237" y2="360" marker-end="url(#ah)"/>
+    <path class="a-loop" d="M650 320 C650 285 800 292 800 252" marker-end="url(#ahc)"/>
+    <text class="lbl" x="690" y="292" text-anchor="middle" style="fill:var(--accent)">nouvelle recherche</text>
+    <text class="lbl" x="380" y="282" text-anchor="middle">photo illisible :</text>
+    <text class="lbl" x="380" y="297" text-anchor="middle">question de précision</text>
+
+    <!-- services -->
+    <text class="fl" x="45" y="466">SERVICES</text>
+    <rect class="n" x="45" y="480" width="190" height="66" rx="8"/>
+    <text class="t" x="60" y="507">Serveur MCP</text>
+    <text class="s" x="60" y="527">historique, tickets, droits</text>
+    <rect class="n" x="285" y="480" width="190" height="66" rx="8"/>
+    <text class="t" x="300" y="507">Journal d'audit</text>
+    <text class="s" x="300" y="527">chaque appel, chaîné SHA-256</text>
+    <rect class="n-model" x="525" y="480" width="190" height="66" rx="8"/>
+    <text class="t" x="540" y="507">Qwen2.5-VL-7B</text>
+    <text class="s" x="540" y="527">GPU 8 Go, quantifié 4 bits</text>
+    <rect class="n" x="765" y="480" width="190" height="66" rx="8"/>
+    <text class="t" x="780" y="507">Qdrant</text>
+    <text class="s" x="780" y="527">vecteurs BGE-M3 et CLIP</text>
+    <line class="a-dash" x1="140" y1="400" x2="140" y2="478" marker-end="url(#ah)"/>
+    <text class="lbl" x="150" y="447">création après accord</text>
+    <line class="a" x1="235" y1="513" x2="283" y2="513" marker-end="url(#ah)"/>
+    <line class="a-dash" x1="620" y1="400" x2="620" y2="478" marker-end="url(#ah)"/>
+    <text class="lbl" x="630" y="447">étapes 2, 4, 6, 7</text>
+    <line class="a-dash" x1="860" y1="400" x2="860" y2="478" marker-end="url(#ah)"/>
+    <text class="lbl" x="870" y="447">étape 4</text>
+  </svg>
+  </div>
+  <div class="legend">
+    <span><i class="sw"></i>code déterministe</span>
+    <span><i class="sw model"></i>utilise le modèle Qwen</span>
+    <span><i class="sw human"></i>décision humaine</span>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Étape 2</div>
+  <h2>Le piège du voyant orange</h2>
+  <p>Les baies StorNova et les switchs FabriLink ont le même panneau, avec quatre voyants aux mêmes couleurs. Le voyant L2 allumé ne veut pas dire la même chose. L'agent identifie donc l'équipement avant de répondre, et pose une question si la photo ne permet pas de le reconnaître.</p>
+  <div class="panel">
+    <div class="dev">
+      <h3>Baie de stockage · SN-200 / 400 / 800</h3>
+      <div class="leds"><span><i class="g"></i>L1</span><span><i class="o"></i>L2</span><span><i class="r"></i>L3</span><span><i class="b"></i>L4</span></div>
+      <p>L2 orange : disque défaillant ou reconstruction RAID en cours. Codes E01 à E10.</p>
+    </div>
+    <div class="dev">
+      <h3>Switch Fibre Channel · FL-24 / 48 / 96</h3>
+      <div class="leds"><span><i class="g"></i>L1</span><span><i class="o"></i>L2</span><span><i class="r"></i>L3</span><span><i class="b"></i>L4</span></div>
+      <p>L2 orange : port en erreur ou module SFP hors plage. Codes F01 à F10.</p>
+    </div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Étape 4 en détail</div>
+  <h2>La recherche multimodale et le reranker</h2>
+  <div class="diagram">
+  <svg viewBox="0 0 1160 280" role="img" aria-label="Recherche : trois recherches filtrées par groupe, fusion RRF, contrôle des droits, reranker, cinq meilleurs passages">
+    <defs>
+      <marker id="ah2" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto"><path d="M0 0L10 5L0 10z" class="head"/></marker>
+    </defs>
+    <rect class="banner" x="190" y="6" width="230" height="24" rx="5"/>
+    <text class="lbl" x="305" y="22" text-anchor="middle">filtre par groupe AVANT la recherche</text>
+
+    <rect class="n" x="20" y="70" width="120" height="50" rx="8"/><text class="t" x="80" y="100" text-anchor="middle">Question</text>
+    <rect class="n" x="20" y="190" width="120" height="50" rx="8"/><text class="t" x="80" y="220" text-anchor="middle">Photo</text>
+
+    <rect class="n" x="190" y="40" width="230" height="56" rx="8"/>
+    <text class="t" x="206" y="63">Texte · BGE-M3</text><text class="s" x="206" y="82">20 candidats, OCR compris</text>
+    <rect class="n" x="190" y="120" width="230" height="56" rx="8"/>
+    <text class="t" x="206" y="143">Images · CLIP</text><text class="s" x="206" y="162">par la question (poids 0,5)</text>
+    <rect class="n" x="190" y="200" width="230" height="56" rx="8"/>
+    <text class="t" x="206" y="223">Images · CLIP</text><text class="s" x="206" y="242">par la photo</text>
+
+    <path class="a" d="M140 95 L188 70" marker-end="url(#ah2)"/>
+    <path class="a" d="M140 95 L188 146" marker-end="url(#ah2)"/>
+    <path class="a" d="M140 215 L188 226" marker-end="url(#ah2)"/>
+
+    <rect class="n" x="460" y="110" width="140" height="76" rx="8"/>
+    <text class="t" x="476" y="140">Fusion RRF</text><text class="s" x="476" y="160">1 / (60 + rang)</text>
+    <path class="a" d="M420 68 L458 132" marker-end="url(#ah2)"/>
+    <path class="a" d="M420 148 L458 148" marker-end="url(#ah2)"/>
+    <path class="a" d="M420 228 L458 164" marker-end="url(#ah2)"/>
+
+    <rect class="n" x="640" y="110" width="150" height="76" rx="8"/>
+    <text class="t" x="656" y="140">Filtre des droits</text><text class="s" x="656" y="160">revérifié sur chaque</text><text class="s" x="656" y="175">résultat</text>
+    <line class="a" x1="600" y1="148" x2="638" y2="148" marker-end="url(#ah2)"/>
+
+    <rect class="n-key" x="830" y="100" width="160" height="96" rx="8"/>
+    <text class="t" x="846" y="128">Reranker</text><text class="s" x="846" y="148">lit question et passage</text><text class="s" x="846" y="164">ensemble, note chacun</text><text class="lbl" x="846" y="184">bge-reranker-v2-m3</text>
+    <line class="a" x1="790" y1="148" x2="828" y2="148" marker-end="url(#ah2)"/>
+
+    <rect class="n" x="1030" y="110" width="120" height="76" rx="8"/>
+    <text class="t" x="1046" y="140">Top 5</text><text class="s" x="1046" y="160">passages</text><text class="s" x="1046" y="175">+ 3 images</text>
+    <line class="a" x1="990" y1="148" x2="1028" y2="148" marker-end="url(#ah2)"/>
+  </svg>
+  </div>
+  <div class="two">
+    <p>La recherche par vecteurs est rapide mais approximative : la question et le passage sont transformés en vecteurs séparément, puis comparés. Elle remonte souvent les tableaux d'alarmes des trois modèles, presque identiques.</p>
+    <p>Le reranker lit la question et chaque passage ensemble, ce qui le rend plus précis et plus lent. On ne l'applique qu'aux candidats déjà trouvés. Pour « seuil E03 sur le SN-800 », il doit placer le tableau du SN-800 (65 °C) avant ceux du SN-200 (55 °C) et du SN-400 (60 °C).</p>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Les modèles</div>
+  <h2>Cinq modèles, deux rôles</h2>
+  <p>Les modèles de recherche trouvent les bons passages et tournent sur le processeur. Qwen décrit la photo et rédige ; il tourne sur la carte graphique. La recherche et son évaluation marchent donc sans GPU.</p>
+  <div class="tbl"><table>
+    <thead><tr><th>Rôle</th><th>Modèle</th><th>Ce qu'il fait</th><th>Matériel</th></tr></thead>
+    <tbody>
+      <tr><td>Description et rédaction</td><td class="f">Qwen/Qwen2.5-VL-7B-Instruct</td><td>Décrit la photo, rédige la réponse sourcée, reformule la recherche, prépare le brouillon de ticket. Version 3B possible sur une machine plus modeste.</td><td>GPU 8 Go, 4 bits</td></tr>
+      <tr><td>Recherche dans le texte</td><td class="f">BAAI/bge-m3</td><td>Transforme passages et questions en vecteurs pour chercher par le sens. Multilingue, adapté au français.</td><td>Processeur</td></tr>
+      <tr><td>Recherche dans les images</td><td class="f">sentence-transformers/clip-ViT-B-32</td><td>Transforme les figures, les pages et la photo du technicien en vecteurs.</td><td>Processeur</td></tr>
+      <tr><td>Question vers les images</td><td class="f">sentence-transformers/clip-ViT-B-32-multilingual-v1</td><td>Place une question en français dans le même espace que les images CLIP, pour trouver une figure à partir d'un texte.</td><td>Processeur</td></tr>
+      <tr><td>Reclassement</td><td class="f">BAAI/bge-reranker-v2-m3</td><td>Lit la question avec chaque passage candidat et les reclasse. Version adaptée au corpus prévue par fine-tuning.</td><td>Processeur</td></tr>
+      <tr><td>Lecture des scans</td><td class="f">Tesseract (pack français)</td><td>Reconnaît le texte des documents scannés sans couche texte.</td><td>Processeur</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Avant toute question</div>
+  <h2>Préparer les documents</h2>
+  <div class="steps">
+    <div class="step"><span class="k">1 · generate_corpus</span><h3>Corpus fictif</h3><p>41 PDF, 30 photos, 5 comptes, base MCP de 8 équipements.</p></div>
+    <div class="step"><span class="k">2 · pipeline.ingest</span><h3>Extraction</h3><p>PyMuPDF pour le texte, les tableaux et les figures ; Tesseract pour les scans. Chaque élément garde son document, sa page et ses groupes autorisés.</p></div>
+    <div class="step"><span class="k">3 · pipeline.index</span><h3>Indexation</h3><p>BGE-M3 pour le texte, CLIP pour les images. Les vecteurs sont rangés dans Qdrant.</p></div>
+  </div>
+</section>
+
+<section>
+  <div class="eyebrow">Sécurité</div>
+  <h2>Où chaque protection est appliquée</h2>
+  <div class="tbl"><table>
+    <thead><tr><th>Risque</th><th>Protection</th><th>Fichier</th></tr></thead>
+    <tbody>
+      <tr><td>Utilisateur inconnu</td><td>Jeton JWT vérifié à chaque appel</td><td class="f">api/main.py</td></tr>
+      <tr><td>Document d'un autre groupe</td><td>Filtre avant la recherche et sur chaque résultat</td><td class="f">retrieval/search.py</td></tr>
+      <tr><td>Consigne cachée dans un document</td><td>Les sources sont des données ; tout texte est échappé à l'affichage</td><td class="f">prompts/, ui/render.py</td></tr>
+      <tr><td>Équipement non autorisé</td><td>Droits revérifiés par le serveur MCP, sans révéler s'il existe</td><td class="f">mcp_server/server.py</td></tr>
+      <tr><td>Ticket non voulu ou en double</td><td>Approbation humaine, jeton lié au contenu, anti-doublon</td><td class="f">agent/graph.py</td></tr>
+      <tr><td>Action non tracée</td><td>Journal d'audit chaîné, contrôlable à tout moment</td><td class="f">scripts/audit_mcp.py</td></tr>
+    </tbody>
+  </table></div>
+</section>
+
+<section>
+  <div class="eyebrow">Évaluation</div>
+  <h2>150 scénarios pour mesurer le système</h2>
+  <div class="two">
+    <div class="bars" aria-label="Répartition des 150 scénarios">
+      <div class="bar"><span>Questions texte</span><div class="track"><div class="fill" style="width:100%"></div></div><span class="v">40</span></div>
+      <div class="bar"><span>Avec photo</span><div class="track"><div class="fill" style="width:75%"></div></div><span class="v">30</span></div>
+      <div class="bar"><span>Historique MCP</span><div class="track"><div class="fill" style="width:50%"></div></div><span class="v">20</span></div>
+      <div class="bar"><span>Sources absentes ou contradictoires</span><div class="track"><div class="fill" style="width:50%"></div></div><span class="v">20</span></div>
+      <div class="bar"><span>Droits et approbation</span><div class="track"><div class="fill" style="width:50%"></div></div><span class="v">20</span></div>
+      <div class="bar"><span>Injections</span><div class="track"><div class="fill" style="width:50%"></div></div><span class="v">20</span></div>
+    </div>
+    <div class="tbl"><table>
+      <thead><tr><th>Mesure</th><th>Question posée</th></tr></thead>
+      <tbody>
+        <tr><td>Recall@5</td><td>Le bon document est-il dans les 5 premiers ?</td></tr>
+        <tr><td>nDCG@5</td><td>Est-il classé haut ?</td></tr>
+        <tr><td>MRR@10</td><td>À quel rang apparaît le premier bon document ?</td></tr>
+        <tr><td>Fuites</td><td>Un document interdit est-il apparu ? Objectif : 0</td></tr>
+        <tr><td>Tickets sans accord</td><td>Objectif : 0</td></tr>
+      </tbody>
+    </table></div>
+  </div>
+  <p>La recherche est comparée sans reranker, avec le reranker d'origine, puis avec le reranker adapté au corpus. La vérité attendue vient du contenu du corpus, jamais d'une réponse du modèle.</p>
+</section>
+
+<footer>MaintiDoc · prototype pédagogique, données fictives · Python, LangGraph, LlamaIndex, Qdrant, Qwen2.5-VL, FastAPI, Gradio</footer>
+</div>
+</body>
+</html>

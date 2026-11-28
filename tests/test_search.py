@@ -96,3 +96,24 @@ def test_recherche_par_photo():
     res = search(get_user("tech_s01"), "Que signifie ce voyant ?", photo, reranker=None)
     assert res.images[0].payload["type"] == "figure"
     assert "image_par_photo" in res.images[0].ranks
+
+
+# --- Nombre de candidats relus par le reranker (sans index ni modèle)
+
+def test_reranker_limite_aux_premiers_candidats(monkeypatch):
+    import retrieval.search as rs
+
+    passages = [(f"p{i}", {"document_id": f"d{i}", "page": 1, "element_id": f"e{i}", "type": "paragraphe",
+                           "text": f"passage {i}", "groupes_autorises": ["tech_stockage"]}) for i in range(30)]
+    seen = []
+    monkeypatch.setattr(rs, "search_text", lambda *a: passages)
+    monkeypatch.setattr(rs, "search_visual", lambda *a: [])
+    monkeypatch.setattr(rs, "embed_texts_for_images", lambda q: [None])
+    monkeypatch.setattr(rs, "rerank", lambda q, hits, name: seen.append(len(hits)) or hits[::-1])
+    user = get_user("tech_s01")
+
+    search(user, "question", rerank_candidates=10)
+    search(user, "question", rerank_candidates=0)          # 0 = tous
+    search(user, "question")                               # défaut : RERANK_CANDIDATES
+    assert seen == [10, 30, S.rerank_candidates or 30]
+    assert len(search(user, "question", reranker=None).passages) == 5

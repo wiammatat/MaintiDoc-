@@ -2,17 +2,20 @@
 
 from functools import lru_cache
 
+import torch
 from sentence_transformers import CrossEncoder
 
 from common.config import get_settings
-from indexing.embeddings import model_kwargs
 from indexing.text_index import context_text
 from retrieval.fusion import Hit
 
 
 @lru_cache
 def get_reranker(name: str) -> CrossEncoder:
-    model = CrossEncoder(name, device=get_settings().device, model_kwargs=model_kwargs())
+    s = get_settings()
+    # Appareil et précision propres au reranker (RERANKER_DEVICE, RERANKER_DTYPE), sinon ceux des embeddings.
+    dtype = getattr(torch, s.reranker_dtype or s.model_dtype)
+    model = CrossEncoder(name, device=s.reranker_device or s.device, model_kwargs={"dtype": dtype})
     # Garde-fou : un modèle mal chargé (ex. tokenizer absent du cache) donne le même score à tout.
     good, bad = model.predict([("alarme de température", "Alarme : température du contrôleur trop élevée."),
                                ("alarme de température", "Recette de la tarte aux pommes.")])
