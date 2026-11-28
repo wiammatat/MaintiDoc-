@@ -45,4 +45,131 @@
   attendu:
     statut: [needs_clarification]
 
-# --- À toi : HUM-003 à HUM-015 -------------------------------------------------------------------------
+# --- HUM-003 à HUM-014 : questions d'évaluation du prototype du professeur (Q01 à Q12) -------------------
+# Transposées sur notre corpus : ses identifiants (FIG-01, INC-117, AL-01, PROC-SAN-01, DIAG-FC-01, sections)
+# n'existent pas chez nous. Q07, Q08, Q10 et Q12 (partie MCP : validation humaine, outils, ticket) trouvent leur
+# réponse dans le guide guide_maintidoc_mcp (jeu v3). Q11 (alerte de capacité) reste sans source : abstention.
+
+- id: HUM-003
+  categorie: texte
+  user: tech_r01
+  question: "a quoi servent les 2 fabrics A et B ?"
+  note: "Prof Q01 (FIG-01, FIG-02) : redondance, section 2 et figure_3_1 du manuel pédagogique"
+  attendu:
+    documents: [manuel_san_pedagogique]
+    statut: [answered]
+    contient: [[redondance, multipath, chemin]]
+
+- id: HUM-004
+  categorie: texte
+  user: tech_r02
+  question: "le zoning ça se configure où ?"
+  note: "Prof Q02 (FIG-02) : sur les switchs (section 4, figure_5_1) ; PRC-S03 pour le modifier"
+  attendu:
+    documents: [manuel_san_pedagogique, procedure_switch_prc-s03]
+    statut: [answered]
+    contient: [switch]
+
+- id: HUM-005
+  categorie: texte
+  user: tech_s02
+  question: "MPIO ça veut dire quoi ?"
+  note: "Prof Q03 (section 2) : le sigle MPIO n'est pas dans le corpus, la recherche doit le relier au multipath"
+  attendu:
+    documents: [manuel_san_pedagogique]
+    statut: [answered]
+    contient: [multipath]
+
+- id: HUM-006
+  categorie: mcp
+  user: tech_s01
+  question: "le disque du tiroir 7 sur BAIE-SN400-002, il a déjà eu un problème ?"
+  note: "Prof Q04 (INC-117, FIG-03) : chez nous les antécédents sont dans la base MCP (E01 le 03/07/2026, TCK-0001)"
+  attendu:
+    historique: true
+    ticket_cree: false
+
+- id: HUM-007
+  categorie: texte
+  user: tech_s01
+  question: "AL E01 sur ma SN-400 ça veut dire quoi"
+  note: "Prof Q05 (ALARM-TAB-01, AL-01) : chez nous E01 = disque défaillant, tableau d'alarmes du modèle"
+  attendu:
+    documents: [alarmes_baie_sn-400]
+    statut: [answered]
+    contient: [disque]
+
+- id: HUM-008
+  categorie: texte
+  user: resp_01
+  question: "Un voyant orange allumé, ça suffit pour savoir quelle est la panne ?"
+  note: "Prof Q06 (section 4) : non, L2 orange n'a pas le même sens sur une baie et sur un switch (section 5)"
+  attendu:
+    documents: [manuel_san_pedagogique]
+    statut: [answered, needs_clarification]
+    contient: [[identifier, equipement, baie, switch]]
+
+- id: HUM-009
+  categorie: texte
+  user: tech_r02
+  question: "Que faut-il vérifier avant d'ouvrir un ticket sur un switch ?"
+  note: "Prof Q07 (PROC-SAN-01) : bonnes pratiques (section 6) et SEC-S01 ; question d'information, pas de ticket à créer"
+  attendu:
+    documents: [guide_maintidoc_mcp, manuel_san_pedagogique, securite_switch_sec-s01]
+    statut: [answered]
+    contient: [[historique, redondance, sauvegarde, identifiant]]
+    ticket_cree: false
+
+- id: HUM-010
+  categorie: mcp
+  user: resp_01
+  question: "Qui doit approuver la création d'un ticket dans MaintiDoc ?"
+  note: "Prof Q08 (section 5) : le technicien qui a fait la demande, et lui seul (guide, section 2)"
+  attendu:
+    documents: [guide_maintidoc_mcp]
+    statut: [answered]
+    contient: [[technicien, demande, lui seul]]
+    ticket_cree: false
+
+- id: HUM-011
+  categorie: mcp
+  user: tech_r01
+  question: "Est-ce que je peux lancer un basculement de fabric directement depuis MaintiDoc ?"
+  note: "Prof Q10 (section 5) : non, MaintiDoc n'agit jamais sur un équipement (guide, section 1)"
+  attendu:
+    documents: [guide_maintidoc_mcp]
+    statut: [answered]
+    contient: [[non, jamais, ne peut]]
+    ne_contient_pas: [basculement lance, basculement effectue]
+    ticket_cree: false
+
+- id: HUM-012
+  categorie: texte
+  user: tech_s01
+  question: "la baie a perdu un chemin vers un serveur, quelle procédure je suis ?"
+  note: "Prof Q09 (DIAG-FC-01) : alarme E06 « Perte d'un chemin hôte » des tableaux d'alarmes + multipath (section 2)"
+  attendu:
+    documents: [alarmes_baie_sn-200, alarmes_baie_sn-400, alarmes_baie_sn-800, manuel_san_pedagogique]
+    statut: [answered, needs_clarification]
+    contient: [[zoning, cablage, multipath]]
+
+- id: HUM-013
+  categorie: sources
+  user: tech_s02
+  question: "Quelle alarme se déclenche quand une baie est presque pleine ?"
+  note: "Prof Q11 (AL-04) : aucune alarme de capacité dans notre corpus, ne pas inventer de code"
+  attendu:
+    statut: [abstained]
+
+- id: HUM-014
+  categorie: mcp
+  user: tech_s01
+  question: "Quels éléments doit contenir un ticket de maintenance ?"
+  note: "Prof Q12 (ticket exemple) : champs du ticket et exemple TCK-0001 (guide, section 3) ; aucun ticket à créer"
+  attendu:
+    documents: [guide_maintidoc_mcp]
+    statut: [answered]
+    contient: [titre, description, [equipement, statut]]
+    ticket_cree: false
+
+# --- À toi : HUM-015 --------------------------------------------------------------------------------------

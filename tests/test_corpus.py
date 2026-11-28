@@ -80,3 +80,39 @@ def test_photos_verite_terrain():
     assert any(p["ambigu"] for p in photos)
     for p in photos:
         assert (DATA / "photos" / p["fichier"]).exists()
+
+
+# --- Guide d'utilisation (outils MCP, validation humaine, tickets)
+
+def _guide_text() -> str:
+    import sys
+    sys.path.insert(0, str(DATA.parent / "scripts"))
+    from corpus_content import GUIDE_MCP
+    parts = []
+    for titre, avant, tableau, apres in GUIDE_MCP["sections"]:
+        parts += [titre, *avant, *apres] + [" | ".join(r) for r in tableau or []]
+    return " ".join(parts)
+
+
+def test_guide_mcp_visible_par_tous(metadata):
+    guide = by_id(metadata, "guide_maintidoc_mcp")
+    assert guide["type"] == "guide"
+    for user in ("tech_s01", "tech_r01", "resp_01"):
+        assert can_access(get_user(user), guide["groupes_autorises"])
+
+
+def test_guide_mcp_aligne_sur_le_code():
+    """Le guide décrit le vrai système : mêmes outils, même délai d'approbation, mêmes limites."""
+    import asyncio
+
+    from common.tokens import APPROVAL_TTL_SECONDS
+    from mcp_server.server import MAX_DESCRIPTION, MAX_TITLE, mcp
+
+    text = _guide_text()
+    tools = {t.name for t in asyncio.run(mcp.list_tools())}
+    assert tools == {"get_equipment_history", "get_open_tickets", "create_ticket"}
+    assert all(t in text for t in tools) and "seulement ces trois outils" in text
+    assert f"{APPROVAL_TTL_SECONDS // 60} minutes" in text
+    assert f"Au plus {get_settings().max_mcp_calls} appels MCP" in text
+    assert f"{MAX_TITLE} caractères" in text
+    assert f"{MAX_DESCRIPTION:,} caractères".replace(",", " ") in text

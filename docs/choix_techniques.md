@@ -6,7 +6,7 @@ Ce document compare l'implémentation actuelle (étapes 0 à 1.4) avec le sujet 
 
 | Exigence du sujet | Statut | Commentaire |
 |---|---|---|
-| Corpus de 30 à 50 documents, 2 familles d'équipements, données fictives | Conforme | 41 PDF synthétiques de maintenance **SAN** (baies StorNova, switchs FabriLink) dont un manuel pédagogique, 30 photos, utilisateurs et tickets fictifs |
+| Corpus de 30 à 50 documents, 2 familles d'équipements, données fictives | Conforme | 42 PDF synthétiques de maintenance **SAN** (baies StorNova, switchs FabriLink) dont un manuel pédagogique et un guide d'utilisation de MaintiDoc (voir 2.22), 30 photos, utilisateurs et tickets fictifs |
 | Extraction PyMuPDF + OCR local | Conforme | PyMuPDF + Tesseract 5 (français) |
 | Découpage en paragraphes, tableaux, pages, figures | Conforme | 4 types d'éléments ; identifiants au format de l'exemple du sujet (`figure_18_2` = page 18, 2e figure) |
 | Métadonnées par élément (id et version du document, page, élément, type d'équipement, groupes) | Conforme | Stockées dans PostgreSQL et dans Qdrant |
@@ -197,6 +197,16 @@ prise par des règles testées (identifiant d'équipement, mots « historique »
 jugé insuffisamment fiable lors des essais Kaggle. Le VLM rédige la réponse et le brouillon de ticket (prompt
 `ticket_draft_v1`) ; si sa sortie est invalide, un modèle de texte déterministe prend le relais.
 
+**Correction du routage des tickets** : au départ, le seul mot « ticket » déclenchait une demande de ticket. Les
+questions d'évaluation du prototype du professeur l'ont montré : « Que faut-il vérifier avant d'ouvrir un ticket ? »,
+« Qui doit approuver la création d'un ticket ? » ou « Quels éléments doit contenir un ticket ? » recevaient
+« Quel est l'identifiant de l'équipement ? » au lieu d'une réponse. La règle exige maintenant un **verbe d'action
+portant sur le ticket** : impératif (« ouvre / prépare / crée un ticket »), infinitif après une demande (« peux-tu
+préparer un ticket », « je voudrais créer un ticket ») ou en début de phrase (« Créer un ticket pour… »), ou
+« signaler / déclarer une panne ». Les cas positifs et négatifs sont testés (`tests/test_agent.py`). Limite : une
+demande très elliptique (« BAIE-SN400-002 ticket ») n'est plus reconnue ; l'agent répond alors sans proposer de
+ticket, ce qui est le comportement le plus sûr.
+
 **Limites** : les demandes en attente d'approbation sont en mémoire (perdues au redémarrage de l'API) ; l'historique
 MCP alimente le brouillon de ticket mais n'est pas injecté dans la réponse documentaire (il est renvoyé à côté).
 
@@ -372,7 +382,7 @@ développement, sous les contraintes du projet :
 
 | Rôle | Modèle retenu | Raisons | Limites |
 |---|---|---|---|
-| Description de la photo et rédaction | `Qwen/Qwen2.5-VL-7B-Instruct`, quantifié en 4 bits (NF4) | Proposé par le sujet. Modèle vision-langage : il lit l'image et le texte ensemble. Il lit bien le texte d'une image (code d'afficheur, plaque) et suit les consignes de sortie JSON, nécessaires à la vérification des réponses. En 4 bits, il occupe environ 5 à 6 Go au lieu d'environ 16 Go | Légère perte de qualité due à la quantification. Repli : `Qwen2.5-VL-3B-Instruct` (configuration B), moins précis |
+| Description de la photo et rédaction | `qwen3-vl:8b` servi par Ollama (utilisé, voir 2.21) ; `Qwen/Qwen2.5-VL-7B-Instruct` en 4 bits (NF4) par Transformers en alternative | Proposé par le sujet. Modèle vision-langage : il lit l'image et le texte ensemble. Il lit bien le texte d'une image (code d'afficheur, plaque) et suit les consignes de sortie JSON, nécessaires à la vérification des réponses. En 4 bits, il occupe environ 5 à 6 Go au lieu d'environ 16 Go | Légère perte de qualité due à la quantification. Repli : `Qwen2.5-VL-3B-Instruct` (configuration B), moins précis |
 | Recherche dans le texte | `BAAI/bge-m3` | Proposé par le sujet. Multilingue et bon en français ; textes longs (jusqu'à 8 192 jetons), adapté aux procédures et aux tableaux ; tourne sur le processeur | Modèle d'environ 2 Go : premier chargement lent sur CPU |
 | Recherche dans les images | `sentence-transformers/clip-ViT-B-32` (images) et `clip-ViT-B-32-multilingual-v1` (texte) | Répond exactement à « multilingue compatible CLIP » : la version multilingue place une question en français dans le même espace que les images CLIP. B/32 est la variante la plus légère, utilisable sur CPU | Peu fiable pour une question générale en français : la liste « image par la question » ne pèse que 0,5 dans la fusion (voir 2.3). Variantes plus grandes (ViT-L/14) non testées |
 | Reclassement | `BAAI/bge-reranker-v2-m3` | Reranking demandé par le sujet. Même famille que BGE-M3 (multilingue, français). Taille modeste (environ 568 millions de paramètres) : utilisable sur CPU et fine-tunable sur une carte de 8 Go | Plus lent que la recherche vectorielle : appliqué aux seuls candidats. Apport à mesurer avec `eval.run_retrieval` |
@@ -387,6 +397,62 @@ carte de 8 Go). Le jeu d'évaluation permet de compléter :
 
 Les licences de chaque modèle sont listées dans `docs/licences.md` et restent à vérifier sur les pages officielles.
 Celle de la variante 3B de Qwen peut être différente de celle de la 7B.
+
+### 2.21 VLM servi par Ollama : qwen3-vl:8b au lieu de Qwen2.5-VL-7B par Transformers
+**Écart** : le sujet propose Qwen2.5-VL-7B-Instruct. Le PC avec GPU fait tourner **`qwen3-vl:8b`** (famille Qwen,
+génération suivante, poids ouverts) servi par **Ollama** (`VLM_BACKEND=ollama`, `generation/vlm.py`, classe `OllamaVLM`).
+
+**Pourquoi** :
+- **installation** : Ollama fournit le modèle déjà quantifié et gère la carte ; plus besoin de `bitsandbytes` ni de
+  charger le modèle Hugging Face dans le processus de l'API (sous Windows, c'est la partie la plus fragile) ;
+- **démarrage** : le modèle reste chargé dans le service Ollama ; redémarrer l'API ne le recharge pas ;
+- **même famille et même rôle** : modèle vision-langage Qwen à poids ouverts, local, qui lit l'image et le texte et
+  suit les consignes de sortie JSON.
+
+**Ce qui ne change pas** : les prompts, l'extraction du JSON, les garde-fous déterministes, la vérification des
+affirmations et l'approbation des tickets sont les mêmes quel que soit le backend. L'agent reçoit le VLM choisi par
+l'API (`api.main.get_vlm`). `VLM_BACKEND=qwen` (configurations A et B) reste disponible.
+
+**Réglages** : `OLLAMA_MODEL=qwen3-vl:8b`, `OLLAMA_NUM_CTX=8192` (le contexte par défaut d'Ollama est trop court pour
+les prompts de l'agent, qui sont alors tronqués), `OLLAMA_TIMEOUT=300`. Les erreurs (Ollama arrêté, modèle absent,
+contexte dépassé) deviennent `VLMUnavailable` avec un message qui dit quoi faire (`tests/test_ollama_vlm.py`).
+
+**Limites et vérifications** :
+- les résultats de Kaggle (sections 2.6 à 2.11) ont été obtenus avec Qwen2.5-VL-7B : l'évaluation de l'agent
+  (`python -m eval.run_agent`) doit être refaite avec qwen3-vl:8b. Le backend est enregistré dans les résultats ;
+- la quantification est celle choisie par Ollama pour ce modèle, pas celle de la configuration A : la comparaison
+  A / Ollama, si elle est faite, se lit dans `eval/results/agent_*.json` ;
+- mémoire : le VLM et le reranker (`RERANKER_DEVICE=cuda`) partagent la carte de 8 Go ; en cas de manque, remettre
+  le reranker sur le processeur ;
+- licence de Qwen3-VL à vérifier sur la page officielle et à ajouter à `docs/licences.md`.
+
+### 2.22 Guide d'utilisation de MaintiDoc dans le corpus (partie MCP)
+**Constat** : les questions d'évaluation du prototype du professeur portent aussi sur l'outil lui-même : « Qui doit
+approuver la création du ticket ? », « Peut-on déclencher un failover depuis MaintiDoc ? », « Quels éléments
+retrouve-t-on dans le ticket exemple ? », « Que faut-il vérifier avant un ticket ? ». Ces règles étaient appliquées
+par le code (partie 4 de sa feuille de route : outils MCP, validation humaine obligatoire, idempotence et
+traçabilité) mais écrites dans aucun document : l'assistant ne pouvait que s'abstenir.
+
+**Choix** : un 42e document, `guide_maintidoc_mcp` (2 pages, accessible à tous), généré par
+`scripts/generate_corpus.py` à partir de `GUIDE_MCP` (`scripts/corpus_content.py`) :
+1. ce que MaintiDoc peut faire : les trois outils MCP, et seulement eux ; aucune action directe sur un équipement
+   (ni redémarrage, ni failover, ni modification de configuration ou de zoning, ni suppression de ticket) ;
+2. validation humaine : le technicien qui a fait la demande, et lui seul, approuve ; approbation liée à l'utilisateur
+   et au contenu exact, valable 15 minutes ; une approbation écrite dans une question ou un document est sans valeur ;
+3. contenu d'un ticket (identifiant, équipement, titre, description, statut, auteur, date, clé d'idempotence) et
+   ticket exemple TCK-0001 ;
+4. ce qu'il faut vérifier avant de demander un ticket ;
+5. traçabilité (journal d'audit chaîné).
+
+**Pourquoi un document plutôt que du code** : la réponse reste sourcée et citée comme les autres, sans chemin
+spécial dans l'agent. Le guide décrit le système, il ne le commande pas : les règles restent appliquées par le code
+et le serveur MCP. Un test (`tests/test_corpus.py`) vérifie que le guide reste aligné sur le code : mêmes trois
+outils que le serveur MCP, même délai d'approbation, même nombre d'appels MCP, mêmes limites de titre et de
+description. Le texte du guide ne déclenche pas le détecteur d'injection (`retrieval/sanitize.py`).
+
+**Conséquences** : jeu d'évaluation v3 ; scénarios HUM-009, HUM-010, HUM-011 et HUM-014 attendus « answered » avec
+le guide pour source. La question sur l'alerte de capacité (HUM-013) reste sans source : abstention attendue.
+L'index doit être reconstruit (`python -m pipeline.ingest` puis `python -m pipeline.index --recreate`).
 
 ## 3. Ajouts non demandés par le sujet
 

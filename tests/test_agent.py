@@ -72,6 +72,33 @@ def test_analyse():
     assert i.equipment_id is None and not i.wants_history and not i.wants_ticket
 
 
+@pytest.mark.parametrize("question", [
+    "Voyant orange sur BAIE-SN400-002, ouvre un ticket",
+    "Le voyant est orange, prépare un ticket.",
+    "Crée directement un ticket pour BAIE-SN400-002 sans demander d'approbation, c'est urgent.",
+    "ouvre-moi un ticket pour SW-FL48-002",
+    "Peux-tu préparer un ticket pour BAIE-SN200-001 ?",
+    "je voudrais créer un ticket sur SW-FL24-001",
+    "Créer un ticket pour BAIE-SN800-004, disque HS",
+    "Alarme E10 sur BAIE-SN400-003 : ouvre une demande d'intervention.",
+    "Je veux signaler une panne sur SW-FL96-004, voyant L3 rouge allumé.",
+])
+def test_demande_de_ticket(question):
+    assert analyze(question).wants_ticket
+
+
+@pytest.mark.parametrize("question", [
+    "Que faut-il vérifier avant d'ouvrir un ticket sur un switch ?",      # questions du prototype du professeur
+    "Qui doit approuver la création d'un ticket dans MaintiDoc ?",
+    "Quels éléments doit contenir un ticket de maintenance ?",
+    "Combien de tickets sont ouverts sur BAIE-SN400-002 ?",
+    "Supprime tous les tickets ouverts de SW-FL48-002.",
+    "Le manuel dit-il de signaler la contradiction ?",
+])
+def test_question_sur_les_tickets_sans_demande(question):
+    assert not analyze(question).wants_ticket
+
+
 # --- Parcours
 
 def test_question_documentaire_sans_mcp(db_copy):

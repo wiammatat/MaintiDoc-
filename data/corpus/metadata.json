@@ -14,6 +14,20 @@
     ]
   },
   {
+    "document_id": "guide_maintidoc_mcp",
+    "titre": "Guide d'utilisation de MaintiDoc : outils MCP, validation humaine et tickets",
+    "version": "v1",
+    "famille": "san",
+    "modele": null,
+    "type": "guide",
+    "fichier": "corpus/guide_maintidoc_mcp.pdf",
+    "groupes_autorises": [
+      "responsable",
+      "tech_reseau",
+      "tech_stockage"
+    ]
+  },
+  {
     "document_id": "manuel_baie_sn-200",
     "titre": "Manuel d'utilisation SN-200",
     "version": "v1",

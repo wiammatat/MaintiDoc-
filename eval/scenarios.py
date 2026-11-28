@@ -45,7 +45,9 @@ HUMAN = Path(__file__).with_name("scenarios_humains.yaml")
 # v1 : première version. v2 (2026-11-28) : documents pertinents complétés d'après le contenu du corpus. Le manuel de
 # chaque modèle donne aussi sa capacité ou ses ports et son seuil d'alarme ; le sens d'un voyant et d'un code est le
 # même pour les trois modèles d'une famille ; les notes de service sont pertinentes pour les modèles qu'elles citent.
-JEU_VERSION = "v2"
+# v3 (2026-11-28) : corpus de 42 documents, avec le guide d'utilisation de MaintiDoc (outils MCP, validation
+# humaine, contenu d'un ticket) ; les questions du prototype du professeur sur ces points ont une réponse sourcée.
+JEU_VERSION = "v3"
 CATEGORIES = {"texte": 40, "image": 30, "mcp": 20, "sources": 20, "acces": 20, "injection": 20}
 STATUTS = {"answered", "needs_clarification", "abstained"}
 ATTENDU_KEYS = {"documents", "statut", "contient", "ne_contient_pas", "documents_interdits", "famille_photo",

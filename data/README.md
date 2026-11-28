@@ -6,7 +6,7 @@ Généré par `python scripts/generate_corpus.py`. Le générateur est détermin
 
 | Dossier / fichier | Contenu |
 |---|---|
-| `corpus/*.pdf` | 41 documents : 1 manuel SAN pédagogique, 6 manuels, 6 tableaux d'alarmes, 6 fiches techniques, 10 procédures, 4 documents de sécurité, 4 notes de service, 4 scans |
+| `corpus/*.pdf` | 42 documents : 1 manuel SAN pédagogique, 1 guide d'utilisation de MaintiDoc (outils MCP, validation humaine, tickets), 6 manuels, 6 tableaux d'alarmes, 6 fiches techniques, 10 procédures, 4 documents de sécurité, 4 notes de service, 4 scans |
 | `corpus/figures/` | Figures des documents (faces avant, plaques, schémas du manuel pédagogique, photo de couverture) |
 | `corpus/metadata.json` | Manifeste : id, version, famille, modèle, type, groupes autorisés, drapeaux de test |
 | `photos/*.jpg` + `photos.json` | 30 photos avec leur vérité terrain (voyant, code, lisible, ambiguë, réponse attendue) |
@@ -16,7 +16,7 @@ Généré par `python scripts/generate_corpus.py`. Le générateur est détermin
 ## Familles d'équipements
 - **Baies de stockage StorNova** : SN-200, SN-400, SN-800 (groupe `tech_stockage`)
 - **Switchs Fibre Channel FabriLink** : FL-24, FL-48, FL-96 (groupe `tech_reseau`)
-- **Manuel SAN pédagogique** (texte, tableaux, 5 schémas, photo de couverture) et documents de sécurité : accessibles à tous.
+- **Manuel SAN pédagogique** (texte, tableaux, 5 schémas, photo de couverture), **guide d'utilisation de MaintiDoc** et documents de sécurité : accessibles à tous.
 - Le groupe `responsable` a accès à tout.
 
 ## Pièges volontaires (pour l'évaluation)

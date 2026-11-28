@@ -88,23 +88,17 @@ puis régler les lignes suivantes :
 STORAGE_BACKEND=local
 QDRANT_PATH=data/qdrant
 
-<<<<<<< ours
-# Configuration avec Ollama : le modèle vision doit être installé et Ollama démarré
+# Configuration O (utilisée) : qwen3-vl:8b servi par Ollama sur la carte
 VLM_BACKEND=ollama
 OLLAMA_URL=http://localhost:11434
 OLLAMA_MODEL=qwen3-vl:8b
 OLLAMA_NUM_CTX=8192
-=======
-# Configuration A (recommandée) : Qwen 7B en 4 bits sur la carte, recherche sur le processeur
-VLM_BACKEND=qwen
-VLM_QUANTIZATION=4bit
+# Recherche sur le processeur, reranker seul sur la carte (~1 Go) : ~30 s -> moins d'1 s par recherche
 DEVICE=cpu
 MODEL_DTYPE=float32
-# Reranker seul sur la carte (~1 Go) : ~30 s -> moins d'1 s par recherche
 RERANKER_DEVICE=cuda
 RERANKER_DTYPE=float16
 RERANK_CANDIDATES=20
->>>>>>> theirs
 ```
 
 Installer le modèle une fois avec `ollama pull qwen3-vl:8b`, laisser Ollama tourner, puis redémarrer l'API.
@@ -113,13 +107,9 @@ Pour exécuter le modèle via Transformers plutôt que Ollama, choisir `VLM_BACK
 
 | Configuration | Réglages | Quand l'utiliser |
 |---|---|---|
-<<<<<<< ours
-| **Ollama** | `VLM_BACKEND=ollama`, `OLLAMA_MODEL=qwen3-vl:8b` | Utilise Ollama sur ce PC ; nécessite le modèle téléchargé et le serveur actif |
-| **Transformers** | `VLM_BACKEND=qwen`, `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Charge le modèle Hugging Face directement sur le GPU NVIDIA |
-=======
-| **A** (recommandée) | `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32`, `RERANKER_DEVICE=cuda`, `RERANKER_DTYPE=float16` | Modèle du sujet (Qwen2.5-VL-7B) ; les embeddings tournent sur le processeur, Qwen et le reranker sur la carte. En cas de `CUDA out of memory`, retirer d'abord les deux lignes `RERANKER_*` |
-| **B** (repli) | `VLM_MODEL=Qwen/Qwen2.5-VL-3B-Instruct`, `VLM_QUANTIZATION=4bit`, `DEVICE=cuda`, `MODEL_DTYPE=float16` | Si A manque de mémoire (`CUDA out of memory`) ; plus rapide, modèle plus petit (licence différente, voir `docs/licences.md`) |
->>>>>>> theirs
+| **O** (utilisée) | `VLM_BACKEND=ollama`, `OLLAMA_MODEL=qwen3-vl:8b`, `RERANKER_DEVICE=cuda`, `RERANKER_DTYPE=float16` | Ollama sur ce PC : `ollama pull qwen3-vl:8b` puis Ollama démarré. Le plus simple à installer sur Windows. En cas de manque de mémoire, retirer d'abord les deux lignes `RERANKER_*` |
+| **A** (Transformers) | `VLM_BACKEND=qwen`, `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Modèle du sujet (Qwen2.5-VL-7B) chargé par Hugging Face directement sur la carte |
+| **B** (repli) | `VLM_BACKEND=qwen`, `VLM_MODEL=Qwen/Qwen2.5-VL-3B-Instruct`, `VLM_QUANTIZATION=4bit`, `DEVICE=cuda`, `MODEL_DTYPE=float16` | Si A manque de mémoire (`CUDA out of memory`) ; plus rapide, modèle plus petit (licence différente, voir `docs/licences.md`) |
 
 Le fichier `.env` n'est **jamais** versionné.
 

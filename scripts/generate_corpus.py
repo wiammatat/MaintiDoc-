@@ -31,7 +31,7 @@ except ImportError:
 sys.path.insert(0, str(Path(__file__).parent))
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 from common.security import hash_password  # noqa: E402
-from corpus_content import FAMILLES, MANUEL_SAN, NOTES, SCANS, SECURITE  # noqa: E402
+from corpus_content import FAMILLES, GUIDE_MCP, MANUEL_SAN, NOTES, SCANS, SECURITE  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent / "data"
 CORPUS = ROOT / "corpus"
@@ -317,6 +317,20 @@ def manuel_pedagogique():
     register(doc_id, m["titre"], "san", "manuel_pedagogique", path, groupes=TOUS_LES_GROUPES)
 
 
+def guide_mcp():
+    """Guide d'utilisation de MaintiDoc (outils MCP, validation humaine, tickets), accessible à tous."""
+    g = GUIDE_MCP
+    s = [Paragraph(g["titre"], H1), Paragraph("Document fictif - projet MaintiDoc", CAPTION), Spacer(1, 10)]
+    for titre, avant, tableau, apres in g["sections"]:
+        s += [Paragraph(titre, H2)] + [Paragraph(p, BODY) for p in avant]
+        if tableau:
+            s += [Spacer(1, 4), table(tableau, [4.5 * cm, 12.5 * cm]), Spacer(1, 4)]
+        s += [Paragraph(p, BODY) for p in apres] + [Spacer(1, 6)]
+    path = CORPUS / f"{g['id']}.pdf"
+    build_pdf(path, g["id"], "v1", s)
+    register(g["id"], g["titre"], "san", "guide", path, groupes=TOUS_LES_GROUPES)
+
+
 def manuel(famille, modele):
     fam = FAMILLES[famille]
     spec = fam["modeles"][modele]
@@ -565,6 +579,7 @@ def main():
         p.unlink()
 
     manuel_pedagogique()
+    guide_mcp()
     for famille, fam in FAMILLES.items():
         for modele in fam["modeles"]:
             manuel(famille, modele)

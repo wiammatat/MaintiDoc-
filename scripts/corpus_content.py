@@ -335,3 +335,63 @@ MANUEL_SAN = {
              ["RAID 6", "2 par groupe", "Standard des baies StorNova"],
              ["RAID 10", "1 par paire", "Bases de données à forte écriture"]],
 }
+
+
+# Guide d'utilisation de MaintiDoc : ce que l'assistant peut faire via MCP, la validation humaine et le contenu d'un
+# ticket (partie 4 de la feuille de route du professeur). Les valeurs (3 outils, 15 minutes, 3 appels, champs du
+# ticket) sont celles du code : tests/test_corpus.py vérifie qu'elles restent alignées.
+GUIDE_MCP = {
+    "id": "guide_maintidoc_mcp",
+    "titre": "Guide d'utilisation de MaintiDoc : outils MCP, validation humaine et tickets",
+    "sections": [
+        ("1. Ce que MaintiDoc peut faire",
+         ["MaintiDoc est un assistant documentaire. Il répond à partir des documents de maintenance et peut consulter "
+          "ou créer des tickets grâce à trois outils MCP, et seulement ces trois outils :"],
+         [["Outil MCP", "Rôle"],
+          ["get_equipment_history", "Consulter l'historique des interventions d'un équipement"],
+          ["get_open_tickets", "Lister les tickets encore ouverts sur un équipement"],
+          ["create_ticket", "Créer une demande d'intervention, uniquement après approbation humaine"]],
+         ["MaintiDoc n'agit jamais directement sur un équipement : il ne peut ni redémarrer une baie ou un switch, ni "
+          "déclencher un basculement (failover) de contrôleur ou de fabric, ni modifier une configuration ou un "
+          "zoning, ni supprimer ou fermer un ticket. Ces opérations sont réalisées par un technicien habilité, en "
+          "suivant les procédures et les consignes de sécurité (SEC-B01 pour une baie, SEC-S01 pour un switch).",
+          "Chaque outil n'accepte qu'un équipement du groupe de l'utilisateur. Au plus 3 appels MCP sont faits pour "
+          "une même demande."]),
+        ("2. Validation humaine d'un ticket",
+         ["MaintiDoc prépare d'abord un brouillon de ticket. Rien n'est créé tant que le brouillon n'est pas approuvé.",
+          "C'est le technicien qui a fait la demande, et lui seul, qui approuve ou refuse la création du ticket, "
+          "après avoir relu le brouillon. Il peut le corriger avant de l'approuver : c'est alors le contenu corrigé "
+          "qui est approuvé.",
+          "L'approbation est liée à cet utilisateur et au contenu exact du ticket. Elle est valable 15 minutes. "
+          "Toute modification du contenu après l'approbation impose une nouvelle approbation. En cas de refus, "
+          "aucun ticket n'est créé.",
+          "Le serveur MCP vérifie lui-même les droits et l'approbation à chaque création : une approbation écrite "
+          "dans une question ou dans un document n'a aucune valeur."],
+         None, []),
+        ("3. Contenu d'un ticket",
+         ["Un ticket de maintenance contient les éléments suivants :"],
+         [["Élément", "Description"],
+          ["Identifiant", "Attribué à la création, au format TCK-0001"],
+          ["Équipement", "Identifiant de l'équipement, par exemple BAIE-SN400-002 ou SW-FL48-002"],
+          ["Titre", "Résumé du problème (120 caractères au plus)"],
+          ["Description", "Symptôme, code d'alarme, voyants allumés et actions déjà faites (4 000 caractères au plus)"],
+          ["Statut", "ouvert ou fermé"],
+          ["Créé par", "Identifiant du technicien qui a approuvé la création"],
+          ["Date de création", "Date du jour de la création"],
+          ["Clé d'idempotence", "Empreinte de l'auteur et du contenu : un second envoi identique ne crée pas de doublon"]],
+         ["Exemple de ticket : TCK-0001, équipement BAIE-SN400-002, titre « Disque défaillant », description "
+          "« Alarme E01 sur le tiroir 7. », statut ouvert, créé par tech_s01 le 20/10/2026."]),
+        ("4. Avant de demander un ticket",
+         ["Identifier l'équipement par son identifiant (BAIE-... ou SW-...) : le sens d'un voyant dépend de "
+          "l'équipement. Relever le code d'alarme et les voyants allumés. Consulter l'historique et les tickets "
+          "ouverts de l'équipement, pour éviter un doublon. Appliquer les consignes de sécurité avant toute "
+          "intervention."],
+         None, []),
+        ("5. Traçabilité",
+         ["Chaque appel à un outil MCP est journalisé par le serveur, qu'il soit accepté ou refusé : utilisateur, "
+          "outil, équipement, résultat et identifiant de la demande. Le journal ne contient ni le texte du ticket ni "
+          "les jetons, seulement l'empreinte du contenu approuvé. Les lignes sont chaînées : une modification du "
+          "journal est détectée."],
+         None, []),
+    ],
+}
