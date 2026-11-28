@@ -88,17 +88,21 @@ puis régler les lignes suivantes :
 STORAGE_BACKEND=local
 QDRANT_PATH=data/qdrant
 
-# Configuration A (recommandée) : Qwen 7B en 4 bits sur la carte, recherche sur le processeur
-VLM_BACKEND=qwen
-VLM_QUANTIZATION=4bit
-DEVICE=cpu
-MODEL_DTYPE=float32
+# Configuration avec Ollama : le modèle vision doit être installé et Ollama démarré
+VLM_BACKEND=ollama
+OLLAMA_URL=http://localhost:11434
+OLLAMA_MODEL=qwen3-vl:8b
+OLLAMA_NUM_CTX=8192
 ```
+
+Installer le modèle une fois avec `ollama pull qwen3-vl:8b`, laisser Ollama tourner, puis redémarrer l'API.
+La taille de contexte Ollama est réglée à 8192 tokens pour permettre les prompts de l'agent.
+Pour exécuter le modèle via Transformers plutôt que Ollama, choisir `VLM_BACKEND=qwen`.
 
 | Configuration | Réglages | Quand l'utiliser |
 |---|---|---|
-| **A** (recommandée) | `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Modèle du sujet (Qwen2.5-VL-7B) ; la recherche tourne sur le processeur, la carte est réservée à Qwen |
-| **B** (repli) | `VLM_MODEL=Qwen/Qwen2.5-VL-3B-Instruct`, `VLM_QUANTIZATION=4bit`, `DEVICE=cuda`, `MODEL_DTYPE=float16` | Si A manque de mémoire (`CUDA out of memory`) ; plus rapide, modèle plus petit (licence différente, voir `docs/licences.md`) |
+| **Ollama** | `VLM_BACKEND=ollama`, `OLLAMA_MODEL=qwen3-vl:8b` | Utilise Ollama sur ce PC ; nécessite le modèle téléchargé et le serveur actif |
+| **Transformers** | `VLM_BACKEND=qwen`, `VLM_QUANTIZATION=4bit`, `DEVICE=cpu`, `MODEL_DTYPE=float32` | Charge le modèle Hugging Face directement sur le GPU NVIDIA |
 
 Le fichier `.env` n'est **jamais** versionné.
 
@@ -202,8 +206,9 @@ Attendu : une ligne par appel, avec l'utilisateur, l'outil, le résultat (`ok`, 
 | Symptôme | Cause probable | Solution |
 |---|---|---|
 | `torch.cuda.is_available()` renvoie `False` | PyTorch processeur installé | `pip uninstall torch torchvision`, puis la commande `--index-url` de la section 1.3 |
-| `CUDA out of memory` | 8 Go insuffisants pour la configuration choisie | Fermer les autres applications qui utilisent la carte, sinon passer à la configuration **B** |
-| « modèle : désactivé » dans le bandeau | `VLM_BACKEND=disabled` dans `.env` | Mettre `VLM_BACKEND=qwen` et relancer l'API |
+| `CUDA out of memory` | Mémoire insuffisante pour le modèle Transformers sélectionné | Fermer les autres applications qui utilisent la carte ou choisir un modèle plus petit via `VLM_MODEL` |
+| « modèle : désactivé » dans le bandeau | `VLM_BACKEND=disabled` dans `.env` | Mettre `VLM_BACKEND=ollama` (ou `qwen`) et relancer l'API |
+| Ollama ne répond pas | Le service Ollama est arrêté ou le modèle manque | Démarrer Ollama et exécuter `ollama pull qwen3-vl:8b` |
 | « API injoignable » dans l'interface | L'API ne tourne pas | Lancer `uvicorn api.main:app` dans le terminal 1 |
 | Erreur Qdrant « already accessed by another instance » | Qdrant embarqué n'accepte qu'un seul processus | Arrêter l'API avant de relancer `python -m pipeline.index` |
 | `TesseractNotFoundError` | Chemin de Tesseract | Corriger `TESSERACT_CMD` dans `.env` |
@@ -285,7 +290,7 @@ docs/         sujet, cadrage, étapes, licences, choix techniques
 | `POST /auth/token` | Connexion -> jeton JWT |
 | `GET /me` | Profil et groupes |
 | `POST /search` | Recherche multimodale (question + photo facultative) -> preuves citables |
-| `POST /ask` | Réponse sourcée par le VLM (nécessite `VLM_BACKEND=qwen` ou `remote`) |
+| `POST /ask` | Réponse sourcée par le VLM (nécessite `VLM_BACKEND=ollama`, `qwen` ou `remote`) |
 | `GET /documents/{id}/pdf`, `GET /elements/{uid}/image` | Fichiers, après contrôle d'accès |
 | `POST /agent` | Agent LangGraph : analyse de la photo, réponse sourcée, historique MCP, brouillon de ticket |
 | `POST /agent/{id}/approval` | Approbation humaine (contenu éventuellement modifié) ou refus ; création via MCP |

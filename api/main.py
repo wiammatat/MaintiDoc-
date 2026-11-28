@@ -30,7 +30,7 @@ from agent.graph import CHECKPOINTER, build_agent
 from agent.mcp_client import MCPClient, StdioMCPClient
 from generation.answer import answer
 from generation.schema import Answer
-from generation.vlm import VLM, RemoteVLM, VLMUnavailable, default_vlm
+from generation.vlm import VLM, OllamaVLM, RemoteVLM, VLMUnavailable, default_ollama_vlm, default_vlm
 from retrieval.fusion import Hit
 from retrieval.search import SearchResult, search
 
@@ -74,15 +74,22 @@ def _remote_vlm() -> RemoteVLM:
     return RemoteVLM(s.vlm_remote_url, s.vlm_remote_token.get_secret_value(), timeout=s.vlm_remote_timeout)
 
 
+@lru_cache
+def _ollama_vlm() -> OllamaVLM:
+    return default_ollama_vlm()
+
+
 def get_vlm() -> VLM:
     s = get_settings()
     if s.vlm_backend == "qwen":
         return default_vlm()
+    if s.vlm_backend == "ollama":
+        return _ollama_vlm()
     if s.vlm_backend == "remote" and s.vlm_remote_url and s.vlm_remote_token.get_secret_value():
         return _remote_vlm()
     raise HTTPException(status.HTTP_503_SERVICE_UNAVAILABLE,
-                        "VLM indisponible : utiliser /search, ou VLM_BACKEND=qwen sur un PC avec GPU NVIDIA, "
-                        "ou VLM_BACKEND=remote avec VLM_REMOTE_URL et VLM_REMOTE_TOKEN.")
+                        "VLM indisponible : utiliser /search, ou configurer VLM_BACKEND=qwen, ollama, "
+                        "ou remote avec VLM_REMOTE_URL et VLM_REMOTE_TOKEN.")
 
 
 def get_optional_vlm() -> VLM | None:

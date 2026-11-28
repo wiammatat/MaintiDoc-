@@ -85,6 +85,74 @@ class RemoteVLM:
         return body["text"]
 
 
+class OllamaVLM:
+    """Client du serveur Ollama local, compatible avec les modèles vision Ollama."""
+
+    def __init__(self, url: str, model: str, timeout: float = 300, client=None,
+                 max_new_tokens: int = 512, num_ctx: int = 8192):
+        import httpx
+
+        self.url, self.model, self.timeout = url.rstrip("/"), model, timeout
+        self.client = client or httpx.Client()
+        self.name = f"Ollama ({model})"
+        self.max_new_tokens = max_new_tokens
+        self.num_ctx = num_ctx
+        self.token_log: list[int] = []
+
+    def generate(self, system: str, user: str, images: list[Image.Image]) -> str:
+        import base64
+        import io
+
+        import httpx
+
+        encoded = []
+        for im in images:
+            buf = io.BytesIO()
+            im.convert("RGB").save(buf, "JPEG", quality=90)
+            encoded.append(base64.b64encode(buf.getvalue()).decode())
+        try:
+            response = self.client.post(
+                f"{self.url}/api/chat",
+                json={
+                    "model": self.model,
+                    "messages": [
+                        {"role": "system", "content": system},
+                        {"role": "user", "content": user, "images": encoded},
+                    ],
+                    "stream": False,
+                    "options": {"num_predict": self.max_new_tokens, "num_ctx": self.num_ctx},
+                },
+                timeout=self.timeout,
+            )
+        except httpx.HTTPError as e:
+            raise VLMUnavailable(
+                f"Ollama injoignable : vérifier qu'il tourne et que OLLAMA_URL est correct "
+                f"({type(e).__name__})"
+            ) from None
+        if response.status_code == 404:
+            raise VLMUnavailable(f"Modèle Ollama introuvable : exécuter « ollama pull {self.model} »")
+        if response.status_code != 200:
+            try:
+                error = response.json().get("error")
+            except (ValueError, AttributeError):
+                error = None
+            if isinstance(error, str) and error:
+                raise VLMUnavailable(
+                    f"Erreur du serveur Ollama (HTTP {response.status_code}) : {error[:500]}"
+                )
+            raise VLMUnavailable(f"Erreur du serveur Ollama (HTTP {response.status_code})")
+        try:
+            body = response.json()
+        except ValueError:
+            raise VLMUnavailable("Réponse JSON invalide du serveur Ollama") from None
+        message = body.get("message")
+        if not isinstance(message, dict) or not isinstance(message.get("content"), str):
+            raise VLMUnavailable("Réponse invalide du serveur Ollama : contenu du modèle absent")
+        if body.get("prompt_eval_count"):
+            self.token_log.append(body["prompt_eval_count"])
+        return message["content"]
+
+
 class QwenVL:
     def __init__(self, model_name: str | None = None):
         import torch
@@ -132,3 +200,10 @@ class QwenVL:
 @lru_cache
 def default_vlm() -> VLM:
     return QwenVL()
+
+
+@lru_cache
+def default_ollama_vlm() -> OllamaVLM:
+    s = get_settings()
+    return OllamaVLM(s.ollama_url, s.ollama_model, timeout=s.ollama_timeout,
+                     max_new_tokens=s.vlm_max_new_tokens, num_ctx=s.ollama_num_ctx)

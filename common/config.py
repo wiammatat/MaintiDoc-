@@ -78,10 +78,14 @@ class Settings(BaseSettings):
     storage_backend: Literal["docker", "local"] = "docker"
 
     # API
-    vlm_backend: Literal["disabled", "qwen", "remote"] = "disabled"   # qwen : GPU de ce PC ; remote : serveur VLM d'un autre PC
+    vlm_backend: Literal["disabled", "qwen", "ollama", "remote"] = "disabled"   # qwen : GPU local ; ollama : serveur Ollama local ; remote : serveur VLM distant
     vlm_remote_url: str = ""                  # adresse affichée par python -m generation.vlm_server
     vlm_remote_token: SecretStr = SecretStr("")   # jeton affiché par python -m generation.vlm_server
     vlm_remote_timeout: int = 180             # secondes par génération
+    ollama_url: str = "http://localhost:11434"
+    ollama_model: str = "qwen3-vl:8b"
+    ollama_timeout: int = 300
+    ollama_num_ctx: int = 8192
     max_upload_mb: int = 5                                    # taille maximale d'une photo envoyée
     ui_api_url: str = "http://localhost:8000"                 # adresse de l'API pour l'application Gradio
     ui_timeout: int = 300                                     # secondes : l'agent peut faire 6 appels au modèle
